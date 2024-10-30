@@ -8,10 +8,10 @@ export const Header = () => {
 
   return (
     <header
-      className="flex items-center justify-between flex-wrap bg-[#323232] px-6 py-2 w-full
+      className="flex justify-between flex-wrap bg-[#323232] px-6 py-2 w-full
       sticky top-0 z-10"
     >
-      <div className="flex  ">
+      <div className="flex items-center ">
         <Link to="/">
           <img
             draggable="false"
@@ -21,9 +21,7 @@ export const Header = () => {
           />
         </Link>
 
-        {!isMobile ? (
-          <p className="font-light ">Your vision, your way</p>
-        ) : null}
+        {!isMobile ? <p className="font-light">Your vision, your way</p> : null}
       </div>
 
       <Navbar isMobile={isMobile} />
