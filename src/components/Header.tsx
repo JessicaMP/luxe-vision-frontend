@@ -12,7 +12,7 @@ export const Header = () => {
         <Link to="/">
           <img
             draggable="false"
-            src="./Logo.png"
+            src="/images/Logo.png"
             alt="luxe vision logo"
             className="h-16 w-auto"
           />
