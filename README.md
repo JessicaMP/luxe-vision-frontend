@@ -33,3 +33,11 @@ pnpm run dev
 ## Framework ui: Joy ui
 
 https://mui.com/joy-ui/getting-started/
+Tailwind: https://tailwindcss.com/docs
+
+## Icons
+
+https://github.com/react-icons/react-icons
+
+Pending
+- Install redux
