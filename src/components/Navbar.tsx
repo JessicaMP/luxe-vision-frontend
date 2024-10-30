@@ -10,7 +10,7 @@ export const Navbar = ({ isMobile }) => {
   ];
 
   return (
-    <nav>
+    <nav className="h-min">
       {isMobile ? (
         <MobileNav menuItems={menuItems} />
       ) : (
