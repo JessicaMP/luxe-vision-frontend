@@ -24,7 +24,7 @@ const MobileNav = ({ menuItems }) => {
   return (
     <>
       <button
-        className="fixed top-4 right-4 z-50 p-2 text-[#e8a87c] hover:text-[#ffd6ba] focus:outline-none"
+        className="relative z-50 p-2 text-[#e8a87c] hover:text-[#ffd6ba] focus:outline-none"
         onClick={toggleMenu}
         aria-label="Toggle menu"
       >
@@ -38,14 +38,14 @@ const MobileNav = ({ menuItems }) => {
         onClick={toggleMenu}
       ></div>
 
-      <nav
-        className={`fixed top-0 right-0 h-full w-64 bg-[#1c1c1c] shadow-lg z-50 transform transition-transform duration-300 ease-in-out ${
+      <div
+        className={`fixed top-0 right-0 h-full px-4  bg-[#1c1c1c] shadow-lg z-50 transform transition-transform duration-300 ease-in-out ${
           isOpen ? 'translate-x-0' : 'translate-x-full'
         }`}
       >
-        <div className="p-6">
+        <div className="p-6 flex flex-col items-center">
           <h2 className="text-2xl font-bold mb-6 text-[#e8a87c]">Menu</h2>
-          <ul className="space-y-4">
+          <ul className="space-y-4 flex flex-col items-center">
             {menuItems.map((element, index) =>
               element.style == 'NORMAL' ? (
                 <NormalBtn key={index} element={element} />
@@ -55,7 +55,7 @@ const MobileNav = ({ menuItems }) => {
             )}
           </ul>
         </div>
-      </nav>
+      </div>
     </>
   );
 };
