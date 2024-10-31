@@ -7,7 +7,7 @@ interface CardProps {
   className?: string;
 }
 
-export default function Component({
+export default function CardSpeciality({
   title = 'Bodas',
   image = '/placeholder.svg?height=400&width=300',
   className,
