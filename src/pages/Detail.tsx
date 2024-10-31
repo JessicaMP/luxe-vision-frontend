@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Avatar from "@mui/joy/Avatar";
 import Button from "@mui/joy/Button";
 import { FaChevronLeft, FaPhoneAlt, FaAward } from "react-icons/fa";
@@ -6,6 +6,12 @@ import { MdEmail } from "react-icons/md";
 import { FaLocationDot } from "react-icons/fa6";
 import { BsFillGrid1X2Fill } from "react-icons/bs";
 import ModalDetail from "../components/pages/detail/ModalDetail";
+import { useParams } from 'react-router-dom';
+import ApiService from "../services/api";
+
+type Params = {
+  id: string;
+};
 
 const content = {
   id: 1,
@@ -22,7 +28,24 @@ const content = {
 };
 
 const Detail = () => {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(false)
+  const { id } = useParams<{ id: string }>()
+
+  useEffect(() => {
+    const fetchData = async (id: string) => {
+      try {
+        const { data } = await ApiService.getStudioById(id)
+        console.log(data)
+        // setUser(data)
+      } catch (error) {
+        console.error("Error fetching data:", error)
+      }
+    };
+
+    if (id) {
+      fetchData(id);
+    }
+  }, [id]);
 
   return (
     <main className="bg-white">
