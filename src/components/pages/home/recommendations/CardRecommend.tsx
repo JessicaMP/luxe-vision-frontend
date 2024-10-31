@@ -17,6 +17,7 @@ export default function CardRecommend({ card }: { card: CardProps }) {
           alt="title"
           className="rounded-lg h-full"
           src={card.image}
+          draggable={false}
           style={{
             objectFit: 'cover',
           }}
