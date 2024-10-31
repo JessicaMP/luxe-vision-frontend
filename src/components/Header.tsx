@@ -1,4 +1,3 @@
-import React from 'react';
 import Navbar from './Navbar';
 import { Link } from 'react-router-dom';
 import { useMediaQuery } from '@mui/material';
@@ -9,7 +8,7 @@ export const Header = () => {
   return (
     <header
       className="flex items-center justify-between flex-wrap bg-[#323232] px-6 py-2 w-full
-      sticky top-0 z-10"
+      sticky top-0 z-20"
     >
       <div className="flex items-center ">
         <Link to="/">
@@ -21,7 +20,9 @@ export const Header = () => {
           />
         </Link>
 
-        {!isMobile ? <p className="font-light">Your vision, your way</p> : null}
+        {!isMobile ? (
+          <p className="font-light text-white">Your vision, your way</p>
+        ) : null}
       </div>
 
       <Navbar isMobile={isMobile} />
