@@ -1,8 +1,8 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import { FaFacebookF } from "react-icons/fa";
-import { IoLogoInstagram } from "react-icons/io5";
-import { FaXTwitter } from "react-icons/fa6";
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { FaFacebookF } from 'react-icons/fa';
+import { IoLogoInstagram } from 'react-icons/io5';
+import { FaXTwitter } from 'react-icons/fa6';
 
 const Footer = () => {
   return (
@@ -17,7 +17,7 @@ const Footer = () => {
             />
           </Link>
 
-          <p className="font-light break-words">
+          <p className="font-light break-words text-white">
             Y© 2024 Luxevision. Todos los derechos reservados.
           </p>
         </div>
