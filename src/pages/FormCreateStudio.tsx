@@ -89,8 +89,8 @@ const FormCreateStudio = () => {
   };
   return (
     <main className="bg-[#454243]">
-      <section className="container mx-auto py-10">
-        <div className="max-w-screen-2xl space-y-10">
+      <section className="container mx-auto py-10 px-4 sm:px-10">
+        <div className="space-y-10">
           <h1 className="text-[#D05858] font-bold text-5xl">
             Add photo studio
           </h1>
