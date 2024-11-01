@@ -1,6 +1,7 @@
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Studio } from '@/types';
 import { Avatar } from '@mui/material';
+import { Link } from 'react-router-dom';
 
 export default function CardRecommend({ studio }: { studio: Studio }) {
   return (
@@ -8,7 +9,7 @@ export default function CardRecommend({ studio }: { studio: Studio }) {
       <CardContent className="p-0">
         <img
           alt="title"
-          className="rounded-lg h-full"
+          className="rounded-lg h-full drop-shadow-[20px_0_20px_rgba(0,0,0,0.15)]"
           src={studio.profileImage}
           draggable={false}
           style={{
@@ -29,7 +30,9 @@ export default function CardRecommend({ studio }: { studio: Studio }) {
         <p className="text-sm text-gray-500">
           {studio.location.city + ', ' + studio.location.state}
         </p>
-        <p className="text-sm text-red-500"> Ver detalles</p>
+        <Link to={`/studio/${studio.id}`} className="text-sm text-red-500">
+          Ver detalles
+        </Link>
       </CardFooter>
     </Card>
   );

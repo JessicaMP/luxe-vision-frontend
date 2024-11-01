@@ -10,7 +10,6 @@ const useStudios = () => {
 
   useEffect(() => {
     if (status === 'idle') {
-      console.log('fetching');
       dispatch(fetchStudios());
     }
   }, [status, dispatch]);

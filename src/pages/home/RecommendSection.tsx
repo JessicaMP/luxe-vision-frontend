@@ -9,7 +9,6 @@ const RecommendSection = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const { data: studios, status, error } = useRandomStudios();
-  console.log('studios: ', studios);
 
   if (status === 'loading') return <p>Cargando estudios...</p>;
   if (status === 'failed') return <p>Error: {error}</p>;
@@ -30,8 +29,6 @@ const RecommendSection = () => {
   };
 
   const currentItems = getCurrentItems() || [];
-
-  console.log(currentItems);
 
   return (
     <section className="relative min-h-[50svh] w-full bg-[#444243] flex">

@@ -11,7 +11,7 @@ const initialState = {
 const API_URL = 'http://54.234.87.12:8080/';
 
 export const fetchStudios = createAsyncThunk('studios/fetchStudios', async () => {
-  const response = await axios.get(API_URL+'studios/');
+  const response = await axios.get(API_URL+'studios');
   return response.data;
 });
 
@@ -34,7 +34,6 @@ export const deleteStudio = createAsyncThunk(API_URL+'studios/deleteStudio', asy
   await axios.delete(`/api/studios/${studioId}`);
   return studioId;
 });
-
 
 const studiosSlice = createSlice({
   name: 'studios',
