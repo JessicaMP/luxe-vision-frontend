@@ -6,7 +6,7 @@ export const Header = () => {
   const isMobile = useMediaQuery("(max-width:768px)");
 
   return (
-    <header className="bg-[#323232]">
+    <header className="bg-[#323232] fixed top-0 w-full z-20">
       <div className="container mx-auto">
         <div
           className="flex items-center justify-between flex-wrap px-6 py-2 w-full
