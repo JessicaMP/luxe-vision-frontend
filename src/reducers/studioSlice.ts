@@ -20,10 +20,17 @@ export const fetchRandomStudios = createAsyncThunk('studios/fetchRandomStudios',
   return response.data;
 });
 
-export const addStudio = createAsyncThunk(API_URL+'studios/addStudio', async (newStudio) => {
-  const response = await axios.post('/api/studios', newStudio);
-  return response.data;
-});
+export const addStudio = createAsyncThunk(
+  'studios/addStudio',
+  async (formData: FormData) => {
+    const response = await axios.post(API_URL + 'studios', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    return response.data;
+  }
+);
 
 export const updateStudio = createAsyncThunk(API_URL+'studios/updateStudio', async (updatedStudio) => {
   const response = await axios.put(`/api/studios/${updatedStudio.id}`, updatedStudio);
@@ -52,9 +59,6 @@ const studiosSlice = createSlice({
         state.status = 'failed';
         state.error = action.error.message;
       })
-      .addCase(addStudio.fulfilled, (state, action) => {
-        state.studios.push(action.payload);
-      })
       .addCase(updateStudio.fulfilled, (state, action) => {
         const index = state.studios.findIndex(studio => studio.id === action.payload.id);
         if (index !== -1) {
@@ -63,6 +67,18 @@ const studiosSlice = createSlice({
       })
       .addCase(deleteStudio.fulfilled, (state, action) => {
         state.studios = state.studios.filter(studio => studio.id !== action.payload);
+      })
+      builder
+      .addCase(addStudio.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(addStudio.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        state.studios.push(action.payload);
+      })
+      .addCase(addStudio.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.error.message;
       });
   },
 });

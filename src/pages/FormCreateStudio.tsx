@@ -1,17 +1,23 @@
-import GeneralInformation from "../components/pages/FormCreateStudio/Generalinformation";
-import ContactInformation from "../components/pages/FormCreateStudio/ContactInformation";
-import Location from "../components/pages/FormCreateStudio/Location";
-import Specialty from "../components/pages/FormCreateStudio/Specialty";
-import PhotographerTeam from "../components/pages/FormCreateStudio/PhotographerTeam";
-import SectionImage from "../components/pages/FormCreateStudio/SectionImages";
-import Button from "@mui/joy/Button";
-import { useState } from "react";
-import ApiService from "../services/api";
-import { useNavigate } from "react-router-dom";
+import GeneralInformation from '../components/pages/FormCreateStudio/Generalinformation';
+import ContactInformation from '../components/pages/FormCreateStudio/ContactInformation';
+import Location from '../components/pages/FormCreateStudio/Location';
+import Specialty from '../components/pages/FormCreateStudio/Specialty';
+import PhotographerTeam from '../components/pages/FormCreateStudio/PhotographerTeam';
+import SectionImage from '../components/pages/FormCreateStudio/SectionImages';
+import Button from '@mui/joy/Button';
+import { useState } from 'react';
+import ApiService from '../services/api';
+import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '@/store';
+import { addStudio } from '@/reducers/studioSlice';
 
 const FormCreateStudio = () => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
+
+  const { status, error } = useSelector((state: RootState) => state.studios);
+  const loading = status === 'loading';
 
   const [generalInfo, setGeneralInfo] = useState({});
   const [contactInfo, setContactInfo] = useState({});
@@ -43,14 +49,6 @@ const FormCreateStudio = () => {
   const handleImagesChange = (data: any) => {
     setSectionImages(data);
   };
-  // console.log({
-  //   generalInfo,
-  //   contactInfo,
-  //   location,
-  //   specialties,
-  //   photographers,
-  //   sectionImages,
-  // });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -64,36 +62,31 @@ const FormCreateStudio = () => {
       portfolioPhotos: [],
       studioSpecialties: [...specialties].map((id) => ({ specialty: { id } })),
     };
-    // console.log({ studioData });
 
     const { profileImageFile, portfolioFiles } = sectionImages;
 
     const formData = new FormData();
     formData.append(
-      "studio",
-      new Blob([JSON.stringify(studioData)], { type: "application/json" })
+      'studio',
+      new Blob([JSON.stringify(studioData)], { type: 'application/json' })
     );
     if (profileImageFile) {
-      formData.append("profileImage", profileImageFile);
+      formData.append('profileImage', profileImageFile);
     }
     portfolioFiles.forEach((file: any) => {
-      formData.append("portfolioImages", file);
+      formData.append('portfolioImages', file);
     });
 
     try {
-      setLoading(true);
-      const response = await ApiService.postStudio(formData);
-      setLoading(false);
-      if(response.status !== 201) return
-      const {id} = response.data
-      navigate(`/studio/${id}`)
-
-    } catch (error) {
-      setLoading(false);
-      console.error("Error:", {error});
+      const resultAction = await dispatch(addStudio(formData));
+      if (addStudio.fulfilled.match(resultAction)) {
+        const { id } = resultAction.payload;
+        navigate(`/studio/${id}`);
+      }
+    } catch (err) {
+      console.error('Error:', err);
     }
   };
-
   return (
     <main className="bg-[#454243]">
       <section className="container mx-auto py-10">
