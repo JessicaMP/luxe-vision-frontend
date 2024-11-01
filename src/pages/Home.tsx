@@ -10,8 +10,6 @@ import {
 } from '@/components/ui/carousel';
 import Autoplay from 'embla-carousel-autoplay';
 import CardSpeciality from '@/components/pages/home/speciality/CardSpeciality';
-import CardRecommend from '@/components/pages/home/recommendations/CardRecommend';
-import { useState, useEffect } from 'react';
 import RecommendSection from './home/RecommendSection';
 
 const Home = () => {
