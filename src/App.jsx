@@ -1,10 +1,12 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Register from './pages/Register';
-import Login from './pages/Login';
-import Header from './components/Header';
-import Home from './pages/Home';
-import Detail from './pages/Detail';
-import Footer from './components/Footer';
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Header from "./components/Header";
+import Footer from "./components/Footer";
+
+import Home from "./pages/Home";
+import Detail from "./pages/Detail";
+import Register from "./pages/Register";
+import Login from "./pages/Login";
+import FormCreateStudio from "./pages/FormCreateStudio"
 
 function App() {
   return (
@@ -16,6 +18,7 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
         <Route path="/studio/:id" element={<Detail />} />
+        <Route path="/create_studio" element={<FormCreateStudio />} />
       </Routes>
 
       <Footer />
