@@ -50,7 +50,18 @@ export default {
   				'4': 'hsl(var(--chart-4))',
   				'5': 'hsl(var(--chart-5))'
   			}
-  		}
+  		},
+      screens: {
+        smm: '480px',
+        sm: '640px',
+        md: '768px',
+        lg: '992px',
+        xl: '1024px',
+        '2xl': '1200px',
+        '3xl': '1280px',
+        '4xl': '1366px',
+        '5xl': '1440px',
+      },
   	}
   },
   plugins: [require("tailwindcss-animate")],

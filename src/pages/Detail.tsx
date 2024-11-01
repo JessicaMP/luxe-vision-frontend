@@ -33,7 +33,7 @@ const Detail = () => {
 
   return (
     <main className="bg-white">
-      <div className="container mx-auto py-20 space-y-6 px-4 sm:px-0">
+      <div className="container mx-auto py-20 space-y-6 px-4 sm:px-10">
         <header className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 md:gap-0">
           <div className="flex flex-col sm:flex-row gap-3">
             <Avatar

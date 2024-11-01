@@ -1,4 +1,5 @@
 import CardRecommend from '@/components/pages/home/recommendations/CardRecommend';
+
 import { useState, useEffect } from 'react';
 import useRandomStudios from '@/hooks/useRandomStudios';
 
@@ -38,9 +39,10 @@ const RecommendSection = () => {
 
   return (
     <section className="relative min-h-[50svh] w-full bg-[#444243] flex">
-      <div className="m-10 flex flex-col gap-12 items-center">
+      <div className="container mx-auto">
+      <div className="px-4 sm:px-10 py-10 flex flex-col gap-12 items-center">
         <h3 className="font-bold text-3xl text-white self-start">
-          Recomendaciones para ti
+          Recommendations for you
         </h3>
         <div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 mb-8">
@@ -109,6 +111,7 @@ const RecommendSection = () => {
             </svg>
           </button>
         </div>
+      </div>
       </div>
     </section>
   );
