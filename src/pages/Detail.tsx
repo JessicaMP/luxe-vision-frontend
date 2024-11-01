@@ -28,6 +28,9 @@ const Detail = () => {
     return <NotFoundStudio />;
   }
 
+  const portfolioPhotosLength =
+    studio.portfolioPhotos.length > 5 ? 5 : studio.portfolioPhotos.length;
+
   return (
     <main className="bg-white">
       <div className="container mx-auto py-20 space-y-6 px-4 sm:px-0">
@@ -60,7 +63,35 @@ const Detail = () => {
           </Button>
         </header>
 
-        <section className="flex gap-2 relative">
+        <section className="flex gap-4 relative w-full h-[500px]">
+          {studio.portfolioPhotos.length > 0 && (
+            <div className="w-full flex gap-4">
+              <div className="md:w-1/2">
+                <img
+                  src={studio.portfolioPhotos[0].image}
+                  loading="lazy"
+                  alt={`Imagen 1`}
+                  className="w-full h-full object-cover rounded-lg"
+                  style={{ aspectRatio: '4/3' }}
+                />
+              </div>
+
+              <div className="w-1/2 hidden md:grid grid-cols-2 grid-rows-2 gap-4">
+                {studio.portfolioPhotos
+                  .slice(1, portfolioPhotosLength)
+                  .map((photo, i) => (
+                    <img
+                      key={i}
+                      src={photo.image}
+                      loading="lazy"
+                      alt={`Imagen ${i + 2}`}
+                      className="w-full h-full object-cover rounded-lg"
+                      style={{ aspectRatio: '1/1' }}
+                    />
+                  ))}
+              </div>
+            </div>
+          )}
           <div className="absolute bottom-8 right-5">
             <Button
               color="danger"
@@ -71,25 +102,6 @@ const Detail = () => {
             >
               Show more
             </Button>
-          </div>
-          <img
-            src={studio.portfolioPhotos[0].image}
-            // srcSet={content.image}
-            loading="lazy"
-            alt={`Imagen 1`}
-            className="sm:w-2/4 rounded-lg"
-          />
-          <div className="hidden sm:grid grid-cols-2 gap-2 grid-rows-2">
-            {Array.from({ length: 4 }).map((_, i) => (
-              <img
-                key={i}
-                src={studio.portfolioPhotos[i].image}
-                // srcSet={content.image}
-                loading="lazy"
-                alt={`Imagen ${i + 1}`}
-                className="w-full rounded-lg"
-              />
-            ))}
           </div>
         </section>
 
