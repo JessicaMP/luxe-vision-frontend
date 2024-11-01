@@ -62,13 +62,6 @@ export const ContactInformation = ({ onChangeInfo }) => {
             onChange={(e) => handleProperty(e.target.value, "phone")}
             slotProps={{ input: { component: TextMaskAdapter } }}
           />
-          {/* <Input
-            value={form.phone}
-            onChange={(e) =>
-              handleProperty(e.target.value, "phone")
-            }
-            required
-          /> */}
         </FormControl>
       </div>
     </div>
