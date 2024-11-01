@@ -24,7 +24,7 @@ export default function CardRecommend({ studio }: { studio: Studio }) {
           sx={{ width: 70, height: 70 }}
         />
         <h3 className="text-sm text-black truncate">{studio.studioName}</h3>
-        <p className="text-lg text-black font-bold truncate">
+        <p className="text-lg text-black font-bold break-words overflow-hidden line-clamp-2 text-center">
           {studio.studioSpecialties[0].specialty.specialtyName}
         </p>
         <p className="text-sm text-gray-500 text-center">
