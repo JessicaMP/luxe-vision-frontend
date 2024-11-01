@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import Avatar from "@mui/joy/Avatar";
 import Button from "@mui/joy/Button";
 import { FaChevronLeft, FaPhoneAlt, FaAward } from "react-icons/fa";
