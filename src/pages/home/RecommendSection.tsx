@@ -1,8 +1,5 @@
 import CardRecommend from '@/components/pages/home/recommendations/CardRecommend';
 import { useState, useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { fetchStudios } from '../../reducers/studioSlice';
-import { Studio } from '@/types';
 import useRandomStudios from '@/hooks/useRandomStudios';
 
 const RecommendSection = () => {
@@ -10,14 +7,23 @@ const RecommendSection = () => {
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const { data: studios, status, error } = useRandomStudios();
 
-  if (status === 'loading') return <p>Cargando estudios...</p>;
-  if (status === 'failed') return <p>Error: {error}</p>;
-
   const getItemsPerPage = () => {
     if (windowWidth >= 1024) return 6;
     if (windowWidth >= 768) return 4;
     return 2;
   };
+
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
+    };
+    window.addEventListener('resize', handleResize);
+
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  if (status === 'loading') return <p>Cargando estudios...</p>;
+  if (status === 'failed') return <p>Error: {error}</p>;
 
   const itemsPerPage = getItemsPerPage();
   const totalPages = Math.ceil(studios.length / itemsPerPage);
