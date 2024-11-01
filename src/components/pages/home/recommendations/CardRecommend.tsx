@@ -5,12 +5,12 @@ import { Link } from 'react-router-dom';
 
 export default function CardRecommend({ studio }: { studio: Studio }) {
   return (
-    <Card className="min-w-[250px] min-h-[250px] text-white border-0 grid grid-cols-2 overflow-hidden">
+    <Card className="min-w-[250px] min-h-[250px] h-[300px] text-white border-0 grid grid-cols-2 overflow-hidden">
       <CardContent className="p-0">
         <img
           alt="title"
           className="rounded-lg h-full drop-shadow-[20px_0_20px_rgba(0,0,0,0.15)]"
-          src={studio.profileImage}
+          src={studio.portfolioPhotos[0].image}
           draggable={false}
           style={{
             objectFit: 'cover',
@@ -27,7 +27,7 @@ export default function CardRecommend({ studio }: { studio: Studio }) {
         <p className="text-lg text-black font-bold truncate">
           {studio.studioSpecialties[0].specialty.specialtyName}
         </p>
-        <p className="text-sm text-gray-500">
+        <p className="text-sm text-gray-500 text-center">
           {studio.location.city + ', ' + studio.location.state}
         </p>
         <Link to={`/studio/${studio.id}`} className="text-sm text-red-500">
