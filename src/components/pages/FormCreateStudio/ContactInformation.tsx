@@ -28,7 +28,7 @@ const TextMaskAdapter = forwardRef<HTMLInputElement, TextMaskProps>(function Tex
   );
 });
 
-export const ContactInformation = () => {
+export const ContactInformation = ({ onChangeInfo }) => {
   const initialForm = {
     email: "",
     phone: "",
@@ -36,7 +36,9 @@ export const ContactInformation = () => {
   const [form, setForm] = useState({ ...initialForm });
 
   const handleProperty = (value: any, property: string) => {
-    setForm({ ...form, [property]: value });
+    const updatedForm = { ...form, [property]: value };
+    setForm(updatedForm);
+    onChangeInfo(updatedForm);
   };
 
   return (

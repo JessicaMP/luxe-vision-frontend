@@ -4,7 +4,7 @@ import FormLabel from "@mui/joy/FormLabel";
 import Input from "@mui/joy/Input";
 import Textarea from "@mui/joy/Textarea";
 
-export const GeneralInformacion = () => {
+export const GeneralInformacion = ({ onChangeInfo }) => {
   const inputRef = useRef(null);
 
   const initialForm = {
@@ -15,7 +15,9 @@ export const GeneralInformacion = () => {
   const [form, setForm] = useState({ ...initialForm });
 
   const handleProperty = (value: any, property: string) => {
-    setForm({ ...form, [property]: value });
+    const updatedForm = { ...form, [property]: value };
+    setForm(updatedForm);
+    onChangeInfo(updatedForm);
   };
 
   return (
@@ -39,7 +41,7 @@ export const GeneralInformacion = () => {
             slotProps={{
               input: {
                 ref: inputRef,
-                min: 1
+                min: 1,
               },
             }}
             value={form.yearsOfExperience}

@@ -3,7 +3,7 @@ import FormControl from "@mui/joy/FormControl";
 import FormLabel from "@mui/joy/FormLabel";
 import Input from "@mui/joy/Input";
 
-export const Location = () => {
+export const Location = ({ onChangeInfo }) => {
   const initialForm = {
     city: "",
     state: "",
@@ -13,11 +13,12 @@ export const Location = () => {
   const [form, setForm] = useState({ ...initialForm });
 
   const handleProperty = (value: any, property: string) => {
-    setForm({ ...form, [property]: value });
+    const updatedForm = { ...form, [property]: value };
+    setForm(updatedForm);
+    onChangeInfo(updatedForm);
   };
 
   return (
-
     <div className="space-y-3">
       <h2 className="text-2xl font-bold">Location</h2>
 
@@ -35,9 +36,7 @@ export const Location = () => {
           <FormLabel>State:</FormLabel>
           <Input
             value={form.state}
-            onChange={(e) =>
-              handleProperty(e.target.value, "state")
-            }
+            onChange={(e) => handleProperty(e.target.value, "state")}
             required
           />
         </FormControl>
