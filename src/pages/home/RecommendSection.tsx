@@ -1,106 +1,37 @@
 import CardRecommend from '@/components/pages/home/recommendations/CardRecommend';
 import { useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { fetchStudios } from '../../reducers/studioSlice';
+import { Studio } from '@/types';
+import useRandomStudios from '@/hooks/useRandomStudios';
 
 const RecommendSection = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  const { data: studios, status, error } = useRandomStudios();
+  console.log('studios: ', studios);
 
-  useEffect(() => {
-    const handleResize = () => {
-      setWindowWidth(window.innerWidth);
-      setCurrentPage(1);
-    };
-
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
+  if (status === 'loading') return <p>Cargando estudios...</p>;
+  if (status === 'failed') return <p>Error: {error}</p>;
 
   const getItemsPerPage = () => {
     if (windowWidth >= 1024) return 6;
     if (windowWidth >= 768) return 4;
     return 2;
   };
-  const cardsRecommend = [
-    {
-      title: 'Focus Photography1',
-      image: '/images/cardRecommend/img.png',
-      logoImg: '/images/cardRecommend/Avatar.png',
-      category: 'Bodas',
-      location: 'Buenos Aires, Argentina',
-    },
-    {
-      title: 'Focus Photography2',
-      image: '/images/cardRecommend/img.png',
-      logoImg: '/images/cardRecommend/Avatar.png',
-      category: 'Bodas',
-      location: 'Buenos Aires, Argentina',
-    },
-    {
-      title: 'Focus Photography3',
-      image: '/images/cardRecommend/img.png',
-      logoImg: '/images/cardRecommend/Avatar.png',
-      category: 'Bodas',
-      location: 'Buenos Aires, Argentina',
-    },
-    {
-      title: 'Focus Photography4',
-      image: '/images/cardRecommend/img.png',
-      logoImg: '/images/cardRecommend/Avatar.png',
-      category: 'Bodas',
-      location: 'Buenos Aires, Argentina',
-    },
-    {
-      title: 'Focus Photography5',
-      image: '/images/cardRecommend/img.png',
-      logoImg: '/images/cardRecommend/Avatar.png',
-      category: 'Bodas',
-      location: 'Buenos Aires, Argentina',
-    },
-    {
-      title: 'Focus Photography6',
-      image: '/images/cardRecommend/img.png',
-      logoImg: '/images/cardRecommend/Avatar.png',
-      category: 'Bodas',
-      location: 'Buenos Aires, Argentina',
-    },
-    {
-      title: 'Focus Photography7',
-      image: '/images/cardRecommend/img.png',
-      logoImg: '/images/cardRecommend/Avatar.png',
-      category: 'Bodas',
-      location: 'Buenos Aires, Argentina',
-    },
-    {
-      title: 'Focus Photography8',
-      image: '/images/cardRecommend/img.png',
-      logoImg: '/images/cardRecommend/Avatar.png',
-      category: 'Bodas',
-      location: 'Buenos Aires, Argentina',
-    },
-    {
-      title: 'Focus Photography9',
-      image: '/images/cardRecommend/img.png',
-      logoImg: '/images/cardRecommend/Avatar.png',
-      category: 'Bodas',
-      location: 'Buenos Aires, Argentina',
-    },
-    {
-      title: 'Focus Photography10',
-      image: '/images/cardRecommend/img.png',
-      logoImg: '/images/cardRecommend/Avatar.png',
-      category: 'Bodas',
-      location: 'Buenos Aires, Argentina',
-    },
-  ];
 
   const itemsPerPage = getItemsPerPage();
-  const totalPages = Math.ceil(cardsRecommend.length / itemsPerPage);
+  const totalPages = Math.ceil(studios.length / itemsPerPage);
 
   const getCurrentItems = () => {
     const start = (currentPage - 1) * itemsPerPage;
     const end = start + itemsPerPage;
-    return cardsRecommend.slice(start, end);
+    return Array.isArray(studios) ? studios.slice(start, end) : [];
   };
+
+  const currentItems = getCurrentItems() || [];
+
+  console.log(currentItems);
 
   return (
     <section className="relative min-h-[50svh] w-full bg-[#444243] flex">
@@ -110,15 +41,14 @@ const RecommendSection = () => {
         </h3>
         <div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-            {getCurrentItems().map((card, index) => {
-              return (
-                <div key={index} className=" ">
-                  <CardRecommend card={card} />
-                </div>
-              );
-            })}
+            {currentItems.map((studio) => (
+              <div key={studio.id}>
+                <CardRecommend studio={studio} />
+              </div>
+            ))}
           </div>
         </div>
+
         <div className="flex justify-center items-center gap-2">
           <button
             onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
