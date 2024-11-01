@@ -28,7 +28,7 @@ export default function CardRecommend({ studio }: { studio: Studio }) {
         <p className="text-lg text-black font-bold text-center break-words overflow-hidden line-clamp-2">
           {studio.studioSpecialties[0].specialty.specialtyName}
         </p>
-        <p className="text-sm text-gray-500 text-center">
+        <p className="text-sm text-gray-500 text-center break-words overflow-hidden line-clamp-2">
           {studio.location.city + ', ' + studio.location.state}
         </p>
         <Link to={`/studio/${studio.id}`} className="text-sm text-red-500">

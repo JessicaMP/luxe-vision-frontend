@@ -36,7 +36,7 @@ const Home = () => {
 
   return (
     <main>
-      <section className="relative sm:min-h-[80svh] w-full bg-black flex items-center justify-center py-20 sm:py-0">
+      <section className="relative sm:min-h-[80svh] w-full bg-black flex items-center justify-center py-20 sm:py-0 mt-10">
         <div
           className="absolute inset-0 bg-[url('./images/bg.png')] bg-cover lg:bg-center opacity-70"
           aria-hidden="true"
