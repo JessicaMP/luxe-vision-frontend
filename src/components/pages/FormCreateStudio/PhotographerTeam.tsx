@@ -1,15 +1,15 @@
-import FormControl from "@mui/joy/FormControl";
-import FormLabel from "@mui/joy/FormLabel";
-import Select from "@mui/joy/Select";
-import Option from "@mui/joy/Option";
-import { useState } from "react";
-import Card from "@mui/joy/Card";
-import CardOverflow from "@mui/joy/CardOverflow";
-import CardContent from "@mui/joy/CardContent";
-import Input from "@mui/joy/Input";
+import FormControl from '@mui/joy/FormControl';
+import FormLabel from '@mui/joy/FormLabel';
+import Select from '@mui/joy/Select';
+import Option from '@mui/joy/Option';
+import { useState } from 'react';
+import Card from '@mui/joy/Card';
+import CardOverflow from '@mui/joy/CardOverflow';
+import CardContent from '@mui/joy/CardContent';
+import Input from '@mui/joy/Input';
 
-export const PhotographerTeam = ({onChangeInfo}) => {
-  const initialPhotographers = [{ firstName: "", lastName: "" }];
+export const PhotographerTeam = ({ onChangeInfo }) => {
+  const initialPhotographers = [{ firstName: '', lastName: '' }];
   const [numPhotographers, setNumPhotographers] = useState(1);
   const [photographers, setPhotographers] = useState(initialPhotographers);
 
@@ -17,8 +17,8 @@ export const PhotographerTeam = ({onChangeInfo}) => {
     setNumPhotographers(e);
 
     const updatedPhotographers = Array.from({ length: e }, (_) => ({
-      firstName: "",
-      lastName: "",
+      firstName: '',
+      lastName: '',
     }));
     setPhotographers(updatedPhotographers);
   };
@@ -30,7 +30,7 @@ export const PhotographerTeam = ({onChangeInfo}) => {
       [field]: value,
     };
     setPhotographers(updatedPhotographers);
-    onChangeInfo(updatedPhotographers)
+    onChangeInfo(updatedPhotographers);
   };
 
   return (
@@ -55,28 +55,24 @@ export const PhotographerTeam = ({onChangeInfo}) => {
 
         <div className="col-span-2 grid grid-cols-1 lg:grid-cols-2 gap-3">
           {photographers.map((photographer, index) => (
-            <Card
-              key={index}
-              className="space-y-3"
-              variant="outlined"
-            >
+            <Card key={index} className="space-y-3" variant="outlined">
               <CardOverflow
                 variant="soft"
                 color="primary"
                 sx={{
                   px: 0.2,
-                  justifyContent: "center",
-                  fontSize: "xs",
-                  fontWeight: "xl",
-                  letterSpacing: "1px",
-                  textTransform: "uppercase",
-                  borderLeft: "1px solid",
-                  borderColor: "divider",
+                  justifyContent: 'center',
+                  fontSize: 'xs',
+                  fontWeight: 'xl',
+                  letterSpacing: '1px',
+                  textTransform: 'uppercase',
+                  borderLeft: '1px solid',
+                  borderColor: 'divider',
                 }}
               >
                 Photographer {index + 1}
               </CardOverflow>
-              <CardContent orientation="horizontal">
+              <CardContent orientation="vertical">
                 <FormControl>
                   <FormLabel>First Name:</FormLabel>
                   <Input
@@ -84,7 +80,7 @@ export const PhotographerTeam = ({onChangeInfo}) => {
                     onChange={(e) =>
                       handlePhotographerChange(
                         index,
-                        "firstName",
+                        'firstName',
                         e.target.value
                       )
                     }
@@ -96,7 +92,11 @@ export const PhotographerTeam = ({onChangeInfo}) => {
                   <Input
                     value={photographer.lastName}
                     onChange={(e) =>
-                      handlePhotographerChange(index, "lastName", e.target.value)
+                      handlePhotographerChange(
+                        index,
+                        'lastName',
+                        e.target.value
+                      )
                     }
                     required
                   />
