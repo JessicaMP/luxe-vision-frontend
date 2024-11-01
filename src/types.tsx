@@ -52,3 +52,9 @@ export interface Specialty {
   id: number;
   specialtyName: string;
 }
+
+export interface StudioState {
+  studios: Studio[];
+  loading: boolean;
+  error: string | null;
+}
