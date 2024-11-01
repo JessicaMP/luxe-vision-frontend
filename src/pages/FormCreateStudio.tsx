@@ -1,12 +1,14 @@
 import { useState } from "react";
-import GeneralInformacion from '../components/pages/FormCreateStudio/Generalinformation';
+import GeneralInformation from '../components/pages/FormCreateStudio/Generalinformation';
+import ContactInformation from '../components/pages/FormCreateStudio/ContactInformation';
+import Location from '../components/pages/FormCreateStudio/Location';
 
 const FormCreateStudio = () => {
-  const [studioName, setStudioName] = useState("");
-  const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
-  const [description, setDescription] = useState("");
-  const [yearsOfExperience, setYearsOfExperience] = useState("");
+  // const [studioName, setStudioName] = useState("");
+  // const [email, setEmail] = useState("");
+  // const [phone, setPhone] = useState("");
+  // const [description, setDescription] = useState("");
+  // const [yearsOfExperience, setYearsOfExperience] = useState("");
   const [location, setLocation] = useState({
     city: "",
     state: "",
@@ -144,56 +146,13 @@ const FormCreateStudio = () => {
         <div className="max-w-screen-2xl space-y-10">
         <h1 className="text-[#D05858] font-bold text-5xl">Add photo studio</h1>
 
-        <form onSubmit={handleSubmit} className="bg-[#DADADA] py-8 px-12 rounded-2xl">
-          <GeneralInformacion />
+        <form onSubmit={handleSubmit} className="bg-[#DADADA] py-8 px-12 rounded-2xl space-y-5">
+          <GeneralInformation />
+          <ContactInformation />
+          <Location />
+
+
           {/* <div>
-            <label>Studio Name:</label>
-            <input
-              type="text"
-              value={studioName}
-              onChange={(e) => setStudioName(e.target.value)}
-              required
-            />
-          </div>
-          <div>
-            <label>Description:</label>
-            <textarea
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              required
-            ></textarea>
-          </div>
-          <div>
-            <label>Years of Experience:</label>
-            <input
-              type="number"
-              value={yearsOfExperience}
-              onChange={(e) => setYearsOfExperience(e.target.value)}
-              required
-            />
-          </div> */}
-
-          <div>
-            <label>Email:</label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
-          </div>
-          <div>
-            <label>Phone:</label>
-            <input
-              type="text"
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-              required
-            />
-          </div>
-
-
-          <div>
             <label>Location:</label>
             <input
               type="text"
@@ -227,7 +186,7 @@ const FormCreateStudio = () => {
               onChange={handleLocationChange}
               required
             />
-          </div>
+          </div> */}
 
 
 
