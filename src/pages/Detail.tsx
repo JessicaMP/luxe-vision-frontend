@@ -46,7 +46,7 @@ const Detail = () => {
             />
             <div className="flex flex-col justify-center text-black space-y-2.5 font-semibold">
               <h1 className="text-4xl md:text-6xl">{studio.studioName}</h1>
-              <h2 className="text-[#D05858] text-4xl">
+              <h2 className="text-[#D05858] text-4xl ">
                 {studio.studioSpecialties[0].specialty.specialtyName}
               </h2>
             </div>
@@ -158,7 +158,7 @@ const Detail = () => {
             </div>
           </div>
         </section>
-        <ModalDetail open={open} setOpen={setOpen} />
+        <ModalDetail open={open} setOpen={setOpen} studio={studio} />
       </div>
     </main>
   );
