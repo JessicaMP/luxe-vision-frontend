@@ -11,6 +11,8 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/store';
 import { addStudio } from '@/reducers/studioSlice';
+import { Toaster } from '@/components/ui/toaster';
+import { toast } from '@/hooks/use-toast';
 
 const FormCreateStudio = () => {
   const dispatch = useDispatch();
@@ -82,11 +84,18 @@ const FormCreateStudio = () => {
       if (addStudio.fulfilled.match(resultAction)) {
         const { id } = resultAction.payload;
         navigate(`/studio/${id}`);
+      } else if (addStudio.rejected.match(resultAction)) {
+        toast({
+          title: 'Nombre de estudio duplicado',
+          description: 'No se puede agregar un nombre de estudio duplicado',
+          variant: 'destructive',
+        });
       }
     } catch (err) {
-      console.error('Error:', err);
+      console.log('Error: ', err);
     }
   };
+
   return (
     <main className="bg-[#454243]">
       <section className="container mx-auto py-10 px-4 sm:px-10">
@@ -113,6 +122,7 @@ const FormCreateStudio = () => {
           </form>
         </div>
       </section>
+      <Toaster />
     </main>
   );
 };
