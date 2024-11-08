@@ -1,17 +1,14 @@
-import React from "react";
-import Navbar from "./Navbar";
+import Footer from "./Footer";
+import Header from "./Header";
 
-export const Layout = ({ children }) => {
+const Layout = ({ children }) => {
   return (
-    <div>
-      <header>
-        <Navbar />
-      </header>
+    <>
+      <Header />
       <main>{children}</main>
-      <footer>
-        {/* Aquí puedes poner tu pie de página */}
-        <p>Footer</p>
-      </footer>
-    </div>
+      <Footer />
+    </>
   );
 };
+
+export default Layout;
