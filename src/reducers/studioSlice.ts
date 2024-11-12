@@ -1,4 +1,3 @@
-// src/reducers/studioSlice.js
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
@@ -8,7 +7,7 @@ const initialState = {
   error: null,
 };
 
-const API_URL = 'http://54.234.87.12:8080/';
+const API_URL = import.meta.env.VITE_API_BASE_URL as string;
 
 export const fetchStudios = createAsyncThunk('studios/fetchStudios', async () => {
   const response = await axios.get(API_URL+'studios');
