@@ -19,12 +19,15 @@ export const Header = () => {
                 src="/images/Logo.png"
                 alt="luxe vision logo"
                 className="h-16 "
+                id="logo-luxe-vision"
               />
             </Link>
 
             {!isMobile ? (
               <Link to="/">
-                <p className="font-light text-white">Your vision, your way</p>
+                <p id="slogan" className="font-light text-white">
+                  Your vision, your way
+                </p>
               </Link>
             ) : null}
           </div>
