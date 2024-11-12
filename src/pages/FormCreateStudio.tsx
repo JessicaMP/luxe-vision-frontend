@@ -6,7 +6,6 @@ import PhotographerTeam from '../components/pages/FormCreateStudio/PhotographerT
 import SectionImage from '../components/pages/FormCreateStudio/SectionImages';
 import Button from '@mui/joy/Button';
 import { useState } from 'react';
-import ApiService from '../services/api';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/store';
