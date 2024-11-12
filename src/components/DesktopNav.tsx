@@ -1,4 +1,3 @@
-import React from 'react';
 import NormalBtn from './Buttons/NormalBtn';
 import { MenuItem } from '../types';
 import OutlineBtn from './Buttons/OutlineBtn';

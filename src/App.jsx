@@ -4,7 +4,8 @@ import Home from "./pages/Home";
 import Detail from "./pages/Detail";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
-import FormCreateStudio from "./pages/FormCreateStudio";
+import AddStudio from "./pages/admin/AddStudio";
+import AdminHome from "./pages/admin/Home";
 
 function App() {
   return (
@@ -15,7 +16,9 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
           <Route path="/studio/:id" element={<Detail />} />
-          <Route path="/create_studio" element={<FormCreateStudio />} />
+          {/* Routes Admin */}
+          <Route path="/administration" element={<AdminHome />} />
+          <Route path="/administration/create_studio" element={<AddStudio />} />
         </Routes>
       </Layout>
     </Router>

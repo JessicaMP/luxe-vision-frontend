@@ -1,9 +1,9 @@
-import GeneralInformation from '../components/pages/FormCreateStudio/Generalinformation';
-import ContactInformation from '../components/pages/FormCreateStudio/ContactInformation';
-import Location from '../components/pages/FormCreateStudio/Location';
-import Specialty from '../components/pages/FormCreateStudio/Specialty';
-import PhotographerTeam from '../components/pages/FormCreateStudio/PhotographerTeam';
-import SectionImage from '../components/pages/FormCreateStudio/SectionImages';
+import GeneralInformation from '../../components/pages/FormCreateStudio/Generalinformation';
+import ContactInformation from '../../components/pages/FormCreateStudio/ContactInformation';
+import Location from '../../components/pages/FormCreateStudio/Location';
+import Specialty from '../../components/pages/FormCreateStudio/Specialty';
+import PhotographerTeam from '../../components/pages/FormCreateStudio/PhotographerTeam';
+import SectionImage from '../../components/pages/FormCreateStudio/SectionImages';
 import Button from '@mui/joy/Button';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -13,7 +13,7 @@ import { addStudio } from '@/reducers/studioSlice';
 import { Toaster } from '@/components/ui/toaster';
 import { toast } from '@/hooks/use-toast';
 
-const FormCreateStudio = () => {
+const AddStudio = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -126,4 +126,4 @@ const FormCreateStudio = () => {
   );
 };
 
-export default FormCreateStudio;
+export default AddStudio;

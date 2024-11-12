@@ -1,16 +1,16 @@
-import { useEffect, useState } from 'react';
-import Avatar from '@mui/joy/Avatar';
-import Button from '@mui/joy/Button';
-import { FaChevronLeft, FaPhoneAlt, FaAward } from 'react-icons/fa';
-import { MdEmail } from 'react-icons/md';
-import { FaLocationDot } from 'react-icons/fa6';
-import { BsFillGrid1X2Fill } from 'react-icons/bs';
-import ModalDetail from '../components/pages/detail/ModalDetail';
-import { useParams } from 'react-router-dom';
-import { useSelector } from 'react-redux';
-import { selectStudioById } from '@/reducers/studioSelector';
-import { Studio } from '@/types';
-import NotFoundStudio from '@/components/pages/detail/NotFoundStudio';
+import { useEffect, useState } from "react";
+import Avatar from "@mui/joy/Avatar";
+import Button from "@mui/joy/Button";
+import { FaChevronLeft, FaPhoneAlt, FaAward } from "react-icons/fa";
+import { MdEmail } from "react-icons/md";
+import { FaLocationDot } from "react-icons/fa6";
+import { BsFillGrid1X2Fill } from "react-icons/bs";
+import ModalDetail from "../components/pages/detail/ModalDetail";
+import { useParams } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { selectStudioById } from "@/reducers/studioSelector";
+import { Studio } from "@/types";
+import NotFoundStudio from "@/components/pages/detail/NotFoundStudio";
 
 const Detail = () => {
   useEffect(() => {
@@ -40,7 +40,7 @@ const Detail = () => {
               alt="Remy Sharp"
               src={studio.profileImage}
               sx={{
-                '--Avatar-size': { xs: '90px', md: '170px' },
+                "--Avatar-size": { xs: "90px", md: "170px" },
               }}
               className="hidden md:block"
             />
@@ -66,15 +66,17 @@ const Detail = () => {
         <section className="flex gap-4 relative w-full h-[500px]">
           {studio.portfolioPhotos.length > 0 && (
             <div className="w-full flex gap-4">
-              <div className="md:w-1/2">
-                <img
-                  src={studio.portfolioPhotos[0].image}
-                  loading="lazy"
-                  alt={`Imagen 1`}
-                  className="w-full h-full object-cover rounded-lg"
-                  style={{ aspectRatio: '4/3' }}
-                />
-              </div>
+              {studio.portfolioPhotos.length > 0 && (
+                <div className="md:w-1/2">
+                  <img
+                    src={studio.portfolioPhotos[0].image}
+                    loading="lazy"
+                    alt={`Imagen 1`}
+                    className="w-full h-full object-cover rounded-lg"
+                    style={{ aspectRatio: "4/3" }}
+                  />
+                </div>
+              )}
 
               <div className="w-1/2 hidden md:grid grid-cols-2 grid-rows-2 gap-4">
                 {studio.portfolioPhotos
@@ -86,7 +88,7 @@ const Detail = () => {
                       loading="lazy"
                       alt={`Imagen ${i + 2}`}
                       className="w-full h-full object-cover rounded-lg"
-                      style={{ aspectRatio: '1/1' }}
+                      style={{ aspectRatio: "1/1" }}
                     />
                   ))}
               </div>
@@ -137,9 +139,9 @@ const Detail = () => {
                 </h3>
                 <span>
                   {studio.location.city +
-                    ', ' +
+                    ", " +
                     studio.location.state +
-                    ', ' +
+                    ", " +
                     studio.location.country}
                 </span>
               </div>
@@ -151,8 +153,8 @@ const Detail = () => {
                   Experience
                 </h3>
                 <span>
-                  {studio.yearsOfExperience}{' '}
-                  {studio.yearsOfExperience === 1 ? 'year' : 'years'}
+                  {studio.yearsOfExperience}{" "}
+                  {studio.yearsOfExperience === 1 ? "year" : "years"}
                 </span>
               </div>
             </div>
