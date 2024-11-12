@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 export default function CardRecommend({ studio }: { studio: Studio }) {
   return (
     <Card className="min-w-[250px] min-h-[250px] h-[300px] text-white border-0 grid grid-cols-2 overflow-hidden">
-      <CardContent className="p-0">
+      {studio.portfolioPhotos.length > 0 && <CardContent className="p-0">
         <img
           alt="title"
           className="rounded-lg h-full drop-shadow-[20px_0_20px_rgba(0,0,0,0.15)]"
@@ -16,7 +16,7 @@ export default function CardRecommend({ studio }: { studio: Studio }) {
             objectFit: 'cover',
           }}
         />
-      </CardContent>
+      </CardContent>}
       <CardFooter className="p-4 bg-white flex flex-col gap-4 ">
         <Avatar
           alt="logo"

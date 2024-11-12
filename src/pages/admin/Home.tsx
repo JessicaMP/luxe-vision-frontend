@@ -18,7 +18,7 @@ import Button from "@mui/joy/Button";
 import { AiTwotoneDelete } from "react-icons/ai";
 import { MdOutlineModeEditOutline } from "react-icons/md";
 import IconButton from "@mui/joy/IconButton";
-import Badge from "@mui/joy/Badge";
+import  { Link as LinkRoute } from "react-router-dom";
 
 const options = [
   { label: "The Shawshank Redemption", year: 1994 },
@@ -225,9 +225,9 @@ export default function TableSortAndSelection() {
   };
 
   return (
-    <main className="bg-white">
-      <div className="container mx-auto py-20 sm:py-28 space-y-6 sm:space-y-12 px-4 sm:px-10">
-        <div className="flex justify-between items-center">
+    <div className="w-full">
+      <div className="container mx-auto py-10 sm:py-12 space-y-6 sm:space-y-12 px-4 sm:px-10">
+        <div className="flex flex-col xl:flex-row justify-between xl:items-center gap-5 xl:gap-0">
           <h1 className="text-[#D05858] font-bold text-5xl">
             List of photo studios
           </h1>
@@ -250,6 +250,8 @@ export default function TableSortAndSelection() {
               sx={{
                 borderRadius: "15px",
               }}
+              component={LinkRoute}
+               to="/administration/create_studio"
             >
               Add
             </Button>
@@ -320,7 +322,7 @@ export default function TableSortAndSelection() {
                           }}
                           sx={{ verticalAlign: "top" }}
                         />
-                        <Avatar alt="Remy Sharp" src={row.profileImage} />
+                        <Avatar alt={row.studioName} src={row.profileImage} />
                       </th>
                       <th id={labelId} scope="row">
                         {row.id}
@@ -409,6 +411,6 @@ export default function TableSortAndSelection() {
           </Table>
         </Sheet>
       </div>
-    </main>
+    </div>
   );
 }

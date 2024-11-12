@@ -2,7 +2,7 @@ import Navbar from "./Navbar";
 import { Link } from "react-router-dom";
 import { useMediaQuery } from "@mui/material";
 
-export const Header = () => {
+export const Header = ({ isLogin = false }: any) => {
   const isMobile = useMediaQuery("(max-width:768px)");
 
   return (
@@ -29,7 +29,7 @@ export const Header = () => {
             ) : null}
           </div>
 
-          <Navbar isMobile={isMobile} />
+          <Navbar isMobile={isMobile} isLogin={isLogin} />
         </div>
       </div>
     </header>

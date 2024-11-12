@@ -4,7 +4,7 @@ import Home from "./pages/Home";
 import Detail from "./pages/Detail";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
-import FormCreateStudio from "./pages/FormCreateStudio";
+import AddStudio from "./pages/admin/AddStudio";
 import AdminHome from "./pages/admin/Home";
 
 function App() {
@@ -18,7 +18,7 @@ function App() {
           <Route path="/studio/:id" element={<Detail />} />
           {/* Routes Admin */}
           <Route path="/administration" element={<AdminHome />} />
-          <Route path="/administration/create_studio" element={<FormCreateStudio />} />
+          <Route path="/administration/create_studio" element={<AddStudio />} />
         </Routes>
       </Layout>
     </Router>
