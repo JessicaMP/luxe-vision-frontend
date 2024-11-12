@@ -36,7 +36,10 @@ const Home = () => {
 
   return (
     <main>
-      <section className="relative sm:min-h-[80svh] w-full bg-black flex items-center justify-center py-20 sm:py-0 mt-10">
+      <section
+        id="search-section"
+        className="relative sm:min-h-[80svh] w-full bg-black flex items-center justify-center py-20 sm:py-0 mt-10"
+      >
         <div
           className="absolute inset-0 bg-[url('./images/bg.png')] bg-cover lg:bg-center opacity-70"
           aria-hidden="true"
@@ -59,15 +62,18 @@ const Home = () => {
                 type="text"
                 placeholder="Photographer's specialty"
                 className="flex-1 h-12 rounded-xl"
+                id="specialty-input"
               />
               <Input
                 type="text"
                 placeholder="Location"
                 className="flex-1 h-12 rounded-xl"
+                id="location-input"
               />
               <Button
                 type="submit"
                 className="h-12 px-8 bg-[#F69D7B] hover:bg-[#f38a61] text-white font-bold text-md rounded-xl"
+                id="specialty-search-button"
               >
                 <IoMdSearch />
                 Search
@@ -77,7 +83,10 @@ const Home = () => {
         </div>
       </section>
 
-      <section className="relative min-h-[50svh] w-full bg-[#DADADA] flex flex-col">
+      <section
+        id="category-section"
+        className="relative min-h-[50svh] w-full bg-[#DADADA] flex flex-col"
+      >
         <div className="container mx-auto">
           <div className="px-4 sm:px-10 py-10 flex flex-col gap-12 max-w-[1500px] ">
             <h3 className="font-bold text-3xl">Search by Specialty </h3>
