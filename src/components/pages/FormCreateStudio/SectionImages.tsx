@@ -17,7 +17,7 @@ const VisuallyHiddenInput = styled("input")`
   width: 1px;
 `;
 
-export const SectionImages = ({onChangeInfo}) => {
+export const SectionImages = ({onChangeInfo}: any) => {
   const [profileImageFile, setProfileImageFile] = useState(null);
   const [portfolioFiles, setPortfolioFiles] = useState([]);
 
@@ -25,13 +25,16 @@ export const SectionImages = ({onChangeInfo}) => {
     const file = e.target.files[0];
     if (file) {
       setProfileImageFile(file);
-      onChangeInfo({profileImageFile, portfolioFiles})
+      // console.log({file});
+      // console.log({profileImageFile});
+
+      onChangeInfo({profileImageFile: file, portfolioFiles})
     }
   };
 
   const handleRemoveProfileImage = () => {
     setProfileImageFile(null);
-    onChangeInfo({profileImageFile, portfolioFiles})
+    onChangeInfo({profileImageFile: null, portfolioFiles})
   };
 
   const handleRemoveFile = (index: number) => {

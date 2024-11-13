@@ -1,6 +1,7 @@
 import axios from "axios";
 
 const API_URL = import.meta.env.VITE_API_BASE_URL as string;
+const TOKEN = import.meta.env.VITE_TOKEN as string;
 
 const getStudios = () => {
   return axios.get(`${API_URL}/studios`);
@@ -17,17 +18,18 @@ const getStudioById = (id: string) => {
 const postStudio = (body: any) => {
   const headers = {
     headers: {
-      'Content-Type': 'multipart/form-data',
-    }
-  }
+      "Authorization": `Bearer ${TOKEN}`,
+      "Content-Type": "multipart/form-data",
+    },
+  };
   return axios.post(`${API_URL}/studios`, body, headers);
 };
 
-const putStudio = (id:number,body: any) => {
+const putStudio = (id: number, body: any) => {
   return axios.put(`${API_URL}/studios/${id}`, body);
 };
 
-const deleteStudio = (id:number) => {
+const deleteStudio = (id: number) => {
   return axios.delete(`${API_URL}/studios/${id}`);
 };
 
@@ -37,7 +39,7 @@ const ApiService = {
   getStudioById,
   postStudio,
   putStudio,
-  deleteStudio
+  deleteStudio,
 };
 
 export default ApiService;

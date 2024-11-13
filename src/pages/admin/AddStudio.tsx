@@ -1,31 +1,35 @@
-import GeneralInformation from '../../components/pages/FormCreateStudio/Generalinformation';
-import ContactInformation from '../../components/pages/FormCreateStudio/ContactInformation';
-import Location from '../../components/pages/FormCreateStudio/Location';
-import Specialty from '../../components/pages/FormCreateStudio/Specialty';
-import PhotographerTeam from '../../components/pages/FormCreateStudio/PhotographerTeam';
-import SectionImage from '../../components/pages/FormCreateStudio/SectionImages';
-import Button from '@mui/joy/Button';
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '@/store';
-import { addStudio } from '@/reducers/studioSlice';
-import { Toaster } from '@/components/ui/toaster';
-import { toast } from '@/hooks/use-toast';
+import GeneralInformation from "../../components/pages/FormCreateStudio/Generalinformation";
+import ContactInformation from "../../components/pages/FormCreateStudio/ContactInformation";
+import Location from "../../components/pages/FormCreateStudio/Location";
+import Specialty from "../../components/pages/FormCreateStudio/Specialty";
+import Features from "../../components/pages/FormCreateStudio/Features";
+import PhotographerTeam from "../../components/pages/FormCreateStudio/PhotographerTeam";
+import SectionImage from "../../components/pages/FormCreateStudio/SectionImages";
+import Button from "@mui/joy/Button";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/store";
+import { addStudio } from "@/reducers/studioSlice";
+import { Toaster } from "@/components/ui/toaster";
+import { toast } from "@/hooks/use-toast";
 
 const AddStudio = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { status, error } = useSelector((state: RootState) => state.studios);
-  const loading = status === 'loading';
+  const { status } = useSelector((state: RootState) => state.studios);
+  const loading = status === "loading";
 
   const [generalInfo, setGeneralInfo] = useState({});
   const [contactInfo, setContactInfo] = useState({});
   const [location, setlLocation] = useState({});
   const [specialties, setSpecialties] = useState([]);
+  const [features, setFeatures] = useState([]);
   const [photographers, setPhotographers] = useState([]);
   const [sectionImages, setSectionImages] = useState({});
+
+  const [errors, setErrors] = useState([]);
 
   const handleGeneralInfoChange = (data: any) => {
     setGeneralInfo(data);
@@ -43,6 +47,10 @@ const AddStudio = () => {
     setSpecialties(data);
   };
 
+  const handleFeaturesChange = (data: any) => {
+    setFeatures(data);
+  };
+
   const handleTeamChange = (data: any) => {
     setPhotographers(data);
   };
@@ -51,8 +59,35 @@ const AddStudio = () => {
     setSectionImages(data);
   };
 
-  const handleSubmit = async (e) => {
+  const validateImages = () => {
+    setErrors([])
+    const { profileImageFile, portfolioFiles }: any = sectionImages || {};
+    console.log({profileImageFile, portfolioFiles});
+    const newErrors: string[] = [];
+
+    if (!profileImageFile) {
+      newErrors.push("Profile Image is required");
+    }
+
+    if (!portfolioFiles || portfolioFiles.length === 0) {
+      newErrors.push("Portfolio Images are required");
+    }
+
+    if(portfolioFiles && portfolioFiles.length > 0 && portfolioFiles.length < 5) {
+      newErrors.push("Select at least 5 images in images portfolio");
+    }
+
+    if (newErrors.length > 0) {
+      setErrors((prevErrors) => [...prevErrors, ...newErrors]);
+    }
+    return newErrors
+  };
+
+  const handleSubmit = async (e: any) => {
     e.preventDefault();
+    const newErrors =  await validateImages();
+    console.log({newErrors});
+    if (newErrors.length > 0) return;
 
     const studioData = {
       ...generalInfo,
@@ -61,23 +96,25 @@ const AddStudio = () => {
       location,
       photographers,
       portfolioPhotos: [],
-      studioSpecialties: [...specialties].map((id) => ({ specialty: { id } })),
+      specialties: [...specialties].map((id) => id),
+      features,
     };
 
-    const { profileImageFile, portfolioFiles } = sectionImages;
+    const { profileImageFile, portfolioFiles }: any = sectionImages;
+    console.log(studioData);
 
     const formData = new FormData();
     formData.append(
-      'studio',
-      new Blob([JSON.stringify(studioData)], { type: 'application/json' })
+      "studio",
+      new Blob([JSON.stringify(studioData)], { type: "application/json" })
     );
     if (profileImageFile) {
-      formData.append('profileImage', profileImageFile);
+      formData.append("profileImage", profileImageFile);
     }
     portfolioFiles.forEach((file: any) => {
-      formData.append('portfolioImages', file);
+      formData.append("portfolioImages", file);
     });
-
+    console.log({formData});
     try {
       const resultAction = await dispatch(addStudio(formData));
       if (addStudio.fulfilled.match(resultAction)) {
@@ -85,13 +122,13 @@ const AddStudio = () => {
         navigate(`/studio/${id}`);
       } else if (addStudio.rejected.match(resultAction)) {
         toast({
-          title: 'Nombre de estudio duplicado',
-          description: 'No se puede agregar un nombre de estudio duplicado',
-          variant: 'destructive',
+          title: "Duplicate study name",
+          description: "Cannot add duplicate study name",
+          variant: "destructive",
         });
       }
     } catch (err) {
-      console.log('Error: ', err);
+      console.log("Error: ", err);
     }
   };
 
@@ -111,6 +148,7 @@ const AddStudio = () => {
             <ContactInformation onChangeInfo={handleContactInformationChange} />
             <Location onChangeInfo={handleLocationChange} />
             <Specialty onChangeInfo={handleSpecialtyChange} />
+            <Features onChangeInfo={handleFeaturesChange} />
             <PhotographerTeam onChangeInfo={handleTeamChange} />
             <SectionImage onChangeInfo={handleImagesChange} />
             <div className="flex justify-end">
@@ -118,6 +156,8 @@ const AddStudio = () => {
                 Submit
               </Button>
             </div>
+            {errors.length > 0 &&
+              errors.map((error, index) => <p key={index} className="font-bold text-red-700 text-sm"> * {error}</p>)}
           </form>
         </div>
       </section>

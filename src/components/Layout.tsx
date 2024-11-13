@@ -12,7 +12,7 @@ const Layout = ({ children }: any) => {
     return (
       <>
         <Header isLogin={true} />
-        <main className="bg-[#454243] hidden xl:flex pt-20">
+        <main className="bg-[#454243] hidden xl:flex pt-20 relative">
           <SideBar />
           {children}
         </main>
