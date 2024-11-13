@@ -2,14 +2,14 @@ import Checkbox from "@mui/joy/Checkbox";
 import List from "@mui/joy/List";
 import ListItem from "@mui/joy/ListItem";
 import { useEffect, useState } from "react";
+import { fetchAllFeatures } from "@/reducers/featuresReducer";
 import { useSelector, useDispatch } from "react-redux";
-import { selectSpecialties } from "@/reducers/studioSelector";
-import { fetchSpecialties } from "@/reducers/specialtiesReducer";
+import { selectFeatures } from "@/reducers/studioSelector";
 
 export const Specialty = ({ onChangeInfo }: any) => {
   const [list, setList] = useState<number[]>([]);
   const dispatch = useDispatch();
-  const specialties = useSelector(selectSpecialties) || [];
+  const features = useSelector(selectFeatures) || [];
 
   const handleChange = (e: any, id: number) => {
     setList((prevList) => {
@@ -21,32 +21,31 @@ export const Specialty = ({ onChangeInfo }: any) => {
       return updatedList;
     });
   };
-
   useEffect(() => {
-    if (specialties.length === 0) {
-      dispatch(fetchSpecialties());
+    if (features.length === 0) {
+      dispatch(fetchAllFeatures());
     }
-  }, [dispatch, specialties.length]);
+  }, [dispatch, features.length]);
 
   return (
     <div className="space-y-3">
-      <h2 className="text-2xl font-bold">Specialty</h2>
+      <h2 className="text-2xl font-bold">Features</h2>
       <div role="group" aria-labelledby="topping">
         <List
           orientation="horizontal"
           wrap
           sx={{ "--List-gap": "8px", "--ListItem-radius": "20px" }}
         >
-          {specialties.map((specialty: any) => (
-            <ListItem key={specialty.id}>
+          {features.map((feature: any) => (
+            <ListItem key={feature.id}>
               <Checkbox
                 overlay
                 disableIcon
+                variant={list.includes(feature.id) ? "solid" : "soft"}
                 color="danger"
-                variant={list.includes(specialty.id) ? "solid" : "soft"}
-                label={specialty.specialtyName}
-                value={specialty.id}
-                onChange={(e) => handleChange(e, specialty.id)}
+                label={feature.featureName}
+                value={feature.id}
+                onChange={(e) => handleChange(e, feature.id)}
               />
             </ListItem>
           ))}

@@ -20,17 +20,7 @@ import { MdOutlineModeEditOutline } from "react-icons/md";
 import IconButton from "@mui/joy/IconButton";
 import  { Link as LinkRoute } from "react-router-dom";
 
-const options = [
-  { label: "The Shawshank Redemption", year: 1994 },
-  { label: "The Godfather", year: 1972 },
-  { label: "The Godfather: Part II", year: 1974 },
-  { label: "The Dark Knight", year: 2008 },
-  { label: "12 Angry Men", year: 1957 },
-  { label: "Schindler's List", year: 1993 },
-  { label: "Pulp Fiction", year: 1994 },
-];
-
-function labelDisplayedRows({ from, to, count }) {
+function labelDisplayedRows({ from, to, count }: any) {
   return `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}`;
 }
 
@@ -44,7 +34,7 @@ function descendingComparator(a, b, orderBy) {
   return 0;
 }
 
-function getComparator(order, orderBy) {
+function getComparator(order: any, orderBy: any) {
   return order === "desc"
     ? (a, b) => descendingComparator(a, b, orderBy)
     : (a, b) => -descendingComparator(a, b, orderBy);
@@ -238,7 +228,7 @@ export default function TableSortAndSelection() {
                 startDecorator={<IoMdSearch />}
                 size="lg"
                 placeholder="Search"
-                options={options.map((option) => option.label)}
+                options={rows.map((row) => row.studioName)}
                 sx={{
                   "--Input-radius": "15px",
                 }}

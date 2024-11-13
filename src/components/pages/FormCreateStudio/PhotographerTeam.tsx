@@ -58,7 +58,7 @@ export const PhotographerTeam = ({ onChangeInfo }) => {
             <Card key={index} className="space-y-3" variant="outlined">
               <CardOverflow
                 variant="soft"
-                color="primary"
+                color="danger"
                 sx={{
                   px: 0.2,
                   justifyContent: 'center',
