@@ -19,6 +19,7 @@ import { AiTwotoneDelete } from "react-icons/ai";
 import { MdOutlineModeEditOutline } from "react-icons/md";
 import IconButton from "@mui/joy/IconButton";
 import  { Link as LinkRoute } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 function labelDisplayedRows({ from, to, count }: any) {
   return `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}`;
@@ -158,6 +159,7 @@ const EnhancedTableHead = (props: any) => {
 };
 
 export default function TableSortAndSelection() {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const rows = useSelector(selectStudios) || [];
 
@@ -171,7 +173,8 @@ export default function TableSortAndSelection() {
   const [orderBy, setOrderBy] = useState("calories");
   const [selected, setSelected] = useState([]);
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [rowsPerPage] = useState(10);
+
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
@@ -202,7 +205,7 @@ export default function TableSortAndSelection() {
     }
     setSelected(newSelected);
   };
-  const handleChangePage = (newPage) => {
+  const handleChangePage = (newPage: number) => {
     setPage(newPage);
   };
   const getLabelDisplayedRowsTo = () => {
@@ -213,6 +216,10 @@ export default function TableSortAndSelection() {
       ? rows.length
       : Math.min(rows.length, (page + 1) * rowsPerPage);
   };
+
+  const handleEdit = (id: number) => {
+    navigate(`/administration/edit_studio/${id}`);
+  }
 
   return (
     <div className="w-full">
@@ -342,7 +349,7 @@ export default function TableSortAndSelection() {
                         <IconButton variant="plain" color="danger">
                           <AiTwotoneDelete className="text-2xl text-red-500" />
                         </IconButton>
-                        <IconButton variant="plain" color="neutral">
+                        <IconButton variant="plain" color="neutral" onClick={() => handleEdit(row.id)}>
                           <MdOutlineModeEditOutline  className="text-2xl"/>
                         </IconButton>
                       </td>

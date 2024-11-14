@@ -2,13 +2,16 @@ import FormControl from '@mui/joy/FormControl';
 import FormLabel from '@mui/joy/FormLabel';
 import Select from '@mui/joy/Select';
 import Option from '@mui/joy/Option';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Card from '@mui/joy/Card';
 import CardOverflow from '@mui/joy/CardOverflow';
 import CardContent from '@mui/joy/CardContent';
 import Input from '@mui/joy/Input';
+import { selectStudio } from "@/reducers/studioSelector";
+import { useSelector } from "react-redux";
 
-export const PhotographerTeam = ({ onChangeInfo }) => {
+export const PhotographerTeam = ({ onChangeInfo, isEdit= false }: any) => {
+  const studio = useSelector(selectStudio) || {};
   const initialPhotographers = [{ firstName: '', lastName: '' }];
   const [numPhotographers, setNumPhotographers] = useState(1);
   const [photographers, setPhotographers] = useState(initialPhotographers);
@@ -32,6 +35,20 @@ export const PhotographerTeam = ({ onChangeInfo }) => {
     setPhotographers(updatedPhotographers);
     onChangeInfo(updatedPhotographers);
   };
+
+  const setPropertys = () => {
+    const {photographers} = studio;
+    setNumPhotographers(photographers.length);
+    const photographersData = photographers.map(({firstName,lastName}: any) => ({
+      firstName,lastName
+    }))
+    setPhotographers(photographersData);
+  }
+
+  useEffect(() => {
+    if (!isEdit) return;
+    setPropertys();
+  }, [isEdit, studio.id]);
 
   return (
     <div className="space-y-3 ">

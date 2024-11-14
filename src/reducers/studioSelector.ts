@@ -9,3 +9,4 @@ export const selectStudioById = createSelector(
 
 export const selectFeatures = (state: any) => state.features.features;
 export const selectSpecialties = (state: any) => state.specialties.specialties;
+export const selectStudio = (state: any) => state.studios.studio;

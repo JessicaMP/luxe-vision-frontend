@@ -25,8 +25,8 @@ const postStudio = (body: any) => {
   return axios.post(`${API_URL}/studios`, body, headers);
 };
 
-const putStudio = (id: number, body: any) => {
-  return axios.put(`${API_URL}/studios/${id}`, body);
+const putStudio = (body: any) => {
+  return axios.put(`${API_URL}/studios`, body);
 };
 
 const deleteStudio = (id: number) => {

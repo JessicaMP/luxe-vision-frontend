@@ -4,8 +4,9 @@ import Home from "./pages/Home";
 import Detail from "./pages/Detail";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
-import AddStudio from "./pages/admin/AddStudio";
 import AdminHome from "./pages/admin/Home";
+import AddStudio from "./pages/admin/AddStudio";
+import EditStudio from "./pages/admin/EditStudio";
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
           {/* Routes Admin */}
           <Route path="/administration" element={<AdminHome />} />
           <Route path="/administration/create_studio" element={<AddStudio />} />
+          <Route path="/administration/edit_studio/:id" element={<EditStudio />} />
         </Routes>
       </Layout>
     </Router>
