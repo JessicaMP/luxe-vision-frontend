@@ -9,7 +9,6 @@ import { useSelector, useDispatch } from "react-redux";
 import { selectFeatures } from "@/reducers/studioSelector";
 import { fetchAllFeatures } from "@/reducers/featuresReducer";
 import { RiArrowLeftSLine, RiArrowRightSLine } from "react-icons/ri";
-import Avatar from "@mui/joy/Avatar";
 import { visuallyHidden } from "@mui/utils";
 import FormControl from "@mui/joy/FormControl";
 import Autocomplete from "@mui/joy/Autocomplete";
@@ -20,6 +19,7 @@ import { MdOutlineModeEditOutline } from "react-icons/md";
 import IconButton from "@mui/joy/IconButton";
 import  { Link as LinkRoute } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import { Icon } from '@iconify/react';
 
 function labelDisplayedRows({ from, to, count }: any) {
   return `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}`;
@@ -312,8 +312,8 @@ const FeatureHome = () => {
                         {row.id}
                       </th>
                       <td className="font-bold">{row.featureName}</td>
-                      <td>
-                        {row.icon}
+                      <td className="">
+                        <Icon icon="mdi-light:home" />
                       </td>
                       <td className="flex justify-center items-center gap-4">
                         <IconButton variant="plain" color="danger">
