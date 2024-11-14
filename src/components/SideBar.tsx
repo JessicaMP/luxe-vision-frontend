@@ -20,7 +20,7 @@ const menu = [
   },
   {
     name: "Manage features",
-    route: "/",
+    route: "/administration/features",
   },
   {
     name: "Users",

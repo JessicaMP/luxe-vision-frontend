@@ -1,10 +1,10 @@
-import GeneralInformation from "../../components/pages/FormCreateStudio/Generalinformation";
-import ContactInformation from "../../components/pages/FormCreateStudio/ContactInformation";
-import Location from "../../components/pages/FormCreateStudio/Location";
-import Specialty from "../../components/pages/FormCreateStudio/Specialty";
-import Features from "../../components/pages/FormCreateStudio/Features";
-import PhotographerTeam from "../../components/pages/FormCreateStudio/PhotographerTeam";
-import SectionImage from "../../components/pages/FormCreateStudio/SectionImages";
+import GeneralInformation from "../../../components/pages/FormCreateStudio/Generalinformation";
+import ContactInformation from "../../../components/pages/FormCreateStudio/ContactInformation";
+import Location from "../../../components/pages/FormCreateStudio/Location";
+import Specialty from "../../../components/pages/FormCreateStudio/Specialty";
+import Features from "../../../components/pages/FormCreateStudio/Features";
+import PhotographerTeam from "../../../components/pages/FormCreateStudio/PhotographerTeam";
+import SectionImage from "../../../components/pages/FormCreateStudio/SectionImages";
 import Button from "@mui/joy/Button";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
