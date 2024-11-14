@@ -1,41 +1,57 @@
-import { configureStore } from '@reduxjs/toolkit';
-import { persistStore, persistReducer } from 'redux-persist';
-import storage from 'redux-persist/lib/storage';
-import themeReducer from './reducers/themeSlice';
-import studiosReducer from './reducers/studioSlice';
-import featuresReducer from './reducers/featuresReducer';
-import specialtiesReducer from './reducers/specialtiesReducer';
+import { configureStore } from "@reduxjs/toolkit";
+import { persistStore, persistReducer } from "redux-persist";
+import storage from "redux-persist/lib/storage";
+import themeReducer from "./reducers/themeSlice";
+import studiosReducer from "./reducers/studioSlice";
+import featuresReducer from "./reducers/featuresReducer";
+import specialtiesReducer from "./reducers/specialtiesReducer";
 
 const studioPersistConfig = {
-  key: 'studios',
+  key: "studios",
   storage,
 };
 
 const featurePersistConfig = {
-  key: 'features',
+  key: "features",
   storage,
 };
 
 const featureSpecialtiesConfig = {
-  key: 'specialties',
+  key: "specialties",
   storage,
 };
 
-const persistedStudiosReducer = persistReducer(studioPersistConfig, studiosReducer);
-const persistedFeaturesReducer = persistReducer(featurePersistConfig, featuresReducer);
-const persistedSpecialtiesReducer = persistReducer(featureSpecialtiesConfig, specialtiesReducer);
+const persistedStudiosReducer = persistReducer(
+  studioPersistConfig,
+  studiosReducer
+);
+const persistedFeaturesReducer = persistReducer(
+  featurePersistConfig,
+  featuresReducer
+);
+const persistedSpecialtiesReducer = persistReducer(
+  featureSpecialtiesConfig,
+  specialtiesReducer
+);
 
 const store = configureStore({
   reducer: {
     theme: themeReducer,
     studios: persistedStudiosReducer,
     features: persistedFeaturesReducer,
-    specialties: persistedSpecialtiesReducer
+    specialties: persistedSpecialtiesReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: {
-        ignoredActions: ['persist/PERSIST', 'persist/REHYDRATE'],
+        ignoredActions: [
+          "persist/PERSIST",
+          "persist/REHYDRATE",
+          "persist/FLUSH",
+          "persist/PAUSE",
+          "persist/PURGE",
+          "persist/REGISTER",
+        ],
       },
     }),
 });

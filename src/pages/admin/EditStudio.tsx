@@ -9,17 +9,19 @@ import Button from "@mui/joy/Button";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "@/store";
 import { updateStudio } from "@/reducers/studioSlice";
 import { Toaster } from "@/components/ui/toaster";
 import { fetchStudioById } from "@/reducers/studioSlice";
 import { selectStudio } from "@/reducers/studioSelector";
+import { persistor, RootState } from '@/store';
 
 const EditStudio = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { id } = useParams();
   const { status } = useSelector((state: RootState) => state.studios);
+  const [isLoading, setIsLoading] = useState(false);
+
   const loading = status === "loading";
 
   const [generalInfo, setGeneralInfo] = useState({});
@@ -158,7 +160,7 @@ const EditStudio = () => {
   };
 
   const setPropertys = async () => {
-    console.log(studio);
+    console.log({studio});
     const {
       studioName,
       description,
@@ -169,12 +171,15 @@ const EditStudio = () => {
       studioSpecialties,
       studioFeatures
     } = studio;
+
     // General information
     const general = { studioName, description, yearsOfExperience };
     handleGeneralInfoChange(general);
+
     // Contact information
     const contact = { email, phone };
     handleContactInformationChange(contact);
+
     // Location
     const locationData = {
       city: location.city,
@@ -183,24 +188,30 @@ const EditStudio = () => {
       address: location.address,
     };
     handleLocationChange(locationData);
+
     // Specialties
     const specialtys = studioSpecialties.map(
       (specialty: any) => specialty.specialty.id
     );
     handleSpecialtyChange(specialtys);
+
     // Features
     const features = studioFeatures.map((feature: any) => feature.feature.id);
     handleFeaturesChange(features);
+
     // Images
     const imagesData: any = {};
-    if (studio.profileImage) {
+    console.log({i: studio.profileImage});
+
+    if (studio?.profileImage) {
+      console.log("entra");
       const simulatedProfileImageFile = {
         preview: studio.profileImage,
         name: "profile-image",
         size: 0,
         type: "image/jpeg",
       };
-      console.log({simulatedProfileImageFile});
+      // console.log({simulatedProfileImageFile});
       // imagesData.profileImageFile = simulatedProfileImageFile
       imagesData.profileImageFile = await convertToFile(simulatedProfileImageFile)
     }
@@ -227,20 +238,40 @@ const EditStudio = () => {
       );
       imagesData.portfolioFiles = simulatedPortfolioFiles
     }
+    console.log({imagesData});
     handleImagesChange(imagesData);
   };
 
+  // useEffect(() => {
+  //   // if ((id && !studio.id) || studio.id !== id) {
+  //   //   dispatch(fetchStudioById(id));
+  //   // }
+  //   dispatch(fetchStudioById(id));
+  // }, []);
   useEffect(() => {
-    if ((id && !studio.id) || studio.id !== id) {
-      dispatch(fetchStudioById(id));
-    }
+    const fetchData = async () => {
+      setIsLoading(true); // Activar el loader
+      while (!persistor.getState().bootstrapped) {
+        await new Promise((resolve) => setTimeout(resolve, 50));
+      }
+      await dispatch(fetchStudioById(id));
+      setIsLoading(false); // Desactivar el loader después de cargar los datos
+    };
+
+    fetchData();
+  }, [id]);
+
+  // useEffect(() => {
+  //   if (!isLoading && studio?.id === id) {
+  //     setPropertys();
+  //   }
+  // }, [studio, isLoading]);
+  useEffect(() => {
+    console.log("setPropertys");
+    setPropertys();
   }, []);
 
-  useEffect(() => {
-    if (studio.id) {
-      setPropertys();
-    }
-  }, [studio]);
+  if(isLoading) return <p>Loading...</p>
 
   return (
     <main className="bg-[#454243]">
