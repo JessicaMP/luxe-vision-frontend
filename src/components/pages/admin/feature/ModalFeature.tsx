@@ -5,9 +5,12 @@ import Button from "@mui/joy/Button";
 import Input from "@mui/joy/Input";
 import FormControl from "@mui/joy/FormControl";
 import FormLabel from "@mui/joy/FormLabel";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+// import { addFeature } from "@/reducers/featuresReducer.ts";
+// import { useDispatch } from "react-redux";
 
-const ModalAddFeature = ({ open, setOpen }: any) => {
+const ModalAddFeature = ({ open, setOpen, onSave, isEdit, feature }: any) => {
+  // const dispatch = useDispatch();
   const initialForm = {
     icon: "",
     featureName: "",
@@ -19,9 +22,38 @@ const ModalAddFeature = ({ open, setOpen }: any) => {
     setForm(updatedForm);
   };
 
-  const onSubmit = (event: any) => {
+  const onSubmit = async (event: any) => {
     event.preventDefault();
+    onSave(form)
+    // console.log({ form });
+
+    // try {
+    //   const resultAction = await dispatch(addFeature(form));
+    //   if (addFeature.fulfilled.match(resultAction)) {
+    //     const { featureName } = resultAction.payload;
+    //     console.log({ featureName });
+    //     toast({
+    //       title: "Duplicate study name",
+    //       description: "Cannot add duplicate study name",
+    //       variant: "",
+    //     });
+    //     setOpen(false);
+    //   }
+    // } catch (err) {
+    //   console.log("Error: ", err);
+    // }
   };
+
+  useEffect(() => {
+    if(isEdit === true) {
+      setForm(feature)
+
+
+      return
+    }
+    setForm(initialForm)
+  }, [feature, isEdit])
+  console.log({ form });
 
   return (
     <Modal
@@ -41,9 +73,9 @@ const ModalAddFeature = ({ open, setOpen }: any) => {
         }}
       >
         <ModalClose variant="plain" sx={{ m: 1 }} />
-        <div className="">
-          <h2 className="text-[#D05858] font-bold text-2xl">New Feature</h2>
-          <form onSubmit={onSubmit} className=" space-y-5">
+        <div className="space-y-5">
+          <h2 className="text-[#D05858] font-bold text-2xl">{isEdit ? "Edit" : "New"} Feature</h2>
+          <form onSubmit={onSubmit} className="space-y-5">
             <FormControl>
               <FormLabel>Icon:</FormLabel>
               <Input

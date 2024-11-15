@@ -17,10 +17,10 @@ import Button from "@mui/joy/Button";
 import { AiTwotoneDelete } from "react-icons/ai";
 import { MdOutlineModeEditOutline } from "react-icons/md";
 import IconButton from "@mui/joy/IconButton";
-import  { Link as LinkRoute } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
-import { Icon } from '@iconify/react';
+import { Icon } from "@iconify/react";
 import ModalAddFeature from "@/components/pages/admin/feature/ModalFeature";
+import { addFeature, updateFeature } from "@/reducers/featuresReducer";
+import Snackbar from "@mui/joy/Snackbar";
 
 function labelDisplayedRows({ from, to, count }: any) {
   return `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}`;
@@ -148,10 +148,12 @@ const EnhancedTableHead = (props: any) => {
 };
 
 const FeatureHome = () => {
-  const navigate = useNavigate();
   const dispatch = useDispatch();
   const rows = useSelector(selectFeatures) || [];
   const [open, setOpen] = useState(false);
+  const [openToast, setOpenToast] = useState(false);
+  const [feature, setFeature] = useState({});
+  const [isEdit, setEdit] = useState(false);
 
   useEffect(() => {
     if (rows.length === 0) {
@@ -170,7 +172,7 @@ const FeatureHome = () => {
     setOrder(isAsc ? "desc" : "asc");
     setOrderBy(property);
   };
-  const handleSelectAllClick = (event) => {
+  const handleSelectAllClick = (event: any) => {
     if (event.target.checked) {
       const newSelected = rows.map((n) => n.name);
       setSelected(newSelected);
@@ -178,7 +180,7 @@ const FeatureHome = () => {
     }
     setSelected([]);
   };
-  const handleClick = (event, name) => {
+  const handleClick = (event: any, name: string) => {
     const selectedIndex = selected.indexOf(name);
     let newSelected = [];
     if (selectedIndex === -1) {
@@ -208,16 +210,50 @@ const FeatureHome = () => {
   };
 
   const handleEdit = (id: number) => {
-    navigate(`/administration/edit_studio/${id}`);
-  }
+    setEdit(true);
+    setOpen(true);
+    const featureData = rows.find((row: any) => row.id === id);
+    setFeature(featureData);
+  };
+
+  const handleAdd = () => {
+    setOpen(true)
+    setEdit(false)
+  };
+
+  const handleSave = async (form: any) => {
+    if(isEdit) {
+      try {
+        const resultAction = await dispatch(updateFeature(form));
+        if (updateFeature.fulfilled.match(resultAction)) {
+          const response = resultAction.payload;
+          setFeature(response);
+          setOpen(false);
+          setOpenToast(true);
+        }
+      } catch (err) {
+        console.log("Error: ", err);
+      }
+      return
+    }
+    try {
+      const resultAction = await dispatch(addFeature(form));
+      if (addFeature.fulfilled.match(resultAction)) {
+        const response = resultAction.payload;
+        setFeature(response);
+        setOpen(false);
+        setOpenToast(true);
+      }
+    } catch (err) {
+      console.log("Error: ", err);
+    }
+  };
 
   return (
     <div className="w-full">
       <div className="container mx-auto py-10 sm:py-12 space-y-6 sm:space-y-12 px-4 sm:px-10">
         <div className="flex flex-col xl:flex-row justify-between xl:items-center gap-5 xl:gap-0">
-          <h1 className="text-[#D05858] font-bold text-5xl">
-          Manage features
-          </h1>
+          <h1 className="text-[#D05858] font-bold text-5xl">Manage features</h1>
           <div className="flex gap-4 items-center">
             <FormControl id="free-solo-demo">
               <Autocomplete
@@ -231,14 +267,13 @@ const FeatureHome = () => {
                 }}
               />
             </FormControl>
-            {/*  to="/administration/create_feature"  component={LinkRoute} */}
             <Button
               color="danger"
               size="lg"
               sx={{
                 borderRadius: "15px",
               }}
-              onClick={() => setOpen(true)}
+              onClick={handleAdd}
             >
               Add
             </Button>
@@ -256,7 +291,14 @@ const FeatureHome = () => {
               "--TableCell-selectedBackground": (theme) =>
                 theme.vars.palette.success.softBg,
               "--TableCell-height": "95px",
-              "& tr > *:not(:first-of-type)": { textAlign: "center" , verticalAlign: "middle"},
+              "& tr > *:not(:first-of-type)": {
+                textAlign: "center",
+                verticalAlign: "middle",
+              },
+              "& td > *:not(:first-of-type)": {
+                textAlign: "center",
+                verticalAlign: "middle",
+              },
             }}
             size="lg"
             borderAxis="none"
@@ -315,14 +357,18 @@ const FeatureHome = () => {
                       </th>
                       <td className="font-bold">{row.featureName}</td>
                       <td className="">
-                        <Icon icon="mdi-light:home" />
+                        <Icon icon={row.icon} className="text-3xl" />
                       </td>
                       <td className="flex justify-center items-center gap-4">
                         <IconButton variant="plain" color="danger">
                           <AiTwotoneDelete className="text-2xl text-red-500" />
                         </IconButton>
-                        <IconButton variant="plain" color="neutral" onClick={() => handleEdit(row.id)}>
-                          <MdOutlineModeEditOutline  className="text-2xl"/>
+                        <IconButton
+                          variant="plain"
+                          color="neutral"
+                          onClick={() => handleEdit(row.id)}
+                        >
+                          <MdOutlineModeEditOutline className="text-2xl" />
                         </IconButton>
                       </td>
                     </tr>
@@ -379,10 +425,25 @@ const FeatureHome = () => {
             </tfoot>
           </Table>
         </Sheet>
-        <ModalAddFeature open={open} setOpen={setOpen}/>
+        <ModalAddFeature open={open} setOpen={setOpen} onSave={handleSave} isEdit={isEdit} feature={feature} />
+        <Snackbar
+          autoHideDuration={4000}
+          open={openToast}
+          variant="soft"
+          color="success"
+          onClose={(_, reason) => {
+            if (reason === "clickaway") {
+              return;
+            }
+            setOpenToast(false);
+          }}
+        >
+          {isEdit === true ? "Update feature" : "New feature created"}:{" "}
+          <span className="font-bold"> {feature.featureName}</span>
+        </Snackbar>
       </div>
     </div>
   );
-}
+};
 
-export default FeatureHome
+export default FeatureHome;

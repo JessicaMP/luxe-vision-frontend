@@ -15,10 +15,11 @@ import {
   Modal,
   TextField,
   Button,
-  Checkbox,
   Snackbar,
   tableCellClasses,
 } from "@mui/material";
+import Checkbox from "@mui/joy/Checkbox";
+
 import {
   BiDotsVerticalRounded,
   BiShieldAlt,
@@ -359,7 +360,7 @@ const UsersTable = () => {
           >
             <div className="p-4 bg-white rounded-md shadow-md max-w-sm w-full">
               <h2 className="text-[#D05858] font-bold text-2xl">
-                Editar Usuario
+                Edit User
               </h2>
               <form
                 onSubmit={async (e) => {
@@ -413,7 +414,7 @@ const UsersTable = () => {
                 />
                 <TextField
                   name="firstName"
-                  label="Nombre"
+                  label="First Name"
                   defaultValue={editableUser?.firstName || ""}
                   fullWidth
                   required
@@ -421,7 +422,7 @@ const UsersTable = () => {
                 />
                 <TextField
                   name="lastName"
-                  label="Apellido"
+                  label="Last Name"
                   defaultValue={editableUser?.lastName || ""}
                   fullWidth
                   required
@@ -429,17 +430,18 @@ const UsersTable = () => {
                 />
                 <TextField
                   name="email"
-                  label="Correo"
+                  label="Email"
                   defaultValue={editableUser?.email || ""}
                   fullWidth
                   required
                   margin="normal"
                 />
                 <Checkbox
+                  color="neutral"
                   checked={changePassword}
                   onChange={() => setChangePassword((prev) => !prev)}
+                  label="Change password"
                 />
-                <label>Cambiar contraseña</label>
                 {changePassword && (
                   <TextField
                     name="password"
@@ -461,7 +463,7 @@ const UsersTable = () => {
                       },
                     }}
                   >
-                    Enviar
+                    Send
                   </Button>
                 </div>
               </form>

@@ -11,6 +11,7 @@ import { useSelector } from "react-redux";
 import { selectStudioById } from "@/reducers/studioSelector";
 import { Studio } from "@/types";
 import NotFoundStudio from "@/components/pages/detail/NotFoundStudio";
+import { Icon } from "@iconify/react";
 
 const Detail = () => {
   useEffect(() => {
@@ -165,6 +166,7 @@ const Detail = () => {
             <div className="grid grid-cols-2 gap-4 md:max-w-xl">
               {studio.studioFeatures?.length >0 && studio.studioFeatures.map(({feature}: any) => (
                 <div key={feature.id} className="flex gap-2 items-center">
+                  {feature.icon !== "" &&  <Icon icon={feature.icon} />}
                   <span>{feature.featureName}</span>
                 </div>
               ))}
