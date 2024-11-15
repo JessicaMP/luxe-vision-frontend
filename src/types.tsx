@@ -10,6 +10,7 @@ export const STYLES = {
 } as const;
 
 export interface Studio {
+  studioFeatures: any;
   id: number;
   studioName: string;
   email: string;

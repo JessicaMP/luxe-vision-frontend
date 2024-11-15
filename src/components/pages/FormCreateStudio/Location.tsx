@@ -1,9 +1,12 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import FormControl from "@mui/joy/FormControl";
 import FormLabel from "@mui/joy/FormLabel";
 import Input from "@mui/joy/Input";
+import { useSelector } from "react-redux";
+import { selectStudio } from "@/reducers/studioSelector";
 
-export const Location = ({ onChangeInfo }) => {
+export const Location = ({ onChangeInfo, isEdit = false }: any) => {
+  const studio = useSelector(selectStudio) || {};
   const initialForm = {
     city: "",
     state: "",
@@ -17,6 +20,22 @@ export const Location = ({ onChangeInfo }) => {
     setForm(updatedForm);
     onChangeInfo(updatedForm);
   };
+
+  const setPropertys = () => {
+    const { city, state, country, address } = studio.location;
+    const editForm = {
+      city,
+      state,
+      country,
+      address,
+    };
+    setForm({ ...editForm });
+  };
+
+  useEffect(() => {
+    if (!isEdit) return;
+    setPropertys();
+  }, [isEdit, studio]);
 
   return (
     <div className="space-y-3">

@@ -30,7 +30,7 @@ import {
 import { AlertTriangle } from "lucide-react";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL as string;
-const TOKEN = localStorage.getItem('token') || "";
+const TOKEN = localStorage.getItem("token") || "";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {

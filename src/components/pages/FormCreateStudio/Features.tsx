@@ -4,9 +4,10 @@ import ListItem from "@mui/joy/ListItem";
 import { useEffect, useState } from "react";
 import { fetchAllFeatures } from "@/reducers/featuresReducer";
 import { useSelector, useDispatch } from "react-redux";
-import { selectFeatures } from "@/reducers/studioSelector";
+import { selectFeatures, selectStudio } from "@/reducers/studioSelector";
 
-export const Specialty = ({ onChangeInfo }: any) => {
+export const Specialty = ({ onChangeInfo, isEdit = false }: any) => {
+  const studio = useSelector(selectStudio) || {};
   const [list, setList] = useState<number[]>([]);
   const dispatch = useDispatch();
   const features = useSelector(selectFeatures) || [];
@@ -21,11 +22,22 @@ export const Specialty = ({ onChangeInfo }: any) => {
       return updatedList;
     });
   };
+
+  const setPropertys = () => {
+    const listFeatures = studio.studioFeatures.map((feature: any) => feature.feature.id);
+    setList([...listFeatures])
+  }
+
   useEffect(() => {
     if (features.length === 0) {
       dispatch(fetchAllFeatures());
     }
   }, [dispatch, features.length]);
+
+  useEffect(() => {
+    if (!isEdit) return;
+    setPropertys();
+  }, [isEdit, studio.id]);
 
   return (
     <div className="space-y-3">

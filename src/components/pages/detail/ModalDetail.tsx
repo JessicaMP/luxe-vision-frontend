@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Modal from '@mui/joy/Modal';
 import ModalClose from '@mui/joy/ModalClose';
 import Sheet from '@mui/joy/Sheet';
@@ -9,9 +9,9 @@ import {
 } from '@/components/ui/carousel';
 import { MdNavigateBefore, MdNavigateNext } from 'react-icons/md';
 
-const ModalDetail = ({ open, setOpen, studio }) => {
-  const [currentPage, setCurrentPage] = React.useState(0);
-  const [api, setApi] = React.useState();
+const ModalDetail = ({ open, setOpen, studio }: any) => {
+  const [currentPage, setCurrentPage] = useState(0);
+  const [api, setApi] = useState();
 
   const totalPhotos = studio?.portfolioPhotos?.length || 0;
 
@@ -96,9 +96,9 @@ const ModalDetail = ({ open, setOpen, studio }) => {
               }}
             >
               <CarouselContent>
-                {studio.portfolioPhotos.map((photo, index) => (
+                {studio.portfolioPhotos.map((photo: any, index: number) => (
                   <CarouselItem
-                    key={index}
+                    key={photo.id}
                     className="basis-1/5 cursor-pointer h-min max-sm:basis-1/2"
                     onClick={() => handleImageClick(index)}
                   >

@@ -14,17 +14,17 @@ const authPersistConfig = {
 };
 
 const studioPersistConfig = {
-  key: 'studios',
+  key: "studios",
   storage,
 };
 
 const featurePersistConfig = {
-  key: 'features',
+  key: "features",
   storage,
 };
 
 const featureSpecialtiesConfig = {
-  key: 'specialties',
+  key: "specialties",
   storage,
 };
 
@@ -44,7 +44,14 @@ const store = configureStore({
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: {
-        ignoredActions: ['persist/PERSIST', 'persist/REHYDRATE'],
+        ignoredActions: [
+          "persist/PERSIST",
+          "persist/REHYDRATE",
+          "persist/FLUSH",
+          "persist/PAUSE",
+          "persist/PURGE",
+          "persist/REGISTER",
+        ],
       },
     }),
 });

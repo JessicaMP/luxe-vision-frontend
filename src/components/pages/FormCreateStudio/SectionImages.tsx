@@ -1,9 +1,11 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import FormControl from "@mui/joy/FormControl";
 import FormLabel from "@mui/joy/FormLabel";
 import Button from "@mui/joy/Button";
 import SvgIcon from "@mui/joy/SvgIcon";
 import { styled } from "@mui/joy";
+import { selectStudio } from "@/reducers/studioSelector";
+import { useSelector } from "react-redux";
 
 const VisuallyHiddenInput = styled("input")`
   clip: rect(0 0 0 0);
@@ -17,24 +19,51 @@ const VisuallyHiddenInput = styled("input")`
   width: 1px;
 `;
 
-export const SectionImages = ({onChangeInfo}: any) => {
+export const SectionImages = ({ onChangeInfo, isEdit = false }: any) => {
+  const studio = useSelector(selectStudio) || {};
   const [profileImageFile, setProfileImageFile] = useState(null);
   const [portfolioFiles, setPortfolioFiles] = useState([]);
+
+  useEffect(() => {
+    if (!isEdit) return;
+    setPropertys();
+  }, [isEdit, studio.id]);
+
+  const setPropertys = () => {
+    const {profileImage, portfolioPhotos} = studio;
+    if (profileImage) {
+      const simulatedProfileImageFile = {
+        preview: profileImage,
+        name: "profile-image",
+        size: 0,
+        type: "image/jpeg",
+      };
+
+      setProfileImageFile(simulatedProfileImageFile);
+    }
+
+    if (portfolioPhotos && portfolioPhotos.length > 0) {
+      const simulatedPortfolioFiles = portfolioPhotos.map((photo: any) => ({
+        preview: photo.image,
+        name: `portfolio-image-${photo.id}`,
+        size: 0,
+        type: "image/jpeg",
+      }));
+      setPortfolioFiles(simulatedPortfolioFiles);
+    }
+  }
 
   const handleFileChange = (e: any) => {
     const file = e.target.files[0];
     if (file) {
       setProfileImageFile(file);
-      // console.log({file});
-      // console.log({profileImageFile});
-
-      onChangeInfo({profileImageFile: file, portfolioFiles})
+      onChangeInfo({ profileImageFile: file, portfolioFiles });
     }
   };
 
   const handleRemoveProfileImage = () => {
     setProfileImageFile(null);
-    onChangeInfo({profileImageFile: null, portfolioFiles})
+    onChangeInfo({ profileImageFile: null, portfolioFiles });
   };
 
   const handleRemoveFile = (index: number) => {
@@ -55,11 +84,12 @@ export const SectionImages = ({onChangeInfo}: any) => {
     }
 
     setPortfolioFiles((prevFiles) => {
-      const updatedFiles = [...prevFiles, ...selectedFiles]
+      const updatedFiles = [...prevFiles, ...selectedFiles];
       onChangeInfo({ profileImageFile, portfolioFiles: updatedFiles }); // Llamada con el valor actualizado
       return updatedFiles;
     });
   };
+  // console.log({profileImageFile, portfolioFiles});
 
   return (
     <div className="space-y-3">
@@ -112,7 +142,7 @@ export const SectionImages = ({onChangeInfo}: any) => {
               }}
             >
               <img
-                src={URL.createObjectURL(profileImageFile)}
+                src={profileImageFile && profileImageFile.preview || URL.createObjectURL(profileImageFile)}
                 alt="Profile Preview"
                 style={{ width: "100%", height: "auto", borderRadius: "4px" }}
               />
@@ -184,10 +214,10 @@ export const SectionImages = ({onChangeInfo}: any) => {
               marginTop: "10px",
             }}
           >
-            {portfolioFiles.map((file, index) => (
+            {portfolioFiles.map((file: any, index) => (
               <div key={index} style={{ position: "relative", width: "100px" }}>
                 <img
-                  src={URL.createObjectURL(file)}
+                  src={file.preview || URL.createObjectURL(file)}
                   alt={`Preview ${index}`}
                   style={{
                     width: "100%",

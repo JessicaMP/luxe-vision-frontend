@@ -5,6 +5,7 @@ const initialState = {
   studios: [],
   status: "idle",
   error: null,
+  studio: {}
 };
 
 export const fetchStudios = createAsyncThunk(
@@ -23,6 +24,14 @@ export const fetchRandomStudios = createAsyncThunk(
   }
 );
 
+export const fetchStudioById = createAsyncThunk(
+  "studios/fetchStudioById",
+  async (id: string) => {
+    const response = await ApiService.getStudioById(id);
+    return response.data;
+  }
+);
+
 export const addStudio = createAsyncThunk(
   "studios/addStudio",
   async (formData: FormData) => {
@@ -33,9 +42,8 @@ export const addStudio = createAsyncThunk(
 
 export const updateStudio = createAsyncThunk(
   "studios/updateStudio",
-  async (updatedStudio) => {
+  async (updatedStudio: any) => {
     const response = await ApiService.putStudio(
-      updatedStudio.id,
       updatedStudio
     );
     return response.data;
@@ -44,7 +52,7 @@ export const updateStudio = createAsyncThunk(
 
 export const deleteStudio = createAsyncThunk(
   "studios/deleteStudio",
-  async (studioId) => {
+  async (studioId: number) => {
     await ApiService.deleteStudio(studioId);
     return studioId;
   }
@@ -67,19 +75,11 @@ const studiosSlice = createSlice({
         state.status = "failed";
         state.error = action.error.message;
       })
-      .addCase(updateStudio.fulfilled, (state, action) => {
-        const index = state.studios.findIndex(
-          (studio) => studio.id === action.payload.id
-        );
-        if (index !== -1) {
-          state.studios[index] = action.payload;
-        }
-      })
       .addCase(deleteStudio.fulfilled, (state, action) => {
         state.studios = state.studios.filter(
           (studio) => studio.id !== action.payload
-        );
-      });
+        )
+      })
     builder
       .addCase(addStudio.pending, (state) => {
         state.status = "loading";
@@ -89,6 +89,35 @@ const studiosSlice = createSlice({
         state.studios.push(action.payload);
       })
       .addCase(addStudio.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+      });
+    builder
+      .addCase(fetchStudioById.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(fetchStudioById.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.studio = action.payload;
+      })
+      .addCase(fetchStudioById.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+      })
+    builder
+      .addCase(updateStudio.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(updateStudio.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        const index = state.studios.findIndex(
+          (studio) => studio.id === action.payload.id
+        );
+        if (index !== -1) {
+          state.studios[index] = action.payload;
+        }
+      })
+      .addCase(updateStudio.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
       });

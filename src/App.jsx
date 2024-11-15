@@ -4,9 +4,12 @@ import Home from "./pages/Home";
 import Detail from "./pages/Detail";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
-import AddStudio from "./pages/admin/AddStudio";
-import AdminHome from "./pages/admin/Home";
-import UsersHome from "./pages/admin/UsersTable";
+import AddStudio from "./pages/admin/studio/AddStudio";
+import AdminHome from "./pages/admin/studio/Home";
+import EditStudio from "./pages/admin/studio/EditStudio";
+import HomeFeatures from "./pages/admin/feature/Home";
+import AddFeature from "./pages/admin/feature/AddFeature";
+import UsersHome from "./pages/admin/user/UsersTable";
 import PrivateRoute from "./components/PrivateRoute";
 
 function App() {
@@ -38,10 +41,36 @@ function App() {
             }
           />
           <Route
+            path="/administration/edit_studio/:id"
+            element={
+              <PrivateRoute role="ROLE_ADMINISTRATOR">
+                <EditStudio />
+              </PrivateRoute>
+            }
+          />
+          <Route
             path="/administration/users"
             element={
               <PrivateRoute role="ROLE_ADMINISTRATOR">
                 <UsersHome />
+              </PrivateRoute>
+            }
+          />
+
+          <Route
+            path="/administration/features"
+            element={
+              <PrivateRoute role="ROLE_ADMINISTRATOR">
+                <HomeFeatures />
+              </PrivateRoute>
+            }
+          />
+
+          <Route
+            path="/administration/create_feature"
+            element={
+              <PrivateRoute role="ROLE_ADMINISTRATOR">
+                <AddFeature />
               </PrivateRoute>
             }
           />
