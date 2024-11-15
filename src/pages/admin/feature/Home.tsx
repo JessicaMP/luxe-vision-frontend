@@ -20,6 +20,7 @@ import IconButton from "@mui/joy/IconButton";
 import  { Link as LinkRoute } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { Icon } from '@iconify/react';
+import ModalAddFeature from "@/components/pages/admin/feature/ModalFeature";
 
 function labelDisplayedRows({ from, to, count }: any) {
   return `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}`;
@@ -150,6 +151,7 @@ const FeatureHome = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const rows = useSelector(selectFeatures) || [];
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     if (rows.length === 0) {
@@ -229,14 +231,14 @@ const FeatureHome = () => {
                 }}
               />
             </FormControl>
+            {/*  to="/administration/create_feature"  component={LinkRoute} */}
             <Button
               color="danger"
               size="lg"
               sx={{
                 borderRadius: "15px",
               }}
-              component={LinkRoute}
-               to="/administration/create_studio"
+              onClick={() => setOpen(true)}
             >
               Add
             </Button>
@@ -377,6 +379,7 @@ const FeatureHome = () => {
             </tfoot>
           </Table>
         </Sheet>
+        <ModalAddFeature open={open} setOpen={setOpen}/>
       </div>
     </div>
   );

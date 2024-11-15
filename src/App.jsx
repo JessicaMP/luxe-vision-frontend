@@ -8,7 +8,7 @@ import AddStudio from "./pages/admin/studio/AddStudio";
 import AdminHome from "./pages/admin/studio/Home";
 import EditStudio from "./pages/admin/studio/EditStudio";
 import HomeFeatures from "./pages/admin/feature/Home";
-
+import AddFeature from "./pages/admin/feature/AddFeature";
 
 function App() {
   return (
@@ -24,6 +24,7 @@ function App() {
           <Route path="/administration/create_studio" element={<AddStudio />} />
           <Route path="/administration/edit_studio/:id" element={<EditStudio />} />
           <Route path="/administration/features" element={<HomeFeatures />} />
+          <Route path="/administration/create_feature" element={<AddFeature />} />
         </Routes>
       </Layout>
     </Router>
