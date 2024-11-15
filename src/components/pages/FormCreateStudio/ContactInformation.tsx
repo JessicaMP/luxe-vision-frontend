@@ -1,8 +1,10 @@
-import { forwardRef, useState } from "react";
+import { forwardRef, useEffect, useState } from "react";
 import FormControl from "@mui/joy/FormControl";
 import FormLabel from "@mui/joy/FormLabel";
 import Input from "@mui/joy/Input";
 import { IMaskInput } from "react-imask";
+import { useSelector } from "react-redux";
+import { selectStudio } from "@/reducers/studioSelector";
 
 interface TextMaskProps {
   onChange: (event: { target: { name: string; value: string } }) => void;
@@ -28,7 +30,8 @@ const TextMaskAdapter = forwardRef<HTMLInputElement, TextMaskProps>(function Tex
   );
 });
 
-export const ContactInformation = ({ onChangeInfo }) => {
+export const ContactInformation = ({ onChangeInfo, isEdit = false }: any) => {
+  const studio = useSelector(selectStudio) || {};
   const initialForm = {
     email: "",
     phone: "",
@@ -40,6 +43,20 @@ export const ContactInformation = ({ onChangeInfo }) => {
     setForm(updatedForm);
     onChangeInfo(updatedForm);
   };
+
+  const setPropertys = () => {
+    const editForm = {
+      email: studio.email,
+      phone: studio.phone,
+    };
+    setForm({...editForm})
+  }
+
+  useEffect(() => {
+    if (!isEdit) return
+    setPropertys();
+
+  }, [isEdit, studio]);
 
   return (
     <div className="space-y-3">

@@ -6,7 +6,9 @@ import Register from "./pages/Register";
 import Login from "./pages/Login";
 import AddStudio from "./pages/admin/studio/AddStudio";
 import AdminHome from "./pages/admin/studio/Home";
+import EditStudio from "./pages/admin/studio/EditStudio";
 import HomeFeatures from "./pages/admin/feature/Home";
+
 
 function App() {
   return (
@@ -20,6 +22,7 @@ function App() {
           {/* Routes Admin */}
           <Route path="/administration" element={<AdminHome />} />
           <Route path="/administration/create_studio" element={<AddStudio />} />
+          <Route path="/administration/edit_studio/:id" element={<EditStudio />} />
           <Route path="/administration/features" element={<HomeFeatures />} />
         </Routes>
       </Layout>

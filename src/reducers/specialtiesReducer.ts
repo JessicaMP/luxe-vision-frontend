@@ -10,8 +10,6 @@ export const fetchSpecialties = createAsyncThunk(
   "specialties/fetchSpecialties",
   async () => {
     const response = await ApiSpecialties.getSpecialties();
-    console.log(response);
-
     return response.data;
   }
 );

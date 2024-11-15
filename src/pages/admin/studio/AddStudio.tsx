@@ -62,7 +62,6 @@ const AddStudio = () => {
   const validateImages = () => {
     setErrors([])
     const { profileImageFile, portfolioFiles }: any = sectionImages || {};
-    console.log({profileImageFile, portfolioFiles});
     const newErrors: string[] = [];
 
     if (!profileImageFile) {
@@ -86,7 +85,6 @@ const AddStudio = () => {
   const handleSubmit = async (e: any) => {
     e.preventDefault();
     const newErrors =  await validateImages();
-    console.log({newErrors});
     if (newErrors.length > 0) return;
 
     const studioData = {
@@ -101,7 +99,6 @@ const AddStudio = () => {
     };
 
     const { profileImageFile, portfolioFiles }: any = sectionImages;
-    console.log(studioData);
 
     const formData = new FormData();
     formData.append(
@@ -114,7 +111,6 @@ const AddStudio = () => {
     portfolioFiles.forEach((file: any) => {
       formData.append("portfolioImages", file);
     });
-    console.log({formData});
     try {
       const resultAction = await dispatch(addStudio(formData));
       if (addStudio.fulfilled.match(resultAction)) {

@@ -5,8 +5,10 @@ import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { selectSpecialties } from "@/reducers/studioSelector";
 import { fetchSpecialties } from "@/reducers/specialtiesReducer";
+import { selectStudio } from "@/reducers/studioSelector";
 
-export const Specialty = ({ onChangeInfo }: any) => {
+export const Specialty = ({ onChangeInfo, isEdit = false }: any) => {
+  const studio = useSelector(selectStudio) || {};
   const [list, setList] = useState<number[]>([]);
   const dispatch = useDispatch();
   const specialties = useSelector(selectSpecialties) || [];
@@ -22,11 +24,21 @@ export const Specialty = ({ onChangeInfo }: any) => {
     });
   };
 
+  const setPropertys = () => {
+    const specialties = studio.studioSpecialties.map((specialty: any) => specialty.specialty.id);
+    setList([...specialties])
+  }
+
   useEffect(() => {
     if (specialties.length === 0) {
       dispatch(fetchSpecialties());
     }
-  }, [dispatch, specialties.length]);
+  }, [specialties.length]);
+
+  useEffect(() => {
+    if (!isEdit) return;
+    setPropertys();
+  }, [isEdit, studio.id]);
 
   return (
     <div className="space-y-3">
