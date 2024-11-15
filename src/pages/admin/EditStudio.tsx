@@ -99,7 +99,7 @@ const EditStudio = () => {
     if (newErrors.length > 0) return;
 
     const studioData = {
-      id,
+      // id: Number(id),
       ...generalInfo,
       signup: new Date().toISOString(),
       ...contactInfo,
@@ -198,6 +198,16 @@ const EditStudio = () => {
     // Features
     const features = studioFeatures.map((feature: any) => feature.feature.id);
     handleFeaturesChange(features);
+
+    // Photographers
+    const photographersData = studio.photographers.map(
+      (photographer: any) => ({
+        firstName: photographer.firstName,
+        lastName: photographer.lastName,
+      })
+    );
+    handleTeamChange(photographersData);
+    console.log();
 
     // Images
     const imagesData: any = {};
