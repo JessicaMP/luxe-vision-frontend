@@ -6,7 +6,8 @@ import Register from "./pages/Register";
 import Login from "./pages/Login";
 import AddStudio from "./pages/admin/AddStudio";
 import AdminHome from "./pages/admin/Home";
-import PrivateRoute from "./components/PrivateRoute"; 
+import UsersHome from "./pages/admin/UsersTable";
+import PrivateRoute from "./components/PrivateRoute";
 
 function App() {
   return (
@@ -22,11 +23,28 @@ function App() {
           {/* Rutas protegidas para administradores */}
           <Route
             path="/administration"
-            element={<PrivateRoute role="ROLE_ADMINISTRATOR"><AdminHome /></PrivateRoute>}/>
-          <Route path="/administration/create_studio"
-            element={<PrivateRoute role="ROLE_ADMINISTRATOR"><AddStudio /></PrivateRoute>}/>
-
-          
+            element={
+              <PrivateRoute role="ROLE_ADMINISTRATOR">
+                <AdminHome />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/administration/create_studio"
+            element={
+              <PrivateRoute role="ROLE_ADMINISTRATOR">
+                <AddStudio />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/administration/users"
+            element={
+              <PrivateRoute role="ROLE_ADMINISTRATOR">
+                <UsersHome />
+              </PrivateRoute>
+            }
+          />
         </Routes>
       </Layout>
     </Router>
