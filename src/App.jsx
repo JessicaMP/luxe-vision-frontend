@@ -9,22 +9,71 @@ import AdminHome from "./pages/admin/studio/Home";
 import EditStudio from "./pages/admin/studio/EditStudio";
 import HomeFeatures from "./pages/admin/feature/Home";
 import AddFeature from "./pages/admin/feature/AddFeature";
+import UsersHome from "./pages/admin/user/UsersTable";
+import PrivateRoute from "./components/PrivateRoute";
 
 function App() {
   return (
     <Router>
       <Layout>
         <Routes>
+          {/* Rutas públicas */}
           <Route path="/" element={<Home />} />
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
           <Route path="/studio/:id" element={<Detail />} />
-          {/* Routes Admin */}
-          <Route path="/administration" element={<AdminHome />} />
-          <Route path="/administration/create_studio" element={<AddStudio />} />
-          <Route path="/administration/edit_studio/:id" element={<EditStudio />} />
-          <Route path="/administration/features" element={<HomeFeatures />} />
-          <Route path="/administration/create_feature" element={<AddFeature />} />
+
+          {/* Rutas protegidas para administradores */}
+          <Route
+            path="/administration"
+            element={
+              <PrivateRoute role="ROLE_ADMINISTRATOR">
+                <AdminHome />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/administration/create_studio"
+            element={
+              <PrivateRoute role="ROLE_ADMINISTRATOR">
+                <AddStudio />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/administration/edit_studio/:id"
+            element={
+              <PrivateRoute role="ROLE_ADMINISTRATOR">
+                <EditStudio />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/administration/users"
+            element={
+              <PrivateRoute role="ROLE_ADMINISTRATOR">
+                <UsersHome />
+              </PrivateRoute>
+            }
+          />
+
+          <Route
+            path="/administration/features"
+            element={
+              <PrivateRoute role="ROLE_ADMINISTRATOR">
+                <HomeFeatures />
+              </PrivateRoute>
+            }
+          />
+
+          <Route
+            path="/administration/create_feature"
+            element={
+              <PrivateRoute role="ROLE_ADMINISTRATOR">
+                <AddFeature />
+              </PrivateRoute>
+            }
+          />
         </Routes>
       </Layout>
     </Router>

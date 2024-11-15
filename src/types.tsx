@@ -59,3 +59,7 @@ export interface StudioState {
   loading: boolean;
   error: string | null;
 }
+
+export interface ErrorResponse {
+  message: string;
+}
