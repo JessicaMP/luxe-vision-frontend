@@ -27,7 +27,7 @@ const menu = [
   },
   {
     name: "Users",
-    route: "/",
+    route: "/administration/users",
   },
   {
     name: "Bookings",
