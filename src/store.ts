@@ -5,6 +5,13 @@ import themeReducer from './reducers/themeSlice';
 import studiosReducer from './reducers/studioSlice';
 import featuresReducer from './reducers/featuresReducer';
 import specialtiesReducer from './reducers/specialtiesReducer';
+import authSlice from './reducers/authSlice';
+
+const authPersistConfig = {
+  key: 'users',
+  storage,
+  whitelist: ["token", "user"],
+};
 
 const studioPersistConfig = {
   key: 'studios',
@@ -24,13 +31,15 @@ const featureSpecialtiesConfig = {
 const persistedStudiosReducer = persistReducer(studioPersistConfig, studiosReducer);
 const persistedFeaturesReducer = persistReducer(featurePersistConfig, featuresReducer);
 const persistedSpecialtiesReducer = persistReducer(featureSpecialtiesConfig, specialtiesReducer);
+const persistedAuthReducer = persistReducer(authPersistConfig, authSlice);
 
 const store = configureStore({
   reducer: {
     theme: themeReducer,
     studios: persistedStudiosReducer,
     features: persistedFeaturesReducer,
-    specialties: persistedSpecialtiesReducer
+    specialties: persistedSpecialtiesReducer,
+    users: persistedAuthReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
@@ -42,4 +51,5 @@ const store = configureStore({
 
 export const persistor = persistStore(store);
 export type RootState = ReturnType<typeof store.getState>;
+export type AppDispatch = typeof store.dispatch;
 export default store;

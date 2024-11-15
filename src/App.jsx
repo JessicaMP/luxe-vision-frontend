@@ -6,19 +6,27 @@ import Register from "./pages/Register";
 import Login from "./pages/Login";
 import AddStudio from "./pages/admin/AddStudio";
 import AdminHome from "./pages/admin/Home";
+import PrivateRoute from "./components/PrivateRoute"; 
 
 function App() {
   return (
     <Router>
       <Layout>
         <Routes>
+          {/* Rutas públicas */}
           <Route path="/" element={<Home />} />
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
           <Route path="/studio/:id" element={<Detail />} />
-          {/* Routes Admin */}
-          <Route path="/administration" element={<AdminHome />} />
-          <Route path="/administration/create_studio" element={<AddStudio />} />
+
+          {/* Rutas protegidas para administradores */}
+          <Route
+            path="/administration"
+            element={<PrivateRoute role="ROLE_ADMINISTRATOR"><AdminHome /></PrivateRoute>}/>
+          <Route path="/administration/create_studio"
+            element={<PrivateRoute role="ROLE_ADMINISTRATOR"><AddStudio /></PrivateRoute>}/>
+
+          
         </Routes>
       </Layout>
     </Router>
