@@ -19,7 +19,6 @@ import { AiTwotoneDelete } from "react-icons/ai";
 import { MdOutlineModeEditOutline } from "react-icons/md";
 import IconButton from "@mui/joy/IconButton";
 import { Link as LinkRoute } from "react-router-dom";
-import { Link as LinkRoute } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
 function labelDisplayedRows({ from, to, count }: any) {
@@ -215,7 +214,6 @@ export default function TableSortAndSelection() {
 
   const handleEdit = (id: number) => {
     navigate(`/administration/edit_studio/${id}`);
-  };
   };
 
   return (
