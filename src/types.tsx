@@ -5,8 +5,8 @@ export type MenuItem = {
 };
 
 export const STYLES = {
-  NORMAL: 'normal',
-  OUTLINE: 'outline',
+  NORMAL: "normal",
+  OUTLINE: "outline",
 } as const;
 
 export interface Studio {
@@ -23,6 +23,16 @@ export interface Studio {
   photographers: Photographer[];
   portfolioPhotos: PortfolioPhoto[];
   studioSpecialties: StudioSpecialty[];
+  studioFeatures: StudioFeature[];
+}
+export interface StudioFeature {
+  feature: Feature;
+  id: number;
+}
+export interface Feature {
+  featureName: string;
+  icon: string;
+  id: number;
 }
 
 export interface Location {
