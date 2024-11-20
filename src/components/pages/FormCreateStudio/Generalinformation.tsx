@@ -3,7 +3,7 @@ import FormControl from "@mui/joy/FormControl";
 import FormLabel from "@mui/joy/FormLabel";
 import Input from "@mui/joy/Input";
 import Textarea from "@mui/joy/Textarea";
-import { selectStudio } from "@/reducers/studioSelector";
+import { selectStudio } from "@/selectors/studioSelector";
 import { useSelector } from "react-redux";
 
 export const GeneralInformacion = ({ onChangeInfo, isEdit = false }: any) => {
@@ -29,13 +29,12 @@ export const GeneralInformacion = ({ onChangeInfo, isEdit = false }: any) => {
       description: studio.description,
       yearsOfExperience: studio.yearsOfExperience,
     };
-    setForm({...editForm})
-  }
+    setForm({ ...editForm });
+  };
 
   useEffect(() => {
-    if (!isEdit) return
+    if (!isEdit) return;
     setPropertys();
-
   }, [isEdit, studio]);
 
   return (

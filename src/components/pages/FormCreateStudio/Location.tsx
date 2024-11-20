@@ -3,7 +3,7 @@ import FormControl from "@mui/joy/FormControl";
 import FormLabel from "@mui/joy/FormLabel";
 import Input from "@mui/joy/Input";
 import { useSelector } from "react-redux";
-import { selectStudio } from "@/reducers/studioSelector";
+import { selectStudio } from "@/selectors/studioSelector";
 
 export const Location = ({ onChangeInfo, isEdit = false }: any) => {
   const studio = useSelector(selectStudio) || {};

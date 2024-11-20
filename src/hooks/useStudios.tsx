@@ -1,7 +1,7 @@
 // src/hooks/useStudios.js
-import { useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { fetchStudios } from '../reducers/studioSlice';
+import { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { fetchStudios } from "../reducers/studioReducer";
 
 const useStudios = () => {
   const dispatch = useDispatch();
@@ -9,7 +9,7 @@ const useStudios = () => {
   const { studios, status, error } = useSelector((state) => state.studios);
 
   useEffect(() => {
-    if (status === 'idle') {
+    if (status === "idle") {
       dispatch(fetchStudios());
     }
   }, [status, dispatch]);

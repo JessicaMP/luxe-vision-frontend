@@ -1,18 +1,18 @@
-import FormControl from '@mui/joy/FormControl';
-import FormLabel from '@mui/joy/FormLabel';
-import Select from '@mui/joy/Select';
-import Option from '@mui/joy/Option';
-import { useEffect, useState } from 'react';
-import Card from '@mui/joy/Card';
-import CardOverflow from '@mui/joy/CardOverflow';
-import CardContent from '@mui/joy/CardContent';
-import Input from '@mui/joy/Input';
-import { selectStudio } from "@/reducers/studioSelector";
+import FormControl from "@mui/joy/FormControl";
+import FormLabel from "@mui/joy/FormLabel";
+import Select from "@mui/joy/Select";
+import Option from "@mui/joy/Option";
+import { useEffect, useState } from "react";
+import Card from "@mui/joy/Card";
+import CardOverflow from "@mui/joy/CardOverflow";
+import CardContent from "@mui/joy/CardContent";
+import Input from "@mui/joy/Input";
+import { selectStudio } from "@/selectors/studioSelector";
 import { useSelector } from "react-redux";
 
-export const PhotographerTeam = ({ onChangeInfo, isEdit= false }: any) => {
+export const PhotographerTeam = ({ onChangeInfo, isEdit = false }: any) => {
   const studio = useSelector(selectStudio) || {};
-  const initialPhotographers = [{ firstName: '', lastName: '' }];
+  const initialPhotographers = [{ firstName: "", lastName: "" }];
   const [numPhotographers, setNumPhotographers] = useState(1);
   const [photographers, setPhotographers] = useState(initialPhotographers);
 
@@ -20,8 +20,8 @@ export const PhotographerTeam = ({ onChangeInfo, isEdit= false }: any) => {
     setNumPhotographers(e);
 
     const updatedPhotographers = Array.from({ length: e }, (_) => ({
-      firstName: '',
-      lastName: '',
+      firstName: "",
+      lastName: "",
     }));
     setPhotographers(updatedPhotographers);
   };
@@ -37,13 +37,16 @@ export const PhotographerTeam = ({ onChangeInfo, isEdit= false }: any) => {
   };
 
   const setPropertys = () => {
-    const {photographers} = studio;
+    const { photographers } = studio;
     setNumPhotographers(photographers.length);
-    const photographersData = photographers.map(({firstName,lastName}: any) => ({
-      firstName,lastName
-    }))
+    const photographersData = photographers.map(
+      ({ firstName, lastName }: any) => ({
+        firstName,
+        lastName,
+      })
+    );
     setPhotographers(photographersData);
-  }
+  };
 
   useEffect(() => {
     if (!isEdit) return;
@@ -78,13 +81,13 @@ export const PhotographerTeam = ({ onChangeInfo, isEdit= false }: any) => {
                 color="danger"
                 sx={{
                   px: 0.2,
-                  justifyContent: 'center',
-                  fontSize: 'xs',
-                  fontWeight: 'xl',
-                  letterSpacing: '1px',
-                  textTransform: 'uppercase',
-                  borderLeft: '1px solid',
-                  borderColor: 'divider',
+                  justifyContent: "center",
+                  fontSize: "xs",
+                  fontWeight: "xl",
+                  letterSpacing: "1px",
+                  textTransform: "uppercase",
+                  borderLeft: "1px solid",
+                  borderColor: "divider",
                 }}
               >
                 Photographer {index + 1}
@@ -97,7 +100,7 @@ export const PhotographerTeam = ({ onChangeInfo, isEdit= false }: any) => {
                     onChange={(e) =>
                       handlePhotographerChange(
                         index,
-                        'firstName',
+                        "firstName",
                         e.target.value
                       )
                     }
@@ -111,7 +114,7 @@ export const PhotographerTeam = ({ onChangeInfo, isEdit= false }: any) => {
                     onChange={(e) =>
                       handlePhotographerChange(
                         index,
-                        'lastName',
+                        "lastName",
                         e.target.value
                       )
                     }

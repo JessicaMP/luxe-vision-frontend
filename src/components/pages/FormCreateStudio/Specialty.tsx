@@ -3,9 +3,9 @@ import List from "@mui/joy/List";
 import ListItem from "@mui/joy/ListItem";
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { selectSpecialties } from "@/reducers/studioSelector";
+import { selectSpecialties } from "@/selectors/studioSelector";
 import { fetchSpecialties } from "@/reducers/specialtiesReducer";
-import { selectStudio } from "@/reducers/studioSelector";
+import { selectStudio } from "@/selectors/studioSelector";
 
 export const Specialty = ({ onChangeInfo, isEdit = false }: any) => {
   const studio = useSelector(selectStudio) || {};
@@ -16,7 +16,9 @@ export const Specialty = ({ onChangeInfo, isEdit = false }: any) => {
   const handleChange = (e: any, id: number) => {
     setList((prevList) => {
       const updatedList = e.target.checked
-        ? prevList.includes(id) ? prevList : [...prevList, id]
+        ? prevList.includes(id)
+          ? prevList
+          : [...prevList, id]
         : prevList.filter((item) => item !== id);
 
       onChangeInfo(updatedList);
@@ -25,9 +27,11 @@ export const Specialty = ({ onChangeInfo, isEdit = false }: any) => {
   };
 
   const setPropertys = () => {
-    const specialties = studio.studioSpecialties.map((specialty: any) => specialty.specialty.id);
-    setList([...specialties])
-  }
+    const specialties = studio.studioSpecialties.map(
+      (specialty: any) => specialty.specialty.id
+    );
+    setList([...specialties]);
+  };
 
   useEffect(() => {
     if (specialties.length === 0) {

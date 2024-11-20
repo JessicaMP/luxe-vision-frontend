@@ -4,7 +4,7 @@ import FormLabel from "@mui/joy/FormLabel";
 import Button from "@mui/joy/Button";
 import SvgIcon from "@mui/joy/SvgIcon";
 import { styled } from "@mui/joy";
-import { selectStudio } from "@/reducers/studioSelector";
+import { selectStudio } from "@/selectors/studioSelector";
 import { useSelector } from "react-redux";
 
 const VisuallyHiddenInput = styled("input")`
@@ -30,7 +30,7 @@ export const SectionImages = ({ onChangeInfo, isEdit = false }: any) => {
   }, [isEdit, studio.id]);
 
   const setPropertys = () => {
-    const {profileImage, portfolioPhotos} = studio;
+    const { profileImage, portfolioPhotos } = studio;
     if (profileImage) {
       const simulatedProfileImageFile = {
         preview: profileImage,
@@ -51,7 +51,7 @@ export const SectionImages = ({ onChangeInfo, isEdit = false }: any) => {
       }));
       setPortfolioFiles(simulatedPortfolioFiles);
     }
-  }
+  };
 
   const handleFileChange = (e: any) => {
     const file = e.target.files[0];
@@ -142,7 +142,10 @@ export const SectionImages = ({ onChangeInfo, isEdit = false }: any) => {
               }}
             >
               <img
-                src={profileImageFile && profileImageFile.preview || URL.createObjectURL(profileImageFile)}
+                src={
+                  (profileImageFile && profileImageFile.preview) ||
+                  URL.createObjectURL(profileImageFile)
+                }
                 alt="Profile Preview"
                 style={{ width: "100%", height: "auto", borderRadius: "4px" }}
               />
