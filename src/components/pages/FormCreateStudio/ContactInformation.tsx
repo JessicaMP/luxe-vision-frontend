@@ -4,31 +4,33 @@ import FormLabel from "@mui/joy/FormLabel";
 import Input from "@mui/joy/Input";
 import { IMaskInput } from "react-imask";
 import { useSelector } from "react-redux";
-import { selectStudio } from "@/reducers/studioSelector";
+import { selectStudio } from "@/selectors/studioSelector";
 
 interface TextMaskProps {
   onChange: (event: { target: { name: string; value: string } }) => void;
   name: string;
 }
 
-const TextMaskAdapter = forwardRef<HTMLInputElement, TextMaskProps>(function TextMaskAdapter(props, ref) {
-  const { onChange, ...other } = props;
+const TextMaskAdapter = forwardRef<HTMLInputElement, TextMaskProps>(
+  function TextMaskAdapter(props, ref) {
+    const { onChange, ...other } = props;
 
-  return (
-    <IMaskInput
-      {...other}
-      mask="(#00) 000-0000"
-      definitions={{
-        "#": /[1-9]/,
-      }}
-      inputRef={ref}
-      onAccept={(value) =>
-        onChange({ target: { name: props.name, value: value as string } })
-      }
-      overwrite
-    />
-  );
-});
+    return (
+      <IMaskInput
+        {...other}
+        mask="(#00) 000-0000"
+        definitions={{
+          "#": /[1-9]/,
+        }}
+        inputRef={ref}
+        onAccept={(value) =>
+          onChange({ target: { name: props.name, value: value as string } })
+        }
+        overwrite
+      />
+    );
+  }
+);
 
 export const ContactInformation = ({ onChangeInfo, isEdit = false }: any) => {
   const studio = useSelector(selectStudio) || {};
@@ -49,13 +51,12 @@ export const ContactInformation = ({ onChangeInfo, isEdit = false }: any) => {
       email: studio.email,
       phone: studio.phone,
     };
-    setForm({...editForm})
-  }
+    setForm({ ...editForm });
+  };
 
   useEffect(() => {
-    if (!isEdit) return
+    if (!isEdit) return;
     setPropertys();
-
   }, [isEdit, studio]);
 
   return (
