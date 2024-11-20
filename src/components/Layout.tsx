@@ -14,12 +14,14 @@ const Layout = ({ children }: any) => {
         <Header isLogin={true} />
         <main className="bg-[#454243] hidden xl:flex pt-20 relative">
           <SideBar />
-          {children}
+          <div className="ml-52">{children}</div>
         </main>
-        <main className="bg-[#454243] flex flex-col justify-center items-center xl:hidden pt-28 h-screen text-white gap-4">
-          <IoWarningOutline className="text-6xl"/>
-          <p className="text-2xl font-semibold">Not available in mobile version</p>
-        </main>
+        <section className="bg-[#454243] flex flex-col justify-center items-center xl:hidden pt-28 h-screen text-white gap-4 pl-20">
+          <IoWarningOutline className="text-6xl" />
+          <p className="text-2xl font-semibold">
+            Not available in mobile version
+          </p>
+        </section>
         <Footer />
       </>
     );

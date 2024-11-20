@@ -70,7 +70,7 @@ export const SideBar = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="bg-[#323232] h-screen py-10 space-y-5">
+    <aside className="bg-[#323232] h-full py-10 space-y-5 fixed left-0 z-20 ">
       <h2 className="text-white text-2xl font-bold text-center">Admin</h2>
       <SelectedList />
       <Button
@@ -89,7 +89,7 @@ export const SideBar = () => {
       >
         Log out
       </Button>
-    </div>
+    </aside>
   );
 };
 
