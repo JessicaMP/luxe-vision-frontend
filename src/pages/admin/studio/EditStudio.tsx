@@ -9,32 +9,58 @@ import Button from "@mui/joy/Button";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { updateStudio } from "@/reducers/studioSlice";
+import { setActiveStudioById, updateStudio } from "@/reducers/studioReducer";
 import { Toaster } from "@/components/ui/toaster";
-import { fetchStudioById } from "@/reducers/studioSlice";
-import { selectStudio } from "@/reducers/studioSelector";
-import { persistor, RootState } from '@/store';
+import { Photographer, Studio, StudioFeature, StudioSpecialty } from "@/types";
+import { AppDispatch, RootState } from "@/store";
+import NotFoundStudio from "@/components/pages/detail/NotFoundStudio";
 
 const EditStudio = () => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
   const { id } = useParams();
-  const { status } = useSelector((state: RootState) => state.studios);
-  const [isLoading, setIsLoading] = useState(false);
 
-  const loading = status === "loading";
+  dispatch(setActiveStudioById(Number(id)));
+
+  const studio: Studio = useSelector(
+    (state: RootState) => state.studios.studio
+  ) as Studio;
+
+  if (!studio) return <NotFoundStudio />;
 
   const [generalInfo, setGeneralInfo] = useState({});
   const [contactInfo, setContactInfo] = useState({});
   const [location, setlLocation] = useState({});
-  const [specialties, setSpecialties] = useState([]);
-  const [features, setFeatures] = useState([]);
-  const [photographers, setPhotographers] = useState([]);
+  const [specialties, setSpecialties] = useState<StudioSpecialty[]>([]);
+  const [features, setFeatures] = useState<StudioFeature[]>([]);
+  const [photographers, setPhotographers] = useState<Photographer[]>([]);
   const [sectionImages, setSectionImages] = useState({});
+  const [signup, setSignup] = useState<Date>();
 
-  const [errors, setErrors] = useState([]);
+  useEffect(() => {
+    if (studio) {
+      setGeneralInfo({
+        studioName: studio.studioName,
+        description: studio.description,
+        yearsOfExperience: studio.yearsOfExperience,
+      });
+      setContactInfo({
+        email: studio.email,
+        phone: studio.phone,
+      });
+      setlLocation(studio.location);
+      setSpecialties(studio.studioSpecialties);
+      setFeatures(studio.studioFeatures);
+      setPhotographers(studio.photographers);
+      setSectionImages({
+        profileImageFile: studio.profileImage,
+        portfolioFiles: studio.portfolioPhotos,
+      });
+      setSignup(studio.signup);
+    }
+  }, [studio]);
 
-  const studio = useSelector(selectStudio) || {};
+  const [errors, setErrors] = useState<string[]>([]);
 
   const handleGeneralInfoChange = (data: any) => {
     setGeneralInfo(data);
@@ -101,11 +127,10 @@ const EditStudio = () => {
     const studioData = {
       id: Number(id),
       ...generalInfo,
-      signup: new Date().toISOString(),
+      signup: signup,
       ...contactInfo,
       location,
       photographers,
-      portfolioPhotos: [],
       specialties: [...specialties].map((id) => id),
       features,
     };
@@ -136,31 +161,7 @@ const EditStudio = () => {
     }
   };
 
-  const convertToFile = async (imageObject: any) => {
-    try {
-      const encodedUrl = encodeURI(imageObject.preview);
-      const response = await fetch(encodedUrl);
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
-
-      const blob = await response.blob();
-
-      const file = new File([blob], imageObject.name, {
-        type: imageObject.type,
-        lastModified: Date.now(),
-      });
-
-      return file;
-    } catch (error) {
-      console.error('Error al obtener el archivo:', error);
-      throw error; // Vuelve a lanzar el error si es necesario para manejarlo afuera
-    }
-  };
-
   const setPropertys = async () => {
-    console.log({studio});
     const {
       studioName,
       description,
@@ -169,7 +170,7 @@ const EditStudio = () => {
       phone,
       location,
       studioSpecialties,
-      studioFeatures
+      studioFeatures,
     } = studio;
 
     // General information
@@ -200,88 +201,16 @@ const EditStudio = () => {
     handleFeaturesChange(features);
 
     // Photographers
-    const photographersData = studio.photographers.map(
-      (photographer: any) => ({
-        firstName: photographer.firstName,
-        lastName: photographer.lastName,
-      })
-    );
+    const photographersData = studio.photographers.map((photographer: any) => ({
+      firstName: photographer.firstName,
+      lastName: photographer.lastName,
+    }));
     handleTeamChange(photographersData);
-    console.log();
-
-    // Images
-    const imagesData: any = {};
-    console.log({i: studio.profileImage});
-
-    if (studio?.profileImage) {
-      console.log("entra");
-      const simulatedProfileImageFile = {
-        preview: studio.profileImage,
-        name: "profile-image",
-        size: 0,
-        type: "image/jpeg",
-      };
-      // console.log({simulatedProfileImageFile});
-      // imagesData.profileImageFile = simulatedProfileImageFile
-      imagesData.profileImageFile = await convertToFile(simulatedProfileImageFile)
-    }
-
-    if (studio.portfolioPhotos && studio.portfolioPhotos.length > 0) {
-      // const simulatedPortfolioFiles = studio.portfolioPhotos.map(
-      //   (photo: any) => ({
-      //     preview: photo.image,
-      //     name: `portfolio-image-${photo.id}`,
-      //     size: 0,
-      //     type: "image/jpeg",
-      //   })
-      // );
-      const simulatedPortfolioFiles = await Promise.all(
-        studio.portfolioPhotos.map(async (photo: any) => {
-          const file = await convertToFile({
-            preview: photo.image,
-            name: `portfolio-image-${photo.id}`,
-            size: 0,
-            type: "image/jpeg",
-          });
-          return file;
-        })
-      );
-      imagesData.portfolioFiles = simulatedPortfolioFiles
-    }
-    console.log({imagesData});
-    handleImagesChange(imagesData);
   };
 
-  // useEffect(() => {
-  //   // if ((id && !studio.id) || studio.id !== id) {
-  //   //   dispatch(fetchStudioById(id));
-  //   // }
-  //   dispatch(fetchStudioById(id));
-  // }, []);
   useEffect(() => {
-    const fetchData = async () => {
-      setIsLoading(true); // Activar el loader
-      while (!persistor.getState().bootstrapped) {
-        await new Promise((resolve) => setTimeout(resolve, 50));
-      }
-      await dispatch(fetchStudioById(id));
-      setIsLoading(false); // Desactivar el loader después de cargar los datos
-    };
-
-    fetchData();
-  }, [id]);
-
-  // useEffect(() => {
-  //   if (!isLoading && studio?.id === id) {
-  //     setPropertys();
-  //   }
-  // }, [studio, isLoading]);
-  useEffect(() => {
-    console.log("setPropertys");
     setPropertys();
   }, []);
-
-  if(isLoading) return <p>Loading...</p>
 
   return (
     <main className="bg-[#454243]">
@@ -309,7 +238,7 @@ const EditStudio = () => {
             <PhotographerTeam onChangeInfo={handleTeamChange} isEdit={true} />
             <SectionImage onChangeInfo={handleImagesChange} isEdit={true} />
             <div className="flex justify-end">
-              <Button type="submit" size="lg" color="danger" loading={loading}>
+              <Button type="submit" size="lg" color="danger">
                 Submit
               </Button>
             </div>
