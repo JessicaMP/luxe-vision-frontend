@@ -1,62 +1,41 @@
-import { configureStore } from '@reduxjs/toolkit';
-import { persistStore, persistReducer } from 'redux-persist';
-import storage from 'redux-persist/lib/storage';
-import themeReducer from './reducers/themeSlice';
-import studiosReducer from './reducers/studioSlice';
-import featuresReducer from './reducers/featuresReducer';
-import specialtiesReducer from './reducers/specialtiesReducer';
-import authSlice from './reducers/authSlice';
+import { configureStore, combineReducers } from "@reduxjs/toolkit";
+import { persistStore, persistReducer, FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER } from "redux-persist";
+import storage from "redux-persist/lib/storage";
+import themeReducer from "./reducers/themeSlice";
+import studiosReducer from "./reducers/studiosReducer";
+import featuresReducer from "./reducers/featuresReducer";
+import specialtiesReducer from "./reducers/specialtiesReducer";
 
-const authPersistConfig = {
-  key: 'users',
+
+const persistConfig = {
+  key: 'root',
   storage,
-  whitelist: ["token", "user"],
+  whitelist: ['studios', 'features', 'specialties'], 
 };
 
-const studioPersistConfig = {
-  key: "studios",
-  storage,
-};
+const rootReducer = combineReducers({
+  theme: themeReducer,
+  studios: studiosReducer,
+  features: featuresReducer,
+  specialties: specialtiesReducer,
+});
 
-const featurePersistConfig = {
-  key: "features",
-  storage,
-};
-
-const featureSpecialtiesConfig = {
-  key: "specialties",
-  storage,
-};
-
-const persistedStudiosReducer = persistReducer(studioPersistConfig, studiosReducer);
-const persistedFeaturesReducer = persistReducer(featurePersistConfig, featuresReducer);
-const persistedSpecialtiesReducer = persistReducer(featureSpecialtiesConfig, specialtiesReducer);
-const persistedAuthReducer = persistReducer(authPersistConfig, authSlice);
+const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 const store = configureStore({
-  reducer: {
-    theme: themeReducer,
-    studios: persistedStudiosReducer,
-    features: persistedFeaturesReducer,
-    specialties: persistedSpecialtiesReducer,
-    users: persistedAuthReducer,
-  },
+  reducer: persistedReducer,
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: {
-        ignoredActions: [
-          "persist/PERSIST",
-          "persist/REHYDRATE",
-          "persist/FLUSH",
-          "persist/PAUSE",
-          "persist/PURGE",
-          "persist/REGISTER",
-        ],
+        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
       },
     }),
+  devTools: process.env.NODE_ENV !== 'production',
 });
 
 export const persistor = persistStore(store);
+
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
+
 export default store;
