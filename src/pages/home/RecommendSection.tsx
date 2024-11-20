@@ -50,12 +50,16 @@ const RecommendSection = () => {
             Recommendations for you
           </h3>
           <div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 mb-8">
-              {currentItems.map((studio) => (
-                <div key={studio.id}>
-                  <CardRecommend studio={studio} />
-                </div>
-              ))}
+            <div
+              id="grid-recommendations"
+              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 mb-8"
+            >
+              {currentItems.map(
+                (studio) =>
+                  studio != undefined && (
+                    <CardRecommend key={studio.id} studio={studio} />
+                  )
+              )}
             </div>
           </div>
 

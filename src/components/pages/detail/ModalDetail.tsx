@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Modal from '@mui/joy/Modal';
 import ModalClose from '@mui/joy/ModalClose';
 import Sheet from '@mui/joy/Sheet';
@@ -9,9 +9,9 @@ import {
 } from '@/components/ui/carousel';
 import { MdNavigateBefore, MdNavigateNext } from 'react-icons/md';
 
-const ModalDetail = ({ open, setOpen, studio }) => {
-  const [currentPage, setCurrentPage] = React.useState(0);
-  const [api, setApi] = React.useState();
+const ModalDetail = ({ open, setOpen, studio }: any) => {
+  const [currentPage, setCurrentPage] = useState(0);
+  const [api, setApi] = useState();
 
   const totalPhotos = studio?.portfolioPhotos?.length || 0;
 
@@ -42,7 +42,7 @@ const ModalDetail = ({ open, setOpen, studio }) => {
     }
   };
 
-  const handleImageClick = (index: number) => {
+  const handleImageClick = (index) => {
     setCurrentPage(index);
   };
 
@@ -57,29 +57,31 @@ const ModalDetail = ({ open, setOpen, studio }) => {
       <Sheet
         variant="outlined"
         sx={{
-          width: '100vw',
+          width: '80vw', // Ancho del fondo
+          height: '80vh', // Altura del fondo
           borderRadius: 'md',
-          p: 6,
+          p: 2, // Reducir el padding del fondo
           boxShadow: 'lg',
-          height: '70svh',
         }}
         className="flex justify-center items-center h-max"
       >
         <ModalClose variant="plain" sx={{ m: 1 }} />
 
-        <div className="flex flex-col gap-10 h-[70svh] justify-center items-center">
-          <div className="w-4/9">
+        <div className="flex flex-col gap-6 justify-center items-center w-full h-full">
+          {/* Imagen principal */}
+          <div className="w-full h-full max-h-[60vh] flex justify-center items-center">
             <img
               src={studio.portfolioPhotos[currentPage]?.image}
               alt="logo"
-              className="w-full h-full object-cover rounded-lg"
+              className="max-w-full max-h-full object-contain rounded-lg"
             />
           </div>
 
-          <div className="flex items-center justify-center gap-4">
+          {/* Carrusel de miniaturas */}
+          <div className="flex items-center justify-center gap-4 w-full">
             <button
               onClick={handlePrevious}
-              className=" bg-[#D05858] p-1 md:p-2 rounded-full shadow-lg hover:bg-white"
+              className="bg-[#D05858] p-1 md:p-2 rounded-full shadow-lg hover:bg-white"
             >
               <MdNavigateBefore className="text-white size-8 hover:text-[#D05858]" />
             </button>
@@ -94,9 +96,9 @@ const ModalDetail = ({ open, setOpen, studio }) => {
               }}
             >
               <CarouselContent>
-                {studio.portfolioPhotos.map((photo, index) => (
+                {studio.portfolioPhotos.map((photo: any, index: number) => (
                   <CarouselItem
-                    key={index}
+                    key={photo.id}
                     className="basis-1/5 cursor-pointer h-min max-sm:basis-1/2"
                     onClick={() => handleImageClick(index)}
                   >
@@ -116,7 +118,7 @@ const ModalDetail = ({ open, setOpen, studio }) => {
             </Carousel>
             <button
               onClick={handleNext}
-              className=" bg-[#D05858] p-1 md:p-2 rounded-full shadow-lg hover:bg-white"
+              className="bg-[#D05858] p-1 md:p-2 rounded-full shadow-lg hover:bg-white"
             >
               <MdNavigateNext className="text-white size-8 hover:text-[#D05858]" />
             </button>

@@ -10,6 +10,7 @@ export const STYLES = {
 } as const;
 
 export interface Studio {
+  studioFeatures: any;
   id: number;
   studioName: string;
   email: string;
@@ -57,4 +58,8 @@ export interface StudioState {
   studios: Studio[];
   loading: boolean;
   error: string | null;
+}
+
+export interface ErrorResponse {
+  message: string;
 }

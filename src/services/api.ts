@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const API_URL = import.meta.env.VITE_API_BASE_URL as string;
-const TOKEN = import.meta.env.VITE_TOKEN as string;
+const TOKEN = localStorage.getItem("token") || "";
 
 const getStudios = () => {
   return axios.get(`${API_URL}/studios`);

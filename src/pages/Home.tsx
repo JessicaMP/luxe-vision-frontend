@@ -46,7 +46,7 @@ const Home = () => {
         />
 
         <div className="relative z-10 container px-4 flex flex-col gap-10 items-center text-center">
-          <h1 className="text-4xl md:text-5xl lg:text-[55px] font-bold leading-loose mb-8 max-w-3xl text-[#D05858]">
+          <h1 className="text-4xl md:text-5xl lg:text-[55px] font-bold md:leading-relaxed leading-normal mb-8 max-w-3xl text-[#D05858] ">
             <span className="text-[#D05858]">Your ideal photographer,</span>
             <br />
             <span className="text-[#D05858]">just a click away</span>

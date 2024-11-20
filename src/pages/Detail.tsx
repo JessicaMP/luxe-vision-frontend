@@ -11,6 +11,7 @@ import { useSelector } from "react-redux";
 import { selectStudioById } from "@/reducers/studioSelector";
 import { Studio } from "@/types";
 import NotFoundStudio from "@/components/pages/detail/NotFoundStudio";
+import { Icon } from "@iconify/react";
 
 const Detail = () => {
   useEffect(() => {
@@ -159,7 +160,20 @@ const Detail = () => {
               </div>
             </div>
           </div>
+
+          <div className="border-t border-[#D05858] py-5 space-y-6">
+            <h3 className="text-[#D05858] font-semibold text-3xl">Features</h3>
+            <div className="grid grid-cols-2 gap-4 md:max-w-xl">
+              {studio.studioFeatures?.length >0 && studio.studioFeatures.map(({feature}: any) => (
+                <div key={feature.id} className="flex gap-2 items-center">
+                  {feature.icon !== "" &&  <Icon icon={feature.icon} />}
+                  <span>{feature.featureName}</span>
+                </div>
+              ))}
+            </div>
+          </div>
         </section>
+
         <ModalDetail open={open} setOpen={setOpen} studio={studio} />
       </div>
     </main>

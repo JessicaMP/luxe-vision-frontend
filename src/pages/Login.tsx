@@ -1,7 +1,9 @@
-export const Login = () => {
+import Loginform from "@/components/pages/forms/Loginform";
+
+const Login = () => {
   return (
     <div>
-      <h1>Login</h1>
+      <Loginform/>
     </div>
   );
 };
