@@ -87,7 +87,15 @@ const studiosSlice = createSlice({
       if (index !== -1) {
         state.studios[index] = action.payload;
       }
-    }
+    },
+    setActiveStudioById: (state, action: PayloadAction<number>) => {
+      const studio = state.studios.find(s => s.id === action.payload);
+      if (studio) {
+        state.studio = studio;
+      } else {
+        state.studio = null; 
+      }
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -177,7 +185,8 @@ export const {
   clearError, 
   resetStatus,
   updateStudioInList,
-  setActiveStudio
+  setActiveStudio,
+  setActiveStudioById
 } = studiosSlice.actions;
 
 export default studiosSlice.reducer;
