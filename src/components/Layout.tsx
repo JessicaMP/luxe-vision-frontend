@@ -6,7 +6,7 @@ import { IoWarningOutline } from "react-icons/io5";
 import { useDispatch, useSelector } from "react-redux";
 import { selectStudios, selectStudioStatus } from "@/selectors/studioSelector";
 import { useEffect } from "react";
-import { fetchStudios } from "@/reducers/studioReducer";
+import { fetchStudios } from "@/reducers/studiosReducer";
 import { AppDispatch } from "@/store";
 
 const Layout = ({ children }: any) => {
