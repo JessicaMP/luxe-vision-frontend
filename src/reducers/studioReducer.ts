@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
-import ApiService from "../services/api";
+import ApiService from "../services/studios";
 import { Studio } from "@/types";
 
 interface StudioState {
