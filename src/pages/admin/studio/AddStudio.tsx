@@ -10,7 +10,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store";
-import { addStudio } from "@/reducers/studioSlice";
+import { addStudio } from "@/reducers/studioReducer";
 import { Toaster } from "@/components/ui/toaster";
 import { toast } from "@/hooks/use-toast";
 
@@ -60,7 +60,7 @@ const AddStudio = () => {
   };
 
   const validateImages = () => {
-    setErrors([])
+    setErrors([]);
     const { profileImageFile, portfolioFiles }: any = sectionImages || {};
     const newErrors: string[] = [];
 
@@ -72,19 +72,23 @@ const AddStudio = () => {
       newErrors.push("Portfolio Images are required");
     }
 
-    if(portfolioFiles && portfolioFiles.length > 0 && portfolioFiles.length < 5) {
+    if (
+      portfolioFiles &&
+      portfolioFiles.length > 0 &&
+      portfolioFiles.length < 5
+    ) {
       newErrors.push("Select at least 5 images in images portfolio");
     }
 
     if (newErrors.length > 0) {
       setErrors((prevErrors) => [...prevErrors, ...newErrors]);
     }
-    return newErrors
+    return newErrors;
   };
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
-    const newErrors =  await validateImages();
+    const newErrors = await validateImages();
     if (newErrors.length > 0) return;
 
     const studioData = {
@@ -153,7 +157,12 @@ const AddStudio = () => {
               </Button>
             </div>
             {errors.length > 0 &&
-              errors.map((error, index) => <p key={index} className="font-bold text-red-700 text-sm"> * {error}</p>)}
+              errors.map((error, index) => (
+                <p key={index} className="font-bold text-red-700 text-sm">
+                  {" "}
+                  * {error}
+                </p>
+              ))}
           </form>
         </div>
       </section>
