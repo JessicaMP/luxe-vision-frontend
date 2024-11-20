@@ -8,7 +8,7 @@ import { BsFillGrid1X2Fill } from "react-icons/bs";
 import ModalDetail from "../components/pages/detail/ModalDetail";
 import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { selectStudioById } from "@/reducers/studioSelector";
+import { selectStudioById } from "@/selectors/studioSelector";
 import { Studio } from "@/types";
 import NotFoundStudio from "@/components/pages/detail/NotFoundStudio";
 import { Icon } from "@iconify/react";
