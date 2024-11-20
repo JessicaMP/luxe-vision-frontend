@@ -11,10 +11,6 @@ import {
 import Autoplay from "embla-carousel-autoplay";
 import CardSpeciality from "@/components/pages/home/speciality/CardSpeciality";
 import RecommendSection from "./home/RecommendSection";
-import { useSelector, useDispatch } from "react-redux";
-import { useEffect } from "react";
-import { selectStudios } from "@/reducers/studioSelector";
-import { fetchStudios } from "@/reducers/studioSlice";
 
 const Home = () => {
   const cardsSpeciality = [
@@ -24,15 +20,6 @@ const Home = () => {
     { title: "Architecture", image: "/images/cardsSpeciality/foto4.png" },
     { title: "Business", image: "/images/cardsSpeciality/foto5.png" },
   ];
-
-  const dispatch = useDispatch();
-  const studios = useSelector(selectStudios);
-
-  useEffect(() => {
-    if (studios.length === 0) {
-      dispatch(fetchStudios());
-    }
-  }, [dispatch, studios.length]);
 
   return (
     <main>
