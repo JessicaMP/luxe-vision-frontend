@@ -6,8 +6,8 @@ import Checkbox from "@mui/joy/Checkbox";
 import Link from "@mui/joy/Link";
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { selectStudios } from "@/reducers/studioSelector";
-import { fetchStudios } from "@/reducers/studioSlice";
+import { selectStudios } from "@/selectors/studioSelector";
+import { fetchStudios } from "@/reducers/studioReducer";
 import { RiArrowLeftSLine, RiArrowRightSLine } from "react-icons/ri";
 import Avatar from "@mui/joy/Avatar";
 import { visuallyHidden } from "@mui/utils";
@@ -18,7 +18,7 @@ import Button from "@mui/joy/Button";
 import { AiTwotoneDelete } from "react-icons/ai";
 import { MdOutlineModeEditOutline } from "react-icons/md";
 import IconButton from "@mui/joy/IconButton";
-import  { Link as LinkRoute } from "react-router-dom";
+import { Link as LinkRoute } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
 function labelDisplayedRows({ from, to, count }: any) {
@@ -219,7 +219,7 @@ export default function TableSortAndSelection() {
 
   const handleEdit = (id: number) => {
     navigate(`/administration/edit_studio/${id}`);
-  }
+  };
 
   return (
     <div className="w-full">
@@ -248,7 +248,7 @@ export default function TableSortAndSelection() {
                 borderRadius: "15px",
               }}
               component={LinkRoute}
-               to="/administration/create_studio"
+              to="/administration/create_studio"
             >
               Add
             </Button>
@@ -266,7 +266,10 @@ export default function TableSortAndSelection() {
               "--TableCell-selectedBackground": (theme) =>
                 theme.vars.palette.success.softBg,
               "--TableCell-height": "95px",
-              "& tr > *:not(:first-of-type)": { textAlign: "center" , verticalAlign: "middle"},
+              "& tr > *:not(:first-of-type)": {
+                textAlign: "center",
+                verticalAlign: "middle",
+              },
             }}
             size="lg"
             borderAxis="none"
@@ -349,8 +352,12 @@ export default function TableSortAndSelection() {
                         <IconButton variant="plain" color="danger">
                           <AiTwotoneDelete className="text-2xl text-red-500" />
                         </IconButton>
-                        <IconButton variant="plain" color="neutral" onClick={() => handleEdit(row.id)}>
-                          <MdOutlineModeEditOutline  className="text-2xl"/>
+                        <IconButton
+                          variant="plain"
+                          color="neutral"
+                          onClick={() => handleEdit(row.id)}
+                        >
+                          <MdOutlineModeEditOutline className="text-2xl" />
                         </IconButton>
                       </td>
                     </tr>
