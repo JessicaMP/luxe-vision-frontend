@@ -1,6 +1,7 @@
 import { RootState } from '@/store';
 import { Studio } from '@/types';
 import { createSelector } from '@reduxjs/toolkit';
+import { setActiveStudio } from '../reducers/studiosReducer';
 
 export const selectStudios = (state: RootState) => state.studios.studios;
 

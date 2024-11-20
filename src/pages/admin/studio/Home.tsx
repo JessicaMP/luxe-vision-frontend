@@ -7,7 +7,7 @@ import Link from "@mui/joy/Link";
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { selectStudios } from "@/selectors/studioSelector";
-import { fetchStudios } from "@/reducers/studioReducer";
+import { fetchStudios } from "@/reducers/studiosReducer";
 import { RiArrowLeftSLine, RiArrowRightSLine } from "react-icons/ri";
 import Avatar from "@mui/joy/Avatar";
 import { visuallyHidden } from "@mui/utils";
@@ -18,6 +18,7 @@ import Button from "@mui/joy/Button";
 import { AiTwotoneDelete } from "react-icons/ai";
 import { MdOutlineModeEditOutline } from "react-icons/md";
 import IconButton from "@mui/joy/IconButton";
+import { Link as LinkRoute } from "react-router-dom";
 import { Link as LinkRoute } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
@@ -160,14 +161,7 @@ const EnhancedTableHead = (props: any) => {
 
 export default function TableSortAndSelection() {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
   const rows = useSelector(selectStudios) || [];
-
-  useEffect(() => {
-    if (rows.length === 0) {
-      dispatch(fetchStudios());
-    }
-  }, [dispatch, rows.length]);
 
   const [order, setOrder] = useState("asc");
   const [orderBy, setOrderBy] = useState("calories");
@@ -182,17 +176,19 @@ export default function TableSortAndSelection() {
   };
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelected = rows.map((n) => n.name);
+      const newSelected = rows.map((n) => n.id);
       setSelected(newSelected);
       return;
     }
     setSelected([]);
   };
-  const handleClick = (event, name) => {
-    const selectedIndex = selected.indexOf(name);
+
+  const handleClick = (event, id) => {
+    // Cambiar el parámetro name por id
+    const selectedIndex = selected.indexOf(id);
     let newSelected = [];
     if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, name);
+      newSelected = newSelected.concat(selected, id);
     } else if (selectedIndex === 0) {
       newSelected = newSelected.concat(selected.slice(1));
     } else if (selectedIndex === selected.length - 1) {
@@ -219,6 +215,7 @@ export default function TableSortAndSelection() {
 
   const handleEdit = (id: number) => {
     navigate(`/administration/edit_studio/${id}`);
+  };
   };
 
   return (
@@ -292,7 +289,7 @@ export default function TableSortAndSelection() {
 
                   return (
                     <tr
-                      onClick={(event) => handleClick(event, row.studioName)}
+                      onClick={(event) => handleClick(event, row.id)}
                       role="checkbox"
                       aria-checked={isItemSelected}
                       tabIndex={-1}

@@ -7,6 +7,8 @@ export type MenuItem = {
 export const STYLES = {
   NORMAL: "normal",
   OUTLINE: "outline",
+  NORMAL: "normal",
+  OUTLINE: "outline",
 } as const;
 
 export interface Studio {

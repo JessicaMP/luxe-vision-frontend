@@ -1,10 +1,17 @@
-import { configureStore, combineReducers } from "@reduxjs/toolkit";
-import { persistStore, persistReducer, FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER } from "redux-persist";
-import storage from "redux-persist/lib/storage";
-import themeReducer from "./reducers/themeSlice";
-import studiosReducer from "./reducers/studiosReducer";
-import featuresReducer from "./reducers/featuresReducer";
-import specialtiesReducer from "./reducers/specialtiesReducer";
+import { combineReducers, configureStore } from '@reduxjs/toolkit';
+import { persistStore, persistReducer, FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER } from 'redux-persist';
+import storage from 'redux-persist/lib/storage';
+import themeReducer from './reducers/themeSlice';
+import studiosReducer from './reducers/studiosReducer';
+import featuresReducer from './reducers/featuresReducer';
+import specialtiesReducer from './reducers/specialtiesReducer';
+import authSlice from './reducers/authReducer';
+
+const authPersistConfig = {
+  key: 'users',
+  storage,
+  whitelist: ["token", "user"],
+};
 
 
 const persistConfig = {
@@ -18,6 +25,7 @@ const rootReducer = combineReducers({
   studios: studiosReducer,
   features: featuresReducer,
   specialties: specialtiesReducer,
+  users: authSlice,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

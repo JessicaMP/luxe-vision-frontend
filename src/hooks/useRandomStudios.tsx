@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { fetchRandomStudios } from "../reducers/studioReducer";
+import { fetchRandomStudios } from "@/reducers/studiosReducer";
 
 const useRandomStudios = () => {
   const dispatch = useDispatch();
