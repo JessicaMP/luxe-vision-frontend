@@ -18,7 +18,7 @@ const getStudioById = (id: string) => {
 const postStudio = (body: any) => {
   const headers = {
     headers: {
-      "Authorization": `Bearer ${TOKEN}`,
+      Authorization: `Bearer ${TOKEN}`,
       "Content-Type": "multipart/form-data",
     },
   };
@@ -26,7 +26,13 @@ const postStudio = (body: any) => {
 };
 
 const putStudio = (body: any) => {
-  return axios.put(`${API_URL}/studios`, body);
+  const headers = {
+    headers: {
+      Authorization: `Bearer ${TOKEN}`,
+      "Content-Type": "multipart/form-data",
+    },
+  };
+  return axios.put(`${API_URL}/studios`, body, headers);
 };
 
 const deleteStudio = (id: number) => {
