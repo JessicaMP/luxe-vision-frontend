@@ -5,6 +5,9 @@ import { useEffect, useState } from "react";
 import { fetchAllFeatures } from "@/reducers/featuresReducer";
 import { useSelector, useDispatch } from "react-redux";
 import { selectFeatures, selectStudio } from "@/reducers/studioSelector";
+import ListItemDecorator from '@mui/joy/ListItemDecorator';
+import { Icon } from "@iconify/react";
+import ListItemButton from '@mui/joy/ListItemButton';
 
 export const Specialty = ({ onChangeInfo, isEdit = false }: any) => {
   const studio = useSelector(selectStudio) || {};
@@ -50,6 +53,10 @@ export const Specialty = ({ onChangeInfo, isEdit = false }: any) => {
         >
           {features.map((feature: any) => (
             <ListItem key={feature.id}>
+              {/* <ListItemDecorator>
+                <Icon icon={feature.icon} className="text-xl text-red-500" />
+              </ListItemDecorator> */}
+              <Icon icon={feature.icon} className="text-xl" />
               <Checkbox
                 overlay
                 disableIcon

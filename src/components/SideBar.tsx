@@ -19,7 +19,7 @@ const menu = [
   },
   {
     name: "Manage categories",
-    route: "/",
+    route: "/administration/specialties",
   },
   {
     name: "Manage features",
