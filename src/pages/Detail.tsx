@@ -14,6 +14,7 @@ import { Icon } from "@iconify/react";
 import { fetchStudioByIdAPI } from "@/reducers/studiosReducer";
 import { AppDispatch, RootState } from "@/store";
 import { selectStudioById } from "@/selectors/studioSelector";
+import Availability from "./Availability";
 
 const Detail = () => {
   useEffect(() => {
@@ -36,6 +37,34 @@ const Detail = () => {
 
   const portfolioPhotosLength =
     studio.portfolioPhotos.length > 5 ? 5 : studio.portfolioPhotos.length;
+
+  const schedule = {
+    openHours: {
+      Monday: "09:00-19:00",
+      Tuesday: "09:00-18:00",
+      Wednesday: "09:00-18:00",
+      Thursday: "09:00-18:00",
+      Friday: "09:00-18:00",
+      Saturday: "10:00-15:00",
+      Sunday: "Closed",
+    },
+    appointments: [
+      {
+        id: 1,
+        date: "2024-11-25",
+        startTime: "10:00",
+        endTime: "11:00",
+        status: "booked",
+      },
+      {
+        id: 2,
+        date: "2024-11-25",
+        startTime: "13:00",
+        endTime: "14:00",
+        status: "booked",
+      },
+    ],
+  };
 
   return (
     <main className="bg-white">
@@ -176,6 +205,18 @@ const Detail = () => {
                 ))}
             </div>
           </div>
+        </section>
+
+        <section className="space-y-6">
+          <h3 className="text-[#D05858] font-semibold text-3xl">
+            Availability
+          </h3>
+          <Availability
+            schedule={schedule}
+            onReserve={(startTime, endTime, date) => {
+              console.log("Reserved:", { startTime, endTime, date });
+            }}
+          />
         </section>
 
         <ModalDetail open={open} setOpen={setOpen} studio={studio} />
