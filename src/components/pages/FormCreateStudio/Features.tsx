@@ -3,24 +3,10 @@ import List from "@mui/joy/List";
 import ListItem from "@mui/joy/ListItem";
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-
-import { selectFeatures, selectStudio } from "@/reducers/studioSelector";
-import ListItemDecorator from '@mui/joy/ListItemDecorator';
+import { selectFeatures } from "@/selectors/studioSelector";
 import { Icon } from "@iconify/react";
-import ListItemButton from '@mui/joy/ListItemButton';
-
-export const Specialty = ({ onChangeInfo, isEdit = false }: any) => {
-  const studio = useSelector(selectStudio) || {};
-  const [list, setList] = useState<number[]>([]);
-  const dispatch = useDispatch();
-  const features = useSelector(selectFeatures) || [];
-
-  const handleChange = (e: any, id: number) => {
-    setList((prevList) => {
-      const updatedList = e.target.checked
-        ? prevList.includes(id) ? prevList : [...prevList, id]
-        : prevList.filter((item) => item !== id);
-
+import { AppDispatch } from "@/store";
+import { fetchAllFeatures } from "@/reducers/featuresReducer";
 
 interface FeaturesProps {
   onChangeInfo: (features: number[]) => void;
