@@ -10,6 +10,7 @@ import EditStudio from "./pages/admin/studio/EditStudio";
 import HomeFeatures from "./pages/admin/feature/Home";
 import AddFeature from "./pages/admin/feature/AddFeature";
 import UsersHome from "./pages/admin/user/UsersTable";
+import HomeSpecialies from "./pages/admin/specialy/Home";
 import PrivateRoute from "./components/PrivateRoute";
 
 function App() {
@@ -71,6 +72,15 @@ function App() {
             element={
               <PrivateRoute role="ROLE_ADMINISTRATOR">
                 <AddFeature />
+              </PrivateRoute>
+            }
+          />
+
+          <Route
+            path="/administration/specialties"
+            element={
+              <PrivateRoute role="ROLE_ADMINISTRATOR">
+                <HomeSpecialies />
               </PrivateRoute>
             }
           />

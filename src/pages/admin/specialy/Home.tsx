@@ -6,8 +6,8 @@ import Checkbox from "@mui/joy/Checkbox";
 import Link from "@mui/joy/Link";
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { selectFeatures } from "@/selectors/studioSelector";
-import { fetchAllFeatures } from "@/reducers/featuresReducer";
+import { selectSpecialties } from "@/reducers/studioSelector";
+import { fetchSpecialties } from "@/reducers/specialtiesReducer";
 import { RiArrowLeftSLine, RiArrowRightSLine } from "react-icons/ri";
 import { visuallyHidden } from "@mui/utils";
 import FormControl from "@mui/joy/FormControl";
@@ -17,7 +17,6 @@ import Button from "@mui/joy/Button";
 import { AiTwotoneDelete } from "react-icons/ai";
 import { MdOutlineModeEditOutline } from "react-icons/md";
 import IconButton from "@mui/joy/IconButton";
-import { Icon } from "@iconify/react";
 import ModalAddFeature from "@/components/pages/admin/feature/ModalFeature";
 import { addFeature, updateFeature } from "@/reducers/featuresReducer";
 import Snackbar from "@mui/joy/Snackbar";
@@ -51,16 +50,22 @@ const headCells = [
     textAlign: "center",
   },
   {
-    id: "featureName",
+    id: "specialtyName",
     numeric: false,
     disablePadding: false,
-    label: "Feature Name",
+    label: "Specialty Name",
   },
   {
-    id: "icon",
+    id: "description",
     numeric: false,
     disablePadding: false,
-    label: "Icon",
+    label: "Description",
+  },
+  {
+    id: "image",
+    numeric: false,
+    disablePadding: false,
+    label: "Image",
   },
   {
     id: "actions",
@@ -147,9 +152,9 @@ const EnhancedTableHead = (props: any) => {
   );
 };
 
-const FeatureHome = () => {
+const SpecialyHome = () => {
   const dispatch = useDispatch();
-  const rows = useSelector(selectFeatures) || [];
+  const rows = useSelector(selectSpecialties) || [];
   const [open, setOpen] = useState(false);
   const [openToast, setOpenToast] = useState(false);
   const [feature, setFeature] = useState({});
@@ -157,7 +162,7 @@ const FeatureHome = () => {
 
   useEffect(() => {
     if (rows.length === 0) {
-      dispatch(fetchAllFeatures());
+      dispatch(fetchSpecialties());
     }
   }, [dispatch, rows.length]);
 
@@ -253,7 +258,9 @@ const FeatureHome = () => {
     <div className="w-full">
       <div className="container mx-auto py-10 sm:py-12 space-y-6 sm:space-y-12 px-4 sm:px-10">
         <div className="flex flex-col xl:flex-row justify-between xl:items-center gap-5 xl:gap-0">
-          <h1 className="text-[#D05858] font-bold text-5xl">Manage features</h1>
+          <h1 className="text-[#D05858] font-bold text-5xl">
+            Manage specialties
+          </h1>
           <div className="flex gap-4 items-center">
             <FormControl id="free-solo-demo">
               <Autocomplete
@@ -261,7 +268,7 @@ const FeatureHome = () => {
                 startDecorator={<IoMdSearch />}
                 size="lg"
                 placeholder="Search"
-                options={rows.map((row: any) => row.featureName)}
+                options={rows.map((row: any) => row.specialtyName)}
                 sx={{
                   "--Input-radius": "15px",
                 }}
@@ -321,7 +328,7 @@ const FeatureHome = () => {
 
                   return (
                     <tr
-                      onClick={(event) => handleClick(event, row.featureName)}
+                      onClick={(event) => handleClick(event, row.specialtyName)}
                       role="checkbox"
                       aria-checked={isItemSelected}
                       tabIndex={-1}
@@ -355,9 +362,23 @@ const FeatureHome = () => {
                       <th id={labelId} scope="row">
                         {row.id}
                       </th>
-                      <td className="font-bold">{row.featureName}</td>
+                      <td className="font-bold">{row.specialtyName}</td>
+                      <td className="text-sm">{row.description}</td>
                       <td className="">
-                        <Icon icon={row.icon} className="text-3xl mx-auto" />
+                        <img
+                          src={
+                            (row.image && row.image) ||
+                            URL.createObjectURL(row.image)
+                          }
+                          alt={row.specialtyName}
+                          style={{
+                            width: "auto",
+                            height: "auto",
+                            maxHeight: "100px",
+                            borderRadius: "4px",
+                          }}
+                          className="mx-auto"
+                        />
                       </td>
                       <td className="flex justify-center items-center gap-4">
                         <IconButton variant="plain" color="danger">
@@ -377,7 +398,7 @@ const FeatureHome = () => {
             </tbody>
             <tfoot>
               <tr>
-                <td colSpan={5}>
+                <td colSpan={6}>
                   <Box
                     sx={{
                       display: "flex",
@@ -445,11 +466,11 @@ const FeatureHome = () => {
           }}
         >
           {isEdit === true ? "Update feature" : "New feature created"}:{" "}
-          <span className="font-bold"> {feature.featureName}</span>
+          <span className="font-bold"> {feature.specialtyName}</span>
         </Snackbar>
       </div>
     </div>
   );
 };
 
-export default FeatureHome;
+export default SpecialyHome;

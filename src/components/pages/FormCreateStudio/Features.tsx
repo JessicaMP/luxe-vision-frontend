@@ -3,10 +3,24 @@ import List from "@mui/joy/List";
 import ListItem from "@mui/joy/ListItem";
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { selectFeatures } from "@/selectors/studioSelector";
-import React from "react";
-import { AppDispatch } from "@/store";
-import { fetchAllFeatures } from "@/reducers/featuresReducer";
+
+import { selectFeatures, selectStudio } from "@/reducers/studioSelector";
+import ListItemDecorator from '@mui/joy/ListItemDecorator';
+import { Icon } from "@iconify/react";
+import ListItemButton from '@mui/joy/ListItemButton';
+
+export const Specialty = ({ onChangeInfo, isEdit = false }: any) => {
+  const studio = useSelector(selectStudio) || {};
+  const [list, setList] = useState<number[]>([]);
+  const dispatch = useDispatch();
+  const features = useSelector(selectFeatures) || [];
+
+  const handleChange = (e: any, id: number) => {
+    setList((prevList) => {
+      const updatedList = e.target.checked
+        ? prevList.includes(id) ? prevList : [...prevList, id]
+        : prevList.filter((item) => item !== id);
+
 
 interface FeaturesProps {
   onChangeInfo: (features: number[]) => void;
@@ -60,6 +74,10 @@ export const Features = ({
         >
           {features.map((feature: any) => (
             <ListItem key={feature.id}>
+              {/* <ListItemDecorator>
+                <Icon icon={feature.icon} className="text-xl text-red-500" />
+              </ListItemDecorator> */}
+              <Icon icon={feature.icon} className="text-xl" />
               <Checkbox
                 overlay
                 disableIcon
