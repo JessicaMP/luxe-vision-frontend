@@ -15,7 +15,7 @@ const getStudioById = (id: string) => {
   return axios.get(`${API_URL}/studios/${id}`);
 };
 
-const postStudio = (body: any) => {
+const postStudio = (body: FormData) => {
   const headers = {
     headers: {
       Authorization: `Bearer ${TOKEN}`,
@@ -25,7 +25,7 @@ const postStudio = (body: any) => {
   return axios.post(`${API_URL}/studios`, body, headers);
 };
 
-const putStudio = (body: any) => {
+const putStudio = (body: FormData) => {
   const headers = {
     headers: {
       Authorization: `Bearer ${TOKEN}`,
@@ -35,8 +35,13 @@ const putStudio = (body: any) => {
   return axios.put(`${API_URL}/studios`, body, headers);
 };
 
-const deleteStudio = (id: number) => {
-  return axios.delete(`${API_URL}/studios/${id}`);
+const deleteStudio = (id: string) => {
+  const headers = {
+    headers: {
+      Authorization: `Bearer ${TOKEN}`,
+    },
+  };
+  return axios.delete(`${API_URL}/studios/${id}`, headers);
 };
 
 const ApiService = {
