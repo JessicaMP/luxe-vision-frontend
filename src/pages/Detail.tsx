@@ -30,12 +30,6 @@ const Detail = () => {
     (state: RootState) => selectStudioById(studioId, state) as Studio
   );
 
-  // useEffect(() => {
-  //   if (!studio || studio.id !== studioId) {
-  //     dispatch(fetchStudioByIdAPI(studioId.toString()));
-  //   }
-  // }, [dispatch, studioId, studio]);
-
   if (!studio) {
     return <NotFoundStudio />;
   }
