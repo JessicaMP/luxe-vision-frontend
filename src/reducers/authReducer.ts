@@ -17,7 +17,7 @@ interface AuthState {
 }
 
 const initialState: AuthState = {
-  token: localStorage.getItem("token"),
+  token: localStorage.getItem("token") || null,
   user: null,
   loading: false,
   error: null,
@@ -108,7 +108,7 @@ const authSlice = createSlice({
         state.error = null;
       })
       .addCase(login.fulfilled, (state, action) => {
-        const jwtToken = action.payload.jwt;
+        const jwtToken = action.payload.token;
         if (jwtToken) {
             localStorage.setItem("token", jwtToken);
         }
@@ -127,7 +127,7 @@ const authSlice = createSlice({
       })
       .addCase(register.fulfilled, (state, action) => {
         state.loading = false;
-        state.token = action.payload.jwt;
+        state.token = action.payload.token;
         state.user = action.payload.user;
         state.isAuthenticated = true;
       })
