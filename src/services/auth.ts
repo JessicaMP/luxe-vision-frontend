@@ -7,7 +7,6 @@ const login = async (email: string, password: string) => {
   const { token } = response.data.jwt;
   if (token) {
     localStorage.setItem("token", token); 
-    console.log("Token guardado en login:", token);
   }
   return response;
 };
@@ -17,14 +16,12 @@ const register = async (userData: { firstName: string; lastName: string; email: 
   const { token } = response.data.jwt;
   if (token) {
     localStorage.setItem("token", token); 
-    console.log("Token guardado en register:", token);
   }
   return response;
 };
 
 const getProfile = () => {
   const token = localStorage.getItem("token");
-  console.log("Token guardado en register:", token);
   return axios.get(`${API_URL}/users/profile`, {
     headers: {
       Authorization: `Bearer ${token}`,
