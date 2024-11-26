@@ -1,5 +1,5 @@
-import { combineReducers, configureStore } from '@reduxjs/toolkit';
-import { persistStore, persistReducer, FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER } from 'redux-persist';
+import { configureStore } from '@reduxjs/toolkit';
+import { persistStore, persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import themeReducer from './reducers/themeSlice';
 import studiosReducer from './reducers/studiosReducer';
@@ -13,37 +13,50 @@ const authPersistConfig = {
   whitelist: ["token", "user"],
 };
 
-
-const persistConfig = {
-  key: 'root',
+const studioPersistConfig = {
+  key: "studios",
   storage,
-  whitelist: ['studios', 'features', 'specialties'], 
 };
 
-const rootReducer = combineReducers({
-  theme: themeReducer,
-  studios: studiosReducer,
-  features: featuresReducer,
-  specialties: specialtiesReducer,
-  users: authSlice,
-});
+const featurePersistConfig = {
+  key: "features",
+  storage,
+};
 
-const persistedReducer = persistReducer(persistConfig, rootReducer);
+const featureSpecialtiesConfig = {
+  key: "specialties",
+  storage,
+};
+
+const persistedStudiosReducer = persistReducer(studioPersistConfig, studiosReducer);
+const persistedFeaturesReducer = persistReducer(featurePersistConfig, featuresReducer);
+const persistedSpecialtiesReducer = persistReducer(featureSpecialtiesConfig, specialtiesReducer);
+const persistedAuthReducer = persistReducer(authPersistConfig, authSlice);
 
 const store = configureStore({
-  reducer: persistedReducer,
+  reducer: {
+    theme: themeReducer,
+    studios: persistedStudiosReducer,
+    features: persistedFeaturesReducer,
+    specialties: persistedSpecialtiesReducer,
+    users: persistedAuthReducer,
+  },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: {
-        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+        ignoredActions: [
+          "persist/PERSIST",
+          "persist/REHYDRATE",
+          "persist/FLUSH",
+          "persist/PAUSE",
+          "persist/PURGE",
+          "persist/REGISTER",
+        ],
       },
     }),
-  devTools: process.env.NODE_ENV !== 'production',
 });
 
 export const persistor = persistStore(store);
-
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
-
 export default store;
