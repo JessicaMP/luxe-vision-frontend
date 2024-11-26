@@ -14,7 +14,7 @@ import RecommendSection from "./home/RecommendSection";
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect } from "react";
 import { selectStudios } from "@/selectors/studioSelector";
-import { fetchStudios } from "@/reducers/studiosReducer";
+import { fetchStudiosAPI } from "@/reducers/studiosReducer";
 import { AppDispatch } from "@/store";
 
 const Home = () => {
@@ -31,7 +31,7 @@ const Home = () => {
 
   useEffect(() => {
     if (studios.length === 0) {
-      dispatch(fetchStudios());
+      dispatch(fetchStudiosAPI());
     }
   }, [dispatch, studios.length]);
 
