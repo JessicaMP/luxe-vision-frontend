@@ -73,3 +73,25 @@ export interface StudioState {
 export interface ErrorResponse {
   message: string;
 }
+
+export interface OpenHours {
+  [key: string]: string;
+}
+
+export interface Appointment {
+  id: number;
+  date: string;
+  startTime: string;
+  endTime: string;
+  status: string;
+}
+
+export interface Schedule {
+  openHours: OpenHours;
+  appointments: Appointment[];
+}
+
+export interface AvailabilityProps {
+  schedule: Schedule;
+  onReserve: (startTime: string, endTime: string, date: Date) => void;
+}
