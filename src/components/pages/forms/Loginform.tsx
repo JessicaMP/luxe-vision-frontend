@@ -1,12 +1,13 @@
 import { Button, FormControl, FormLabel, Input, Typography } from "@mui/joy";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "@/reducers/authReducer";
-import { RootState } from "src/store.ts";
+import { AppDispatch, RootState } from "src/store.ts";
 import { useNavigate } from "react-router-dom";
+import InputField from "./InputField";
 
 const Login = () => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
   const { loading, error } = useSelector((state: RootState) => state.users);
 
@@ -15,16 +16,56 @@ const Login = () => {
     password: "",
   });
 
-  const handleChange = (event) => {
-    const { name, value } = event.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
+  const [formErrors, setFormErrors] = useState({
+    email: "",
+    password: "",
+  });
+
+  const validateField = useCallback((name: string, value: string) => {
+    let error = "";
+
+    if (name === "email" && value.trim() === "") {
+      error = "Email is required.";
+    } else if (name === "password" && value.trim() === "") {
+      error = "Password is required.";
+    }
+
+    setFormErrors((prevErrors) => ({
+      ...prevErrors,
+      [name]: error,
     }));
-  };
+  }, []);
+
+  const handleChange = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      const { name, value } = event.target;
+
+      setFormData((prevData) => ({
+        ...prevData,
+        [name]: value,
+      }));
+      validateField(name, value);
+    },
+    [validateField]
+  );
 
   const handleSubmit = (event) => {
     event.preventDefault();
+
+    // Final validation before submission
+    const finalErrors: Record<string, string> = {};
+    if (formData.email.trim() === "") {
+      finalErrors.email = "Email is required.";
+    }
+    if (formData.password.trim() === "") {
+      finalErrors.password = "Password is required.";
+    }
+
+    setFormErrors(finalErrors);
+
+    if (Object.values(finalErrors).some((error) => error)) {
+      return;
+    }
 
     const emailLowercase = formData.email.toLowerCase();
 
@@ -56,30 +97,19 @@ const Login = () => {
           Log in
         </Typography>
         <form className="px-[40px] space-y-4 mt-8" onSubmit={handleSubmit}>
-          {["Email", "Password"].map((label, index) => (
-            <FormControl key={index}>
-              <FormLabel
-                className="text-[#323232] font-bold text-[24px] mb-1"
-                style={{ fontFamily: "inherit" }}
-              >
-                {label}
-              </FormLabel>
-              <Input
-                name={label.toLowerCase()}
-                type={label.toLowerCase() === "password" ? "password" : "text"}
-                value={formData[label.toLowerCase()]}
-                onChange={handleChange}
-                sx={{
-                  backgroundColor: "#DADADA",
-                  border: "1px solid #323232",
-                  borderRadius: "15px",
-                  width: "100%",
-                  height: "40px",
-                  boxShadow: "0 6px 12px rgba(0, 0, 0, 0.2)",
-                  fontFamily: "inherit",
-                }}
-              />
-            </FormControl>
+          {[
+            { label: "Email", name: "email", type: "email" },
+            { label: "Password", name: "password", type: "password" },
+          ].map((field) => (
+            <InputField
+              key={field.name}
+              label={field.label}
+              name={field.name}
+              type={field.type}
+              value={formData[field.name]}
+              error={formErrors[field.name]}
+              onChange={handleChange}
+            />
           ))}
           {error && <p className="text-red-500">{error}</p>}
 
