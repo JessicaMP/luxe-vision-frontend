@@ -4,10 +4,9 @@ import Typography from "@mui/joy/Typography";
 import Sheet from "@mui/joy/Sheet";
 import Checkbox from "@mui/joy/Checkbox";
 import Link from "@mui/joy/Link";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { selectStudios } from "@/selectors/studioSelector";
-import { fetchStudios } from "@/reducers/studiosReducer";
 import { RiArrowLeftSLine, RiArrowRightSLine } from "react-icons/ri";
 import Avatar from "@mui/joy/Avatar";
 import { visuallyHidden } from "@mui/utils";
@@ -20,6 +19,8 @@ import { MdOutlineModeEditOutline } from "react-icons/md";
 import IconButton from "@mui/joy/IconButton";
 import { Link as LinkRoute } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import { AppDispatch } from "@/store";
+import { deleteStudio, selectStudioById } from "@/reducers/studiosReducer";
 
 function labelDisplayedRows({ from, to, count }: any) {
   return `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}`;
@@ -160,6 +161,7 @@ const EnhancedTableHead = (props: any) => {
 
 export default function TableSortAndSelection() {
   const navigate = useNavigate();
+  const dispatch = useDispatch<AppDispatch>();
   const rows = useSelector(selectStudios) || [];
 
   const [order, setOrder] = useState("asc");
@@ -213,7 +215,12 @@ export default function TableSortAndSelection() {
   };
 
   const handleEdit = (id: number) => {
+    dispatch(selectStudioById(id));
     navigate(`/administration/edit_studio/${id}`);
+  };
+
+  const handleDelete = (id: number) => {
+    dispatch(deleteStudio(id));
   };
 
   return (
@@ -344,7 +351,11 @@ export default function TableSortAndSelection() {
                         {row.yearsOfExperience === 1 ? " year" : " years"}
                       </td>
                       <td className="flex justify-center items-center gap-4">
-                        <IconButton variant="plain" color="danger">
+                        <IconButton
+                          variant="plain"
+                          color="danger"
+                          onClick={() => handleDelete(row.id)}
+                        >
                           <AiTwotoneDelete className="text-2xl text-red-500" />
                         </IconButton>
                         <IconButton
