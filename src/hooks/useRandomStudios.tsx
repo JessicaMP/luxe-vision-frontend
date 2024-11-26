@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { fetchStudiosRandomAPI } from "@/reducers/studiosReducer";
 import { AppDispatch } from "@/store";
+import ApiService from "@/services/studios";
 
 const useRandomStudios = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -13,8 +13,8 @@ const useRandomStudios = () => {
     const fetchData = async () => {
       setStatus("loading");
       try {
-        const result = await dispatch(fetchStudiosRandomAPI()).unwrap();
-        setData(result);
+        const result = await ApiService.getStudiosRandom();
+        setData(result.data);
         setStatus("succeeded");
       } catch (err: any) {
         setError(err.message);
