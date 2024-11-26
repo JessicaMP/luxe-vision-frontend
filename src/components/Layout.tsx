@@ -3,23 +3,9 @@ import Header from "./Header";
 import SideBar from "./SideBar";
 import { useLocation } from "react-router-dom";
 import { IoWarningOutline } from "react-icons/io5";
-import { useDispatch, useSelector } from "react-redux";
-import { selectStudios, selectStudioStatus } from "@/selectors/studioSelector";
-import { useEffect } from "react";
-import { fetchStudios } from "@/reducers/studiosReducer";
-import { AppDispatch } from "@/store";
 
 const Layout = ({ children }: any) => {
   const location = useLocation();
-  const studios = useSelector(selectStudios);
-  const status = useSelector(selectStudioStatus);
-  const dispatch = useDispatch<AppDispatch>();
-
-  useEffect(() => {
-    if (status === "idle" && studios.length === 0) {
-      dispatch(fetchStudios());
-    }
-  }, [dispatch, studios.length, status]);
 
   const isAdminRoute = location.pathname.includes("administration");
   if (isAdminRoute) {
