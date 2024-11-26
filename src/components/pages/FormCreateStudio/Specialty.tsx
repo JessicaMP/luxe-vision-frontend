@@ -6,43 +6,50 @@ import { useSelector, useDispatch } from "react-redux";
 import { selectSpecialties } from "@/selectors/studioSelector";
 import { fetchSpecialties } from "@/reducers/specialtiesReducer";
 import { selectStudio } from "@/selectors/studioSelector";
+import React from "react";
+import { Studio, StudioSpecialty } from "@/types";
+import { AppDispatch } from "@/store";
 
-export const Specialty = ({ onChangeInfo, isEdit = false }: any) => {
-  const studio = useSelector(selectStudio) || {};
-  const [list, setList] = useState<number[]>([]);
-  const dispatch = useDispatch();
-  const specialties = useSelector(selectSpecialties) || [];
+interface SpecialtyProps {
+  onChangeInfo: (specialties: number[]) => void;
+  isEdit?: boolean;
+  initialData?: number[];
+}
 
-  const handleChange = (e: any, id: number) => {
-    setList((prevList) => {
-      const updatedList = e.target.checked
-        ? prevList.includes(id)
-          ? prevList
-          : [...prevList, id]
-        : prevList.filter((item) => item !== id);
-
-      onChangeInfo(updatedList);
-      return updatedList;
-    });
-  };
-
-  const setPropertys = () => {
-    const specialties = studio.studioSpecialties.map(
-      (specialty: any) => specialty.specialty.id
-    );
-    setList([...specialties]);
-  };
+export const Specialty = ({
+  onChangeInfo,
+  isEdit = false,
+  initialData = [],
+}: SpecialtyProps) => {
+  const [list, setList] = useState<number[]>(initialData);
+  const dispatch = useDispatch<AppDispatch>();
+  const specialties = useSelector(selectSpecialties) as StudioSpecialty[];
 
   useEffect(() => {
     if (specialties.length === 0) {
       dispatch(fetchSpecialties());
     }
-  }, [specialties.length]);
+  }, [dispatch, specialties.length]);
 
-  useEffect(() => {
-    if (!isEdit) return;
-    setPropertys();
-  }, [isEdit, studio.id]);
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>, id: number) => {
+    setList((prevList) => {
+      let updatedList;
+      if (e.target.checked) {
+        if (prevList.includes(id)) {
+          updatedList = prevList.filter((item) => item !== id);
+          e.target.checked = false;
+        } else {
+          updatedList = [...prevList, id];
+        }
+      } else {
+        updatedList = prevList.filter((item) => item !== id);
+      }
+
+      onChangeInfo(updatedList);
+
+      return updatedList;
+    });
+  };
 
   return (
     <div className="space-y-3">
