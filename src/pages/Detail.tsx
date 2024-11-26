@@ -7,11 +7,13 @@ import { FaLocationDot } from "react-icons/fa6";
 import { BsFillGrid1X2Fill } from "react-icons/bs";
 import ModalDetail from "../components/pages/detail/ModalDetail";
 import { useParams } from "react-router-dom";
-import { useSelector } from "react-redux";
-import { selectStudioById } from "@/selectors/studioSelector";
+import { useDispatch, useSelector } from "react-redux";
 import { Studio } from "@/types";
 import NotFoundStudio from "@/components/pages/detail/NotFoundStudio";
 import { Icon } from "@iconify/react";
+import { fetchStudioByIdAPI } from "@/reducers/studiosReducer";
+import { AppDispatch, RootState } from "@/store";
+import { selectStudioById } from "@/selectors/studioSelector";
 
 const Detail = () => {
   useEffect(() => {
@@ -20,10 +22,19 @@ const Detail = () => {
 
   const [open, setOpen] = useState(false);
 
+  const dispatch = useDispatch<AppDispatch>();
   const { id } = useParams();
-  const studio: Studio = useSelector((state) =>
-    selectStudioById(state, Number(id))
+  const studioId = Number(id);
+
+  const studio: Studio = useSelector(
+    (state: RootState) => selectStudioById(studioId, state) as Studio
   );
+
+  // useEffect(() => {
+  //   if (!studio || studio.id !== studioId) {
+  //     dispatch(fetchStudioByIdAPI(studioId.toString()));
+  //   }
+  // }, [dispatch, studioId, studio]);
 
   if (!studio) {
     return <NotFoundStudio />;
@@ -34,12 +45,12 @@ const Detail = () => {
 
   return (
     <main className="bg-white">
-      <div className="container mx-auto py-20 space-y-6 px-4 sm:px-10">
+      <div className="container mx-auto py-20 space-y-6 px-4 sm:px-10 mt-4">
         <header className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 md:gap-0">
           <div className="flex flex-col sm:flex-row gap-3">
             <Avatar
               alt="Remy Sharp"
-              src={studio.profileImage}
+              src={`${studio.profileImage}?t=${studio.lastUpdate}`}
               sx={{
                 "--Avatar-size": { xs: "90px", md: "170px" },
               }}
@@ -70,8 +81,7 @@ const Detail = () => {
               {studio.portfolioPhotos.length > 0 && (
                 <div className="md:w-1/2">
                   <img
-                    src={studio.portfolioPhotos[0].image}
-                    loading="lazy"
+                    src={`${studio.portfolioPhotos[0].image}?t=${studio.lastUpdate}`}
                     alt={`Imagen 1`}
                     className="w-full h-full object-cover rounded-lg"
                     style={{ aspectRatio: "4/3" }}
@@ -85,8 +95,7 @@ const Detail = () => {
                   .map((photo, i) => (
                     <img
                       key={i}
-                      src={photo.image}
-                      loading="lazy"
+                      src={`${photo.image}?t=${studio.lastUpdate}`}
                       alt={`Imagen ${i + 2}`}
                       className="w-full h-full object-cover rounded-lg"
                       style={{ aspectRatio: "1/1" }}
