@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { fetchRandomStudios } from "@/reducers/studiosReducer";
+import { fetchStudiosRandomAPI } from "@/reducers/studiosReducer";
+import { AppDispatch } from "@/store";
 
 const useRandomStudios = () => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const [data, setData] = useState([]);
   const [status, setStatus] = useState("idle");
   const [error, setError] = useState(null);
@@ -12,10 +13,10 @@ const useRandomStudios = () => {
     const fetchData = async () => {
       setStatus("loading");
       try {
-        const result = await dispatch(fetchRandomStudios()).unwrap();
+        const result = await dispatch(fetchStudiosRandomAPI()).unwrap();
         setData(result);
         setStatus("succeeded");
-      } catch (err) {
+      } catch (err: any) {
         setError(err.message);
         setStatus("failed");
       }
