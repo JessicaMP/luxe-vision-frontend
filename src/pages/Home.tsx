@@ -13,8 +13,9 @@ import CardSpeciality from "@/components/pages/home/speciality/CardSpeciality";
 import RecommendSection from "./home/RecommendSection";
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect } from "react";
-import { selectStudios } from "@/reducers/studioSelector";
-import { fetchStudios } from "@/reducers/studioSlice";
+import { selectStudios } from "@/selectors/studioSelector";
+import { fetchStudiosAPI } from "@/reducers/studiosReducer";
+import { AppDispatch } from "@/store";
 
 const Home = () => {
   const cardsSpeciality = [
@@ -25,12 +26,12 @@ const Home = () => {
     { title: "Business", image: "/images/cardsSpeciality/foto5.png" },
   ];
 
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const studios = useSelector(selectStudios);
 
   useEffect(() => {
     if (studios.length === 0) {
-      dispatch(fetchStudios());
+      dispatch(fetchStudiosAPI());
     }
   }, [dispatch, studios.length]);
 

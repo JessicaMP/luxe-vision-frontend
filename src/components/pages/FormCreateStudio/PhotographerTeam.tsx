@@ -1,32 +1,65 @@
-import FormControl from '@mui/joy/FormControl';
-import FormLabel from '@mui/joy/FormLabel';
-import Select from '@mui/joy/Select';
-import Option from '@mui/joy/Option';
-import { useEffect, useState } from 'react';
-import Card from '@mui/joy/Card';
-import CardOverflow from '@mui/joy/CardOverflow';
-import CardContent from '@mui/joy/CardContent';
-import Input from '@mui/joy/Input';
-import { selectStudio } from "@/reducers/studioSelector";
-import { useSelector } from "react-redux";
+import FormControl from "@mui/joy/FormControl";
+import FormLabel from "@mui/joy/FormLabel";
+import Select from "@mui/joy/Select";
+import Option from "@mui/joy/Option";
+import { useEffect, useState } from "react";
+import Card from "@mui/joy/Card";
+import CardOverflow from "@mui/joy/CardOverflow";
+import CardContent from "@mui/joy/CardContent";
+import Input from "@mui/joy/Input";
+import React from "react";
+import { Photographer } from "@/types";
 
-export const PhotographerTeam = ({ onChangeInfo, isEdit= false }: any) => {
-  const studio = useSelector(selectStudio) || {};
-  const initialPhotographers = [{ firstName: '', lastName: '' }];
-  const [numPhotographers, setNumPhotographers] = useState(1);
-  const [photographers, setPhotographers] = useState(initialPhotographers);
+interface PhotographerTeamProps {
+  onChangeInfo: (photographers: Photographer[]) => void;
+  isEdit?: boolean;
+  initialData?: Photographer[];
+}
+
+export const PhotographerTeam = ({
+  onChangeInfo,
+  isEdit = false,
+  initialData = [],
+}: PhotographerTeamProps) => {
+  const [numPhotographers, setNumPhotographers] = useState(
+    initialData.length || 1
+  );
+  const [photographers, setPhotographers] = useState<Photographer[]>(
+    initialData.length ? initialData : [{ firstName: "", lastName: "" }]
+  );
+
+  useEffect(() => {
+    if (!initialData.length) {
+      setPhotographers([{ firstName: "", lastName: "" }]);
+      setNumPhotographers(1);
+    } else {
+      setPhotographers(initialData);
+      setNumPhotographers(initialData.length);
+    }
+  }, [initialData]);
 
   const handleNumPhotographersChange = (e: number) => {
+    if (e > photographers.length) {
+      const newPhotographers = Array.from(
+        { length: e - photographers.length },
+        () => ({ firstName: "", lastName: "" })
+      );
+      const updatedPhotographers = [...photographers, ...newPhotographers];
+      setPhotographers(updatedPhotographers);
+      onChangeInfo(updatedPhotographers);
+    } else {
+      const updatedPhotographers = photographers.slice(0, e);
+      setPhotographers(updatedPhotographers);
+      onChangeInfo(updatedPhotographers);
+    }
     setNumPhotographers(e);
-
-    const updatedPhotographers = Array.from({ length: e }, (_) => ({
-      firstName: '',
-      lastName: '',
-    }));
-    setPhotographers(updatedPhotographers);
   };
 
-  const handlePhotographerChange = (index, field, value) => {
+  const handlePhotographerChange = (
+    index: number,
+    field: keyof Photographer,
+    value: string
+  ) => {
     const updatedPhotographers = [...photographers];
     updatedPhotographers[index] = {
       ...updatedPhotographers[index],
@@ -35,20 +68,6 @@ export const PhotographerTeam = ({ onChangeInfo, isEdit= false }: any) => {
     setPhotographers(updatedPhotographers);
     onChangeInfo(updatedPhotographers);
   };
-
-  const setPropertys = () => {
-    const {photographers} = studio;
-    setNumPhotographers(photographers.length);
-    const photographersData = photographers.map(({firstName,lastName}: any) => ({
-      firstName,lastName
-    }))
-    setPhotographers(photographersData);
-  }
-
-  useEffect(() => {
-    if (!isEdit) return;
-    setPropertys();
-  }, [isEdit, studio.id]);
 
   return (
     <div className="space-y-3 ">
@@ -60,7 +79,9 @@ export const PhotographerTeam = ({ onChangeInfo, isEdit= false }: any) => {
             placeholder="Select"
             required
             value={numPhotographers}
-            onChange={(_, newValue) => handleNumPhotographersChange(newValue)}
+            onChange={(_, newValue) =>
+              handleNumPhotographersChange(newValue as number)
+            }
           >
             {Array.from({ length: 15 }, (_, i) => i + 1).map((num) => (
               <Option key={num} value={num}>
@@ -78,13 +99,13 @@ export const PhotographerTeam = ({ onChangeInfo, isEdit= false }: any) => {
                 color="danger"
                 sx={{
                   px: 0.2,
-                  justifyContent: 'center',
-                  fontSize: 'xs',
-                  fontWeight: 'xl',
-                  letterSpacing: '1px',
-                  textTransform: 'uppercase',
-                  borderLeft: '1px solid',
-                  borderColor: 'divider',
+                  justifyContent: "center",
+                  fontSize: "xs",
+                  fontWeight: "xl",
+                  letterSpacing: "1px",
+                  textTransform: "uppercase",
+                  borderLeft: "1px solid",
+                  borderColor: "divider",
                 }}
               >
                 Photographer {index + 1}
@@ -97,7 +118,7 @@ export const PhotographerTeam = ({ onChangeInfo, isEdit= false }: any) => {
                     onChange={(e) =>
                       handlePhotographerChange(
                         index,
-                        'firstName',
+                        "firstName",
                         e.target.value
                       )
                     }
@@ -111,7 +132,7 @@ export const PhotographerTeam = ({ onChangeInfo, isEdit= false }: any) => {
                     onChange={(e) =>
                       handlePhotographerChange(
                         index,
-                        'lastName',
+                        "lastName",
                         e.target.value
                       )
                     }

@@ -4,59 +4,66 @@ import FormLabel from "@mui/joy/FormLabel";
 import Input from "@mui/joy/Input";
 import { IMaskInput } from "react-imask";
 import { useSelector } from "react-redux";
-import { selectStudio } from "@/reducers/studioSelector";
+import { selectStudio } from "@/selectors/studioSelector";
+import React from "react";
+import { Studio } from "@/types";
 
 interface TextMaskProps {
   onChange: (event: { target: { name: string; value: string } }) => void;
   name: string;
 }
-
-const TextMaskAdapter = forwardRef<HTMLInputElement, TextMaskProps>(function TextMaskAdapter(props, ref) {
-  const { onChange, ...other } = props;
-
-  return (
-    <IMaskInput
-      {...other}
-      mask="(#00) 000-0000"
-      definitions={{
-        "#": /[1-9]/,
-      }}
-      inputRef={ref}
-      onAccept={(value) =>
-        onChange({ target: { name: props.name, value: value as string } })
-      }
-      overwrite
-    />
-  );
-});
-
-export const ContactInformation = ({ onChangeInfo, isEdit = false }: any) => {
-  const studio = useSelector(selectStudio) || {};
-  const initialForm = {
-    email: "",
-    phone: "",
+interface ContactInformationProps {
+  onChangeInfo: (data: any) => void;
+  isEdit?: boolean;
+  initialData?: {
+    email?: string;
+    phone?: string;
   };
-  const [form, setForm] = useState({ ...initialForm });
+}
+
+const TextMaskAdapter = forwardRef<HTMLInputElement, TextMaskProps>(
+  function TextMaskAdapter(props, ref) {
+    const { onChange, ...other } = props;
+
+    return (
+      <IMaskInput
+        {...other}
+        mask="(#00) 000-0000"
+        definitions={{
+          "#": /[1-9]/,
+        }}
+        inputRef={ref}
+        onAccept={(value) =>
+          onChange({ target: { name: props.name, value: value as string } })
+        }
+        overwrite
+      />
+    );
+  }
+);
+
+export const ContactInformation = ({
+  onChangeInfo,
+  isEdit = false,
+  initialData = {},
+}: ContactInformationProps) => {
+  const [form, setForm] = useState({
+    email: initialData?.email || "",
+    phone: initialData?.phone || "",
+  });
+
+  useEffect(() => {
+    setForm({
+      email: initialData?.email || "",
+      phone: initialData?.phone || "",
+    });
+  }, [initialData]);
 
   const handleProperty = (value: any, property: string) => {
     const updatedForm = { ...form, [property]: value };
     setForm(updatedForm);
     onChangeInfo(updatedForm);
   };
-
-  const setPropertys = () => {
-    const editForm = {
-      email: studio.email,
-      phone: studio.phone,
-    };
-    setForm({...editForm})
-  }
-
-  useEffect(() => {
-    if (!isEdit) return
-    setPropertys();
-
-  }, [isEdit, studio]);
 
   return (
     <div className="space-y-3">
@@ -84,5 +91,4 @@ export const ContactInformation = ({ onChangeInfo, isEdit = false }: any) => {
     </div>
   );
 };
-
 export default ContactInformation;

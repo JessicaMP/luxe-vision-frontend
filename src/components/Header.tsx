@@ -5,11 +5,13 @@ import { useSelector, useDispatch } from "react-redux";
 import { RootState, AppDispatch } from "src/store.ts";
 import { useState, useEffect } from "react";
 import { MdMenu } from "react-icons/md";
-import { fetchProfile, logout } from "@/reducers/authSlice";
+import { fetchProfile, logout } from "@/reducers/authReducer";
 
 export const Header = ({ isLogin = false }: any) => {
   const isMobile = useMediaQuery("(max-width:768px)");
-  const { isAuthenticated, user, loading } = useSelector((state: RootState) => state.users);
+  const { isAuthenticated, user, loading } = useSelector(
+    (state: RootState) => state.users
+  );
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -28,14 +30,14 @@ export const Header = ({ isLogin = false }: any) => {
     }
   }, [isAuthenticated, user, dispatch, loading]);
 
-
   return (
     <header className="bg-[#323232] fixed top-0 w-full z-20">
       <div className="container mx-auto">
         <div
-          className="flex items-center justify-between flex-wrap px-6 py-2 w-full sticky top-0 z-20"
+          className="flex items-center justify-between flex-wrap px-6 py-2 w-full
+      sticky top-0 z-20"
         >
-          <div className="flex items-center">
+          <div className="flex items-center ">
             <Link to="/">
               <img
                 draggable="false"
@@ -59,8 +61,12 @@ export const Header = ({ isLogin = false }: any) => {
             <div className="flex items-center space-x-4 text-white">
               {!isMobile && (
                 <span className="mr-2 text-lg">
-                Welcome, {user?.firstName ? user?.firstName.charAt(0).toUpperCase() + user?.firstName.slice(1) : ""}
-              </span>
+                  Welcome,{" "}
+                  {user?.firstName
+                    ? user?.firstName.charAt(0).toUpperCase() +
+                      user?.firstName.slice(1)
+                    : ""}
+                </span>
               )}
               <div
                 className={`flex items-center justify-center rounded-full 

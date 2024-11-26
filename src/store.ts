@@ -2,10 +2,10 @@ import { configureStore } from '@reduxjs/toolkit';
 import { persistStore, persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import themeReducer from './reducers/themeSlice';
-import studiosReducer from './reducers/studioSlice';
+import studiosReducer from './reducers/studiosReducer';
 import featuresReducer from './reducers/featuresReducer';
 import specialtiesReducer from './reducers/specialtiesReducer';
-import authSlice from './reducers/authSlice';
+import authSlice from './reducers/authReducer';
 
 const authPersistConfig = {
   key: 'users',

@@ -1,9 +1,10 @@
 import { Button, FormControl, FormLabel, Input, Typography } from "@mui/joy";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { register } from "@/reducers/authSlice";
+import { register } from "@/reducers/authReducer";
 import { RootState } from "src/store.ts";
 import { useNavigate } from "react-router-dom";
+import InputField from "./InputField";
 
 const Register = () => {
   const dispatch = useDispatch();
@@ -26,20 +27,33 @@ const Register = () => {
   });
 
   const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
-  const passwordRegex =  /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}/
+  const passwordRegex =
+    /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}/;
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = event.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
+  const handleChange = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      const { name, value } = event.target;
 
-    // Real-time validation
-    validateField(name, value);
-  };
+      setFormData((prevData) => {
+        const updatedData = {
+          ...prevData,
+          [name]: value,
+        };
 
-  const validateField = (name: string, value: string) => {
+        // Real-time validation
+        validateField(name, value, updatedData);
+
+        return updatedData;
+      });
+    },
+    []
+  );
+
+  const validateField = (
+    name: string,
+    value: string,
+    allValues: typeof formData
+  ) => {
     let error = "";
 
     if (name === "firstName" && value.trim().length < 2) {
@@ -49,8 +63,9 @@ const Register = () => {
     } else if (name === "email" && !emailRegex.test(value)) {
       error = "Invalid email address.";
     } else if (name === "password" && !passwordRegex.test(value)) {
-      error = "Password must be at least 8 characters, including a number and a special character.";
-    } else if (name === "repeatPassword" && value !== formData.password) {
+      error =
+        "Password must be at least 8 characters, including a number and a special character.";
+    } else if (name === "repeatPassword" && value !== allValues.password) {
       error = "Passwords do not match.";
     }
 
@@ -75,7 +90,8 @@ const Register = () => {
       finalErrors.email = "Invalid email address.";
     }
     if (!passwordRegex.test(formData.password)) {
-      finalErrors.password = "Password must be at least 8 characters, including a number and a special character.";
+      finalErrors.password =
+        "Password must be at least 8 characters, including a number and a special character.";
     }
     if (formData.password !== formData.repeatPassword) {
       finalErrors.repeatPassword = "Passwords do not match.";
@@ -114,9 +130,7 @@ const Register = () => {
         backgroundBlendMode: "overlay",
       }}
     >
-      <div
-        className="w-[90%] max-w-[550px] bg-[#DADADA] shadow-[0_1px_5px_2px_#FFA987] rounded-[30px] p-10"
-      >
+      <div className="w-[90%] max-w-[550px] bg-[#DADADA] shadow-[0_1px_5px_2px_#FFA987] rounded-[30px] p-10">
         <Typography
           className="text-center font-bold"
           style={{ color: "#D05858", fontSize: "40px" }}
@@ -129,34 +143,21 @@ const Register = () => {
             { label: "Last Name", name: "lastName", type: "text" },
             { label: "Email", name: "email", type: "email" },
             { label: "Password", name: "password", type: "password" },
-            { label: "Repeat Password", name: "repeatPassword", type: "password" },
-          ].map((field, index) => (
-            <FormControl key={index}>
-              <FormLabel
-                className="text-[#323232] font-bold text-[24px] mb-1"
-                style={{ fontFamily: "inherit" }}
-              >
-                {field.label}
-              </FormLabel>
-              <Input
-                name={field.name}
-                type={field.type}
-                value={formData[field.name]}
-                onChange={handleChange}
-                sx={{
-                  backgroundColor: "#DADADA",
-                  border: "1px solid #323232",
-                  borderRadius: "15px",
-                  width: "100%",
-                  height: "40px",
-                  boxShadow: "0 6px 12px rgba(0, 0, 0, 0.2)",
-                  fontFamily: "inherit",
-                }}
-              />
-              {formErrors[field.name] && (
-                <p className="text-red-500">{formErrors[field.name]}</p>
-              )}
-            </FormControl>
+            {
+              label: "Repeat Password",
+              name: "repeatPassword",
+              type: "password",
+            },
+          ].map((field) => (
+            <InputField
+              key={field.name}
+              label={field.label}
+              name={field.name}
+              type={field.type}
+              value={formData[field.name]}
+              error={formErrors[field.name]}
+              onChange={handleChange}
+            />
           ))}
           {error && <p className="text-red-500">{error}</p>}
 

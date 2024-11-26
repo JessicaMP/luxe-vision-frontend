@@ -4,10 +4,9 @@ import Typography from "@mui/joy/Typography";
 import Sheet from "@mui/joy/Sheet";
 import Checkbox from "@mui/joy/Checkbox";
 import Link from "@mui/joy/Link";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { selectStudios } from "@/reducers/studioSelector";
-import { fetchStudios } from "@/reducers/studioSlice";
+import { selectStudios } from "@/selectors/studioSelector";
 import { RiArrowLeftSLine, RiArrowRightSLine } from "react-icons/ri";
 import Avatar from "@mui/joy/Avatar";
 import { visuallyHidden } from "@mui/utils";
@@ -18,8 +17,10 @@ import Button from "@mui/joy/Button";
 import { AiTwotoneDelete } from "react-icons/ai";
 import { MdOutlineModeEditOutline } from "react-icons/md";
 import IconButton from "@mui/joy/IconButton";
-import  { Link as LinkRoute } from "react-router-dom";
+import { Link as LinkRoute } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import { AppDispatch } from "@/store";
+import { deleteStudio, selectStudioById } from "@/reducers/studiosReducer";
 
 function labelDisplayedRows({ from, to, count }: any) {
   return `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}`;
@@ -160,14 +161,8 @@ const EnhancedTableHead = (props: any) => {
 
 export default function TableSortAndSelection() {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const rows = useSelector(selectStudios) || [];
-
-  useEffect(() => {
-    if (rows.length === 0) {
-      dispatch(fetchStudios());
-    }
-  }, [dispatch, rows.length]);
 
   const [order, setOrder] = useState("asc");
   const [orderBy, setOrderBy] = useState("calories");
@@ -182,17 +177,19 @@ export default function TableSortAndSelection() {
   };
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelected = rows.map((n) => n.name);
+      const newSelected = rows.map((n) => n.id);
       setSelected(newSelected);
       return;
     }
     setSelected([]);
   };
-  const handleClick = (event, name) => {
-    const selectedIndex = selected.indexOf(name);
+
+  const handleClick = (event, id) => {
+    // Cambiar el parámetro name por id
+    const selectedIndex = selected.indexOf(id);
     let newSelected = [];
     if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, name);
+      newSelected = newSelected.concat(selected, id);
     } else if (selectedIndex === 0) {
       newSelected = newSelected.concat(selected.slice(1));
     } else if (selectedIndex === selected.length - 1) {
@@ -218,8 +215,13 @@ export default function TableSortAndSelection() {
   };
 
   const handleEdit = (id: number) => {
+    dispatch(selectStudioById(id));
     navigate(`/administration/edit_studio/${id}`);
-  }
+  };
+
+  const handleDelete = (id: number) => {
+    dispatch(deleteStudio(id));
+  };
 
   return (
     <div className="w-full">
@@ -248,7 +250,7 @@ export default function TableSortAndSelection() {
                 borderRadius: "15px",
               }}
               component={LinkRoute}
-               to="/administration/create_studio"
+              to="/administration/create_studio"
             >
               Add
             </Button>
@@ -266,7 +268,10 @@ export default function TableSortAndSelection() {
               "--TableCell-selectedBackground": (theme) =>
                 theme.vars.palette.success.softBg,
               "--TableCell-height": "95px",
-              "& tr > *:not(:first-of-type)": { textAlign: "center" , verticalAlign: "middle"},
+              "& tr > *:not(:first-of-type)": {
+                textAlign: "center",
+                verticalAlign: "middle",
+              },
             }}
             size="lg"
             borderAxis="none"
@@ -289,7 +294,7 @@ export default function TableSortAndSelection() {
 
                   return (
                     <tr
-                      onClick={(event) => handleClick(event, row.studioName)}
+                      onClick={(event) => handleClick(event, row.id)}
                       role="checkbox"
                       aria-checked={isItemSelected}
                       tabIndex={-1}
@@ -346,11 +351,19 @@ export default function TableSortAndSelection() {
                         {row.yearsOfExperience === 1 ? " year" : " years"}
                       </td>
                       <td className="flex justify-center items-center gap-4">
-                        <IconButton variant="plain" color="danger">
+                        <IconButton
+                          variant="plain"
+                          color="danger"
+                          onClick={() => handleDelete(row.id)}
+                        >
                           <AiTwotoneDelete className="text-2xl text-red-500" />
                         </IconButton>
-                        <IconButton variant="plain" color="neutral" onClick={() => handleEdit(row.id)}>
-                          <MdOutlineModeEditOutline  className="text-2xl"/>
+                        <IconButton
+                          variant="plain"
+                          color="neutral"
+                          onClick={() => handleEdit(row.id)}
+                        >
+                          <MdOutlineModeEditOutline className="text-2xl" />
                         </IconButton>
                       </td>
                     </tr>
