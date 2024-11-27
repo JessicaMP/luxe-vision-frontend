@@ -21,6 +21,7 @@ import {
 } from "../utils/date-utils";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
+import { TimeSelect } from "@/components/TimeSelect";
 
 export default function Availability({
   schedule,
@@ -135,76 +136,36 @@ export default function Availability({
           <div className="space-y-4">
             <div className="flex flex-col gap-4">
               <div className="space-y-2">
-                <Label>From what hours?</Label>
-                <Select
+                <TimeSelect
+                  label="From what hours?"
                   value={startTime}
                   onValueChange={(value) => {
                     setStartTime(value);
                     setEndTime(undefined);
                   }}
+                  timeSlots={timeSlots}
                   disabled={!date || timeSlots.length === 0}
-                >
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Start time">
-                      <div className="flex items-center">
-                        <CalendarIcon className="mr-2 h-4 w-4" />
-                        {startTime || "Select time"}
-                      </div>
-                    </SelectValue>
-                  </SelectTrigger>
-                  <SelectContent>
-                    {timeSlots.map((time) => (
-                      <SelectItem
-                        key={time}
-                        value={time}
-                        disabled={!isSlotAvailable(time) || isSlotBooked(time)}
-                        className={cn(
-                          isSlotBooked(time) && "text-red-500 line-through",
-                          !isSlotAvailable(time) && "text-gray-400"
-                        )}
-                      >
-                        {time}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                  placeholder="Start time"
+                  isSlotAvailable={isSlotAvailable}
+                  isSlotBooked={isSlotBooked}
+                  classname="mt-2"
+                />
               </div>
 
               <div className="space-y-2">
-                <Label>Until what hours?</Label>
-                <Select
+                <TimeSelect
+                  label="Until what hours?"
                   value={endTime}
                   onValueChange={setEndTime}
+                  timeSlots={timeSlots.filter(
+                    (time) => time > (startTime || "")
+                  )}
                   disabled={!startTime}
-                >
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="End time">
-                      <div className="flex items-center">
-                        <CalendarIcon className="mr-2 h-4 w-4" />
-                        {endTime || "Select time"}
-                      </div>
-                    </SelectValue>
-                  </SelectTrigger>
-                  <SelectContent>
-                    {timeSlots
-                      .filter((time) => time > (startTime || ""))
-                      .map((time) => (
-                        <SelectItem
-                          key={time}
-                          value={time}
-                          disabled={
-                            !isSlotAvailable(time) || isSlotBooked(time)
-                          }
-                          className={cn(
-                            isSlotBooked(time) && "text-red-500 line-through",
-                            !isSlotAvailable(time) && "text-gray-400"
-                          )}
-                        >
-                          {time}
-                        </SelectItem>
-                      ))}
-                  </SelectContent>
-                </Select>
+                  placeholder="End time"
+                  isSlotAvailable={isSlotAvailable}
+                  isSlotBooked={isSlotBooked}
+                  classname="mt-2"
+                />
               </div>
             </div>
           </div>
