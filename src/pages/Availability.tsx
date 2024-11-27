@@ -77,7 +77,7 @@ export default function Availability({
 
   return (
     <div className="w-full flex justify-center items-center">
-      <div className="flex gap-12 max-w-2xl">
+      <div className="flex flex-col sm:flex-row gap-12 max-w-2xl">
         <div className="flex flex-col gap-6">
           <div className="space-y-4">
             <Label>Which day?</Label>
