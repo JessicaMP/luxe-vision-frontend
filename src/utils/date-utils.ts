@@ -16,7 +16,7 @@ export function generateTimeSlots(start: string, end: string): string[] {
       minute: '2-digit',
       hour12: false
     }));
-    startTime.setMinutes(startTime.getMinutes() + 30); // 30-minute increments
+    startTime.setMinutes(startTime.getMinutes() + 30);
   }
 
   return slots;
@@ -28,22 +28,27 @@ export function isTimeSlotAvailable(
   appointments: Appointment[],
   openHours: OpenHours
 ): boolean {
-  const dayOfWeek = date.toLocaleDateString("en-US", { weekday: "long" });
+  const dayOfWeek = date.toLocaleDateString('en-US', { weekday: 'long' });
   
-  // Check if the studio is open on this day
   if (openHours[dayOfWeek] === 'Closed') return false;
   
-  // Check if the time slot is within business hours
   const { start: openTime, end: closeTime } = parseTimeRange(openHours[dayOfWeek]);
   const slotTime = convertTo24Hour(timeSlot);
   const openDateTime = convertTo24Hour(openTime);
   const closeDateTime = convertTo24Hour(closeTime);
   
-  if (slotTime < openDateTime || slotTime >= closeDateTime) return false;
-  
-  // Check if the time slot overlaps with any appointments
+  return slotTime >= openDateTime && slotTime < closeDateTime;
+}
+
+export function isTimeSlotBooked(
+  date: Date,
+  timeSlot: string,
+  appointments: Appointment[]
+): boolean {
   const dateString = date.toISOString().split('T')[0];
-  return !appointments.some(apt => 
+  const slotTime = convertTo24Hour(timeSlot);
+  
+  return appointments.some(apt => 
     apt.date === dateString &&
     slotTime >= convertTo24Hour(apt.startTime) &&
     slotTime < convertTo24Hour(apt.endTime)
@@ -55,3 +60,16 @@ export function convertTo24Hour(time: string): number {
   return hours * 60 + minutes;
 }
 
+export function isDayFullyBooked(
+  date: Date,
+  appointments: Appointment[],
+  openHours: OpenHours
+): boolean {
+  const dayOfWeek = date.toLocaleDateString('en-US', { weekday: 'long' });
+  if (openHours[dayOfWeek] === 'Closed') return true;
+
+  const { start, end } = parseTimeRange(openHours[dayOfWeek]);
+  const timeSlots = generateTimeSlots(start, end);
+
+  return timeSlots.every(slot => isTimeSlotBooked(date, slot, appointments));
+}

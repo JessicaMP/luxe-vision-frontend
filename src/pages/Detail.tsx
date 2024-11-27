@@ -11,7 +11,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { Studio, StudioFeature } from "@/types";
 import NotFoundStudio from "@/components/pages/detail/NotFoundStudio";
 import { Icon } from "@iconify/react";
-import { fetchStudioByIdAPI } from "@/reducers/studiosReducer";
 import { AppDispatch, RootState } from "@/store";
 import { selectStudioById } from "@/selectors/studioSelector";
 import Availability from "./Availability";
@@ -23,7 +22,6 @@ const Detail = () => {
 
   const [open, setOpen] = useState(false);
 
-  const dispatch = useDispatch<AppDispatch>();
   const { id } = useParams();
   const studioId = Number(id);
 
@@ -51,16 +49,23 @@ const Detail = () => {
     appointments: [
       {
         id: 1,
-        date: "2024-11-25",
+        date: "2024-11-27",
         startTime: "10:00",
         endTime: "11:00",
         status: "booked",
       },
       {
         id: 2,
-        date: "2024-11-25",
+        date: "2024-11-27",
         startTime: "13:00",
         endTime: "14:00",
+        status: "booked",
+      },
+      {
+        id: 3,
+        date: "2024-11-30",
+        startTime: "9:00",
+        endTime: "15:00",
         status: "booked",
       },
     ],

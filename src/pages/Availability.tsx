@@ -1,5 +1,3 @@
-"use client";
-
 import { useState, useMemo } from "react";
 import { Calendar } from "@/components/ui/calendar";
 import { Button } from "@/components/ui/button";
@@ -18,6 +16,8 @@ import {
   generateTimeSlots,
   isTimeSlotAvailable,
   parseTimeRange,
+  isTimeSlotBooked,
+  isDayFullyBooked,
 } from "../utils/date-utils";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
@@ -31,6 +31,7 @@ export default function Availability({
   const [endTime, setEndTime] = useState<string>();
   const [specialty, setSpecialty] = useState<string>();
   const [costPerHour, setCostPerHour] = useState<number>(75);
+
   const studio: Studio = useSelector(
     (state: RootState) => state.studios.studio
   ) as Studio;
@@ -53,9 +54,9 @@ export default function Availability({
 
     if (minutes === 0) return `${hours} hour${hours !== 1 ? "s" : ""}`;
     return `${hours} hour${hours !== 1 ? "s" : ""} and ${minutes} minutes`;
-  }, [total]);
+  }, [startTime, endTime, total]);
 
-  const availableTimeSlots = useMemo(() => {
+  const timeSlots = useMemo(() => {
     if (!date) return [];
 
     const dayOfWeek = date.toLocaleDateString("en-US", { weekday: "long" });
@@ -64,10 +65,25 @@ export default function Availability({
     if (daySchedule === "Closed") return [];
 
     const { start, end } = parseTimeRange(daySchedule);
-    return generateTimeSlots(start, end).filter((slot) =>
+    return generateTimeSlots(start, end);
+  }, [date, schedule]);
+
+  const isSlotAvailable = (slot: string) => {
+    return (
+      date &&
       isTimeSlotAvailable(date, slot, schedule.appointments, schedule.openHours)
     );
-  }, [date, schedule]);
+  };
+
+  const isSlotBooked = (slot: string) => {
+    return date && isTimeSlotBooked(date, slot, schedule.appointments);
+  };
+
+  const handleDateChange = (newDate: Date | undefined) => {
+    setDate(newDate);
+    setStartTime(undefined);
+    setEndTime(undefined);
+  };
 
   const handleReserve = () => {
     if (date && startTime && endTime) {
@@ -84,13 +100,34 @@ export default function Availability({
             <Calendar
               mode="single"
               selected={date}
-              onSelect={setDate}
+              onSelect={handleDateChange}
               className="border rounded-lg"
               disabled={(date) => {
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
                 const day = date.toLocaleDateString("en-US", {
                   weekday: "long",
                 });
-                return schedule.openHours[day] === "Closed";
+                return (
+                  date < today ||
+                  schedule.openHours[day] === "Closed" ||
+                  isDayFullyBooked(
+                    date,
+                    schedule.appointments,
+                    schedule.openHours
+                  )
+                );
+              }}
+              modifiers={{
+                booked: (date) =>
+                  isDayFullyBooked(
+                    date,
+                    schedule.appointments,
+                    schedule.openHours
+                  ),
+              }}
+              modifiersClassNames={{
+                booked: "line-through text-red-500",
               }}
             />
           </div>
@@ -105,7 +142,7 @@ export default function Availability({
                     setStartTime(value);
                     setEndTime(undefined);
                   }}
-                  disabled={!date || availableTimeSlots.length === 0}
+                  disabled={!date || timeSlots.length === 0}
                 >
                   <SelectTrigger className="w-full">
                     <SelectValue placeholder="Start time">
@@ -116,8 +153,16 @@ export default function Availability({
                     </SelectValue>
                   </SelectTrigger>
                   <SelectContent>
-                    {availableTimeSlots.map((time) => (
-                      <SelectItem key={time} value={time}>
+                    {timeSlots.map((time) => (
+                      <SelectItem
+                        key={time}
+                        value={time}
+                        disabled={!isSlotAvailable(time) || isSlotBooked(time)}
+                        className={cn(
+                          isSlotBooked(time) && "text-red-500 line-through",
+                          !isSlotAvailable(time) && "text-gray-400"
+                        )}
+                      >
                         {time}
                       </SelectItem>
                     ))}
@@ -141,10 +186,20 @@ export default function Availability({
                     </SelectValue>
                   </SelectTrigger>
                   <SelectContent>
-                    {availableTimeSlots
+                    {timeSlots
                       .filter((time) => time > (startTime || ""))
                       .map((time) => (
-                        <SelectItem key={time} value={time}>
+                        <SelectItem
+                          key={time}
+                          value={time}
+                          disabled={
+                            !isSlotAvailable(time) || isSlotBooked(time)
+                          }
+                          className={cn(
+                            isSlotBooked(time) && "text-red-500 line-through",
+                            !isSlotAvailable(time) && "text-gray-400"
+                          )}
+                        >
                           {time}
                         </SelectItem>
                       ))}
