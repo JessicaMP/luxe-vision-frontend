@@ -16,6 +16,7 @@ import { useEffect } from "react";
 import { selectStudios } from "@/selectors/studioSelector";
 import { fetchStudiosAPI } from "@/reducers/studiosReducer";
 import { AppDispatch } from "@/store";
+import SearchSection from "./home/SearchSection";
 
 const Home = () => {
   const cardsSpeciality = [
@@ -46,42 +47,7 @@ const Home = () => {
           aria-hidden="true"
         />
 
-        <div className="relative z-10 container px-4 flex flex-col gap-10 items-center text-center">
-          <h1 className="text-4xl md:text-5xl lg:text-[55px] font-bold md:leading-relaxed leading-normal mb-8 max-w-3xl text-[#D05858] ">
-            <span className="text-[#D05858]">Your ideal photographer,</span>
-            <br />
-            <span className="text-[#D05858]">just a click away</span>
-          </h1>
-
-          <div className="w-full smm:max-w-[80%] bg-[#444243] rounded-[20px] px-8 sm:px-16 py-8">
-            <h3 className="text-white text-xl md:text-2xl mb-6 text-left font-bold">
-              Find the photographer you need
-            </h3>
-
-            <form className="flex flex-col md:flex-row gap-4">
-              <Input
-                type="text"
-                placeholder="Photographer's specialty"
-                className="flex-1 h-12 rounded-xl"
-                id="specialty-input"
-              />
-              <Input
-                type="text"
-                placeholder="Location"
-                className="flex-1 h-12 rounded-xl"
-                id="location-input"
-              />
-              <Button
-                type="submit"
-                className="h-12 px-8 bg-[#F69D7B] hover:bg-[#f38a61] text-white font-bold text-md rounded-xl"
-                id="specialty-search-button"
-              >
-                <IoMdSearch />
-                Search
-              </Button>
-            </form>
-          </div>
-        </div>
+        <SearchSection />
       </section>
 
       <section
@@ -109,7 +75,7 @@ const Home = () => {
                     return (
                       <CarouselItem
                         key={index}
-                        className="basis-full smm:basis-1/2 md:basis-1/3 lg:basis-1/3 xl:basis-1/4"
+                        className="basis-full sm:basis-1/2 md:basis-1/3 lg:basis-1/3 xl:basis-1/4"
                       >
                         <CardSpeciality title={card.title} image={card.image} />
                       </CarouselItem>
