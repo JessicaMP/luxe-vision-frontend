@@ -90,6 +90,23 @@ export const fetchProfile = createAsyncThunk(
   }
 );
 
+export const performLogout = createAsyncThunk(
+  "users/logout",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await AuthService.logout();
+      console.log("Logout realizado con éxito:", response);
+      return response;
+    } catch (error) {
+      const axiosError = error as AxiosError<ErrorResponse>;
+      if (axiosError.response && axiosError.response.data?.message) {
+        return rejectWithValue(axiosError.response.data.message);
+      } else {
+        return rejectWithValue("Error al realizar logout.");
+      }
+    }
+  }
+);
 
 
 const authSlice = createSlice({
@@ -149,6 +166,20 @@ const authSlice = createSlice({
         console.log("Usuario cargado:", action.payload);
       })
       .addCase(fetchProfile.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
+      .addCase(performLogout.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(performLogout.fulfilled, (state) => {
+        state.loading = false;
+        state.token = null;
+        state.user = null;
+        state.isAuthenticated = false;
+      })
+      .addCase(performLogout.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
       });
