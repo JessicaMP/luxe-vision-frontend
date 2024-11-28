@@ -62,6 +62,8 @@ export interface StudioSpecialty {
 export interface Specialty {
   id: number;
   specialtyName: string;
+  description: string;
+  image: string;
 }
 
 export interface StudioState {
