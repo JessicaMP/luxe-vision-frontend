@@ -181,14 +181,15 @@ export default function Availability({
                 <SelectValue placeholder="Choose a specialty" />
               </SelectTrigger>
               <SelectContent>
-                {studio.studioSpecialties.map((specialty) => (
-                  <SelectItem
-                    key={specialty.id}
-                    value={specialty.specialty.specialtyName}
-                  >
-                    {specialty.specialty.specialtyName}
-                  </SelectItem>
-                ))}
+                {studio &&
+                  studio.studioSpecialties.map((specialty) => (
+                    <SelectItem
+                      key={specialty.id}
+                      value={specialty.specialty.specialtyName}
+                    >
+                      {specialty.specialty.specialtyName}
+                    </SelectItem>
+                  ))}
               </SelectContent>
             </Select>
           </div>
