@@ -7,12 +7,12 @@ import { FaLocationDot } from "react-icons/fa6";
 import { BsFillGrid1X2Fill } from "react-icons/bs";
 import ModalDetail from "../components/pages/detail/ModalDetail";
 import { useParams } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { Studio, StudioFeature } from "@/types";
 import NotFoundStudio from "@/components/pages/detail/NotFoundStudio";
 import { Icon } from "@iconify/react";
-import { AppDispatch, RootState } from "@/store";
-import { selectStudioById } from "@/selectors/studioSelector";
+import { RootState } from "@/store";
+import { selectStudio } from "@/selectors/studioSelector";
 import Availability from "./Availability";
 
 const Detail = () => {
@@ -21,20 +21,18 @@ const Detail = () => {
   }, []);
 
   const [open, setOpen] = useState(false);
+  const [studio, setStudio] = useState<Studio | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   const { id } = useParams();
   const studioId = Number(id);
 
-  const studio: Studio = useSelector(
-    (state: RootState) => selectStudioById(studioId, state) as Studio
-  );
+  const currentStudio = useSelector((state: RootState) => selectStudio(state));
 
-  if (!studio) {
-    return <NotFoundStudio />;
-  }
-
-  const portfolioPhotosLength =
-    studio.portfolioPhotos.length > 5 ? 5 : studio.portfolioPhotos.length;
+  useEffect(() => {
+    setStudio(currentStudio);
+    setIsLoading(false);
+  }, [currentStudio, studioId]);
 
   const schedule = {
     openHours: {
@@ -70,6 +68,17 @@ const Detail = () => {
       },
     ],
   };
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (!studio) {
+    return <NotFoundStudio />;
+  }
+
+  const portfolioPhotosLength =
+    studio.portfolioPhotos.length > 5 ? 5 : studio.portfolioPhotos.length;
 
   return (
     <main className="bg-white">
