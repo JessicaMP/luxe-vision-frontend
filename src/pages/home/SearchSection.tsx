@@ -138,7 +138,7 @@ const SearchSection = () => {
                         className={
                           open
                             ? cn(
-                                "mt-12 fixed bg-white rounded-lg min-w-[300px]"
+                                "mt-12 fixed bg-white rounded-lg min-w-[300px] z-50"
                               )
                             : cn("hidden")
                         }
@@ -191,10 +191,10 @@ const SearchSection = () => {
                             !field.value && "text-muted-foreground"
                           )}
                         >
-                          {field.value === new Date("1111-11-11") ? (
+                          {field.value.getFullYear() === 1111 ? (
                             <span>Pick a date</span>
                           ) : (
-                            <span>Pick a date</span>
+                            <span>{format(field.value, "dd/MM/yyyy")}</span>
                           )}
                           <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                         </Button>
