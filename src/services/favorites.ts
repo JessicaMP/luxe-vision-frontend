@@ -10,7 +10,6 @@ const getFavorites = () => {
     },
   };
   return axios.get(`${API_URL}/users/favorites`, headers);
-  // return { data: [5, 6] };
 };
 
 const postFavorite = (body: any) => {
