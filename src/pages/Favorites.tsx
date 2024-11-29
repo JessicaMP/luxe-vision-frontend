@@ -34,10 +34,11 @@ const Favorites = () => {
     <main className="bg-[#454243]">
       <section className="container mx-auto py-32 px-4 sm:px-10">
         <div className="space-y-10">
-          <header className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 md:gap-0">
-            <h1 className="text-[#FFA987] font-bold text-5xl">Favoritos</h1>
+          <header className="flex justify-between items-center gap-4">
+            <h1 className="text-[#FFA987] font-bold text-4xl">Favorites</h1>
 
-            <CustomButton>
+            <CustomButton 
+            onClick={() => window.history.back()}>
               <FaChevronLeft className="text-white" />
               Back
             </CustomButton>

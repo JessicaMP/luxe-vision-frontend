@@ -44,7 +44,10 @@ export const toggleFavorite = (studioId: number) => async (dispatch, getState) =
 const favoritesSlice = createSlice({
   name: "favorites",
   initialState,
-  reducers: {},
+  reducers: {resetFavorites: (state) => {
+    state.favorites = [];
+    state.loading = false;
+  },},
   extraReducers: (builder) => {
     builder
       .addCase(fetchFavorites.pending, (state) => {

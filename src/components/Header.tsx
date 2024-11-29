@@ -5,7 +5,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { RootState, AppDispatch } from "src/store.ts";
 import { useState, useEffect } from "react";
 import { MdMenu } from "react-icons/md";
-import { fetchProfile, logout } from "@/reducers/authReducer";
+import { fetchProfile, performLogout } from "@/reducers/authReducer";
 
 export const Header = ({ isLogin = false }: any) => {
   const isMobile = useMediaQuery("(max-width:768px)");
@@ -114,10 +114,16 @@ export const Header = ({ isLogin = false }: any) => {
                   </MenuItem>
                 )}
                 <MenuItem
-                  onClick={() => {
-                    dispatch(logout());
-                    navigate("/");
-                    handleClose();
+                   onClick={() => {
+                    dispatch(performLogout())
+                      .unwrap()
+                      .then(() => {
+                        navigate("/");
+                      })
+                      .catch((error) => {
+                        console.error("Error durante el logout:", error);
+                      });
+                    handleClose(); 
                   }}
                 >
                   Logout

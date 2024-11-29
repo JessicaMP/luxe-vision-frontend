@@ -2,6 +2,8 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import AuthService from "@/services/auth";
 import { AxiosError } from "axios";
 import { ErrorResponse } from "@/types";
+import { resetFavorites } from "@/reducers/favoritesReducer";
+
 interface AuthState {
   token: string | null;
   user: {
@@ -86,6 +88,24 @@ export const fetchProfile = createAsyncThunk(
   }
 );
 
+export const performLogout = createAsyncThunk(
+  "users/logout",
+  async (_, { rejectWithValue }) => {
+    try {
+      localStorage.removeItem("favorites");
+      const response = await AuthService.logout();
+      console.log("Logout realizado con éxito:", response);
+      return response;
+    } catch (error) {
+      const axiosError = error as AxiosError<ErrorResponse>;
+      if (axiosError.response && axiosError.response.data?.message) {
+        return rejectWithValue(axiosError.response.data.message);
+      } else {
+        return rejectWithValue("Error al realizar logout.");
+      }
+    }
+  }
+);
 
 
 const authSlice = createSlice({
@@ -98,6 +118,7 @@ const authSlice = createSlice({
       state.isAuthenticated = false;
       state.error = null;
       localStorage.removeItem("token");
+      localStorage.removeItem("favorites");
     },
   },
   extraReducers: (builder) => {
@@ -143,6 +164,20 @@ const authSlice = createSlice({
         state.user = action.payload;
       })
       .addCase(fetchProfile.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
+      .addCase(performLogout.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(performLogout.fulfilled, (state) => {
+        state.loading = false;
+        state.token = null;
+        state.user = null;
+        state.isAuthenticated = false;
+      })
+      .addCase(performLogout.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
       });
