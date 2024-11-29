@@ -95,9 +95,15 @@ const Detail = () => {
             />
             <div className="flex flex-col justify-center text-black space-y-2.5 font-semibold">
               <h1 className="text-4xl md:text-6xl">{studio.studioName}</h1>
-              <h2 className="text-[#D05858] text-4xl ">
-                {studio.studioSpecialties[0].specialty.specialtyName}
-              </h2>
+              {studio.studioSpecialties.length > 0 &&
+                studio.studioSpecialties.map(({ specialty }) => (
+                  <h2
+                    key={specialty.specialtyName}
+                    className="text-[#D05858] text-2xl "
+                  >
+                    {specialty.specialtyName}
+                  </h2>
+                ))}
             </div>
           </div>
           <Button
