@@ -32,13 +32,12 @@ const Favorites = () => {
   }, [dispatch]);
   return (
     <main className="bg-[#454243]">
-      <section className="container mx-auto py-32 px-4 sm:px-10">
+      <section className="container mx-auto py-32 px-4 sm:px-10 min-h-[85vh]">
         <div className="space-y-10">
           <header className="flex justify-between items-center gap-4">
             <h1 className="text-[#FFA987] font-bold text-4xl">Favorites</h1>
 
-            <CustomButton 
-            onClick={() => window.history.back()}>
+            <CustomButton onClick={() => window.history.back()}>
               <FaChevronLeft className="text-white" />
               Back
             </CustomButton>
