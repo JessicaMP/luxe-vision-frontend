@@ -9,7 +9,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { CalendarIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { AvailabilityProps, Studio } from "@/types";
 import {
@@ -242,7 +241,7 @@ export default function Availability({
                 "opacity-50 cursor-not-allowed"
             )}
             onClick={handleReserve}
-            disabled={!date || !startTime || !endTime}
+            disabled={!date || !startTime || !endTime || !specialty}
           >
             Reserve now
           </Button>
