@@ -1,6 +1,3 @@
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { IoMdSearch } from "react-icons/io";
 import {
   Carousel,
   CarouselContent,
@@ -16,7 +13,8 @@ import { useEffect } from "react";
 import { selectStudios } from "@/selectors/studioSelector";
 import { fetchStudiosAPI } from "@/reducers/studiosReducer";
 import { AppDispatch } from "@/store";
-import SearchSection from "./home/SearchSection";
+import FormSection from "./home/searchSection/FormSection";
+import SearchSection from "./SearchSection";
 
 const Home = () => {
   const cardsSpeciality = [
@@ -27,27 +25,26 @@ const Home = () => {
     { title: "Business", image: "/images/cardsSpeciality/foto5.png" },
   ];
 
-  const dispatch = useDispatch<AppDispatch>();
-  const studios = useSelector(selectStudios);
-
-  useEffect(() => {
-    if (studios.length === 0) {
-      dispatch(fetchStudiosAPI());
-    }
-  }, [dispatch, studios.length]);
-
   return (
     <main>
       <section
         id="search-section"
-        className="relative sm:min-h-[80svh] w-full bg-black flex items-center justify-center py-20 sm:py-0 mt-10"
+        className="relative sm:min-h-[80svh] bg-black py-20 sm:py-0 mt-14 md:mt-20 w-full flex items-center justify-center"
       >
         <div
-          className="absolute inset-0 bg-[url('./images/bg.png')] bg-cover lg:bg-center opacity-70"
+          className="absolute inset-0 bg-[url('./images/bg.png')] bg-cover lg:bg-center opacity-70 max-h-[800px]"
           aria-hidden="true"
         />
 
-        <SearchSection />
+        <div className="relative z-10 text-center w-full flex flex-col items-center gap-16 mt-0 md:mt-14">
+          <h1 className="text-4xl md:text-5xl lg:text-[55px] font-bold md:leading-relaxed leading-normal mb-8 max-w-3xl text-[#D05858] ">
+            <span className="text-[#D05858] ">Your ideal photographer,</span>
+            <br />
+            <span className="text-[#D05858]">just a click away</span>
+          </h1>
+
+          <SearchSection />
+        </div>
       </section>
 
       <section
