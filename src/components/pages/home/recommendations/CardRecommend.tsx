@@ -1,4 +1,6 @@
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
+import { setStudio } from "@/reducers/studiosReducer";
+import { useDispatch } from "react-redux";
 import { Studio } from "@/types";
 import { Avatar } from "@mui/material";
 import { Link } from "react-router-dom";
@@ -10,6 +12,7 @@ export default function CardRecommend({ studio }: { studio: Studio }) {
   const { isAuthenticated } = useSelector(
     (state: RootState) => state.users
   );
+  const dispatch = useDispatch();
   return (
     studio && (
       <Card className="relative studio-card min-w-[250px] min-h-[250px] h-[300px] text-white border-0 grid grid-cols-2 overflow-hidden">
@@ -41,7 +44,11 @@ export default function CardRecommend({ studio }: { studio: Studio }) {
           <p className="text-sm text-gray-500 text-center break-words overflow-hidden line-clamp-2">
             {studio.location.city + ", " + studio.location.state}
           </p>
-          <Link to={`/studio/${studio.id}`} className="text-sm text-red-500">
+          <Link
+            onClick={() => dispatch(setStudio(studio))}
+            to={`/studio/${studio.id}`}
+            className="text-sm text-red-500"
+          >
             Show details
           </Link>
         </CardFooter>

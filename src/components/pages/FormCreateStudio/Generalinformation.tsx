@@ -3,40 +3,30 @@ import FormControl from "@mui/joy/FormControl";
 import FormLabel from "@mui/joy/FormLabel";
 import Input from "@mui/joy/Input";
 import Textarea from "@mui/joy/Textarea";
-import { selectStudio } from "@/reducers/studioSelector";
-import { useSelector } from "react-redux";
 
-export const GeneralInformacion = ({ onChangeInfo, isEdit = false }: any) => {
-  const studio = useSelector(selectStudio) || {};
+interface GeneralInformationProps {
+  onChangeInfo: (data: any) => void;
+  isEdit?: boolean;
+  initialData?: any;
+}
+
+export const GeneralInformacion = ({
+  onChangeInfo,
+  isEdit = false,
+  initialData = {},
+}: GeneralInformationProps) => {
+  const [formData, setFormData] = useState(initialData);
   const inputRef = useRef(null);
 
-  const initialForm = {
-    studioName: "",
-    description: "",
-    yearsOfExperience: "",
-  };
-  const [form, setForm] = useState({ ...initialForm });
+  useEffect(() => {
+    setFormData(initialData);
+  }, [initialData]);
 
   const handleProperty = (value: any, property: string) => {
-    const updatedForm = { ...form, [property]: value };
-    setForm(updatedForm);
+    const updatedForm = { ...formData, [property]: value };
+    setFormData(updatedForm);
     onChangeInfo(updatedForm);
   };
-
-  const setPropertys = () => {
-    const editForm = {
-      studioName: studio.studioName,
-      description: studio.description,
-      yearsOfExperience: studio.yearsOfExperience,
-    };
-    setForm({...editForm})
-  }
-
-  useEffect(() => {
-    if (!isEdit) return
-    setPropertys();
-
-  }, [isEdit, studio]);
 
   return (
     <div className="space-y-3">
@@ -46,7 +36,7 @@ export const GeneralInformacion = ({ onChangeInfo, isEdit = false }: any) => {
         <FormControl>
           <FormLabel>Studio Name:</FormLabel>
           <Input
-            value={form.studioName}
+            value={formData.studioName}
             onChange={(e) => handleProperty(e.target.value, "studioName")}
             required
           />
@@ -62,7 +52,7 @@ export const GeneralInformacion = ({ onChangeInfo, isEdit = false }: any) => {
                 min: 1,
               },
             }}
-            value={form.yearsOfExperience}
+            value={formData.yearsOfExperience}
             onChange={(e) =>
               handleProperty(e.target.value, "yearsOfExperience")
             }
@@ -73,7 +63,7 @@ export const GeneralInformacion = ({ onChangeInfo, isEdit = false }: any) => {
           <FormLabel>Description</FormLabel>
           <Textarea
             size="lg"
-            value={form.description}
+            value={formData.description}
             onChange={(e) => handleProperty(e.target.value, "description")}
             required
           />

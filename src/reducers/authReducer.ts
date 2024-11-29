@@ -16,7 +16,7 @@ interface AuthState {
 }
 
 const initialState: AuthState = {
-  token: localStorage.getItem("token"),
+  token: localStorage.getItem("token") || null,
   user: null,
   loading: false,
   error: null,
@@ -28,19 +28,18 @@ export const login = createAsyncThunk(
   async ({ email, password }: { email: string; password: string }, { rejectWithValue }) => {
     try {
       const response = await AuthService.login(email, password);
-      const token = response.data.jwt; // Asegúrate de que el backend envíe el token aquí
+      const token = response.data.jwt;
     if (token) {
-      localStorage.setItem("token", token); // Guardar el token en localStorage
-      console.log("Token guardado en login:", localStorage.getItem("token")); // Verificar almacenamiento
+      localStorage.setItem("token", token);
     }
     return { token, user: response.data.user };
     } catch (error: any) {
-      // Verificar si el error es de Axios y contiene respuesta
+
       if (error.response && error.response.data && error.response.data.message) {
-        // Pasar el mensaje del backend
+
         return rejectWithValue(error.response.data.message);
       } else {
-        // Mensaje de error genérico en caso de que no haya respuesta específica
+
         return rejectWithValue("Error de log in: Por favor intenta nuevamente.");
       }
     }
@@ -55,10 +54,9 @@ export const register = createAsyncThunk(
   ) => {
     try {
       const response = await AuthService.register(userData);
-      const token = response.data.jwt; // Asegúrate de que el backend envíe el token aquí
+      const token = response.data.jwt;
     if (token) {
-      localStorage.setItem("token", token); // Guardar el token en localStorage
-      console.log("Token guardado en register:", localStorage.getItem("token")); // Verificar almacenamiento
+      localStorage.setItem("token", token);
     }
     return { token, user: response.data.user };
     } catch (error: any) {
@@ -76,7 +74,6 @@ export const fetchProfile = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const response = await AuthService.getProfile();
-      console.log("Perfil de usuario obtenido:", response.data);
       return response.data;
     } catch (error) {
       const axiosError = error as AxiosError<ErrorResponse>;
@@ -110,10 +107,9 @@ const authSlice = createSlice({
         state.error = null;
       })
       .addCase(login.fulfilled, (state, action) => {
-        const jwtToken = action.payload.jwt || action.payload.token; // dependiendo de tu API
+        const jwtToken = action.payload.token;
         if (jwtToken) {
             localStorage.setItem("token", jwtToken);
-            console.log("Token guardado después del login:", localStorage.getItem("token"));
         }
         state.loading = false;
         state.token = jwtToken;
@@ -130,7 +126,7 @@ const authSlice = createSlice({
       })
       .addCase(register.fulfilled, (state, action) => {
         state.loading = false;
-        state.token = action.payload.jwt;
+        state.token = action.payload.token;
         state.user = action.payload.user;
         state.isAuthenticated = true;
       })
@@ -145,7 +141,6 @@ const authSlice = createSlice({
       .addCase(fetchProfile.fulfilled, (state, action) => {
         state.loading = false;
         state.user = action.payload;
-        console.log("Usuario cargado:", action.payload);
       })
       .addCase(fetchProfile.rejected, (state, action) => {
         state.loading = false;

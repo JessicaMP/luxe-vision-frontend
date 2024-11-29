@@ -2,34 +2,26 @@ import Checkbox from "@mui/joy/Checkbox";
 import List from "@mui/joy/List";
 import ListItem from "@mui/joy/ListItem";
 import { useEffect, useState } from "react";
-import { fetchAllFeatures } from "@/reducers/featuresReducer";
 import { useSelector, useDispatch } from "react-redux";
-import { selectFeatures, selectStudio } from "@/reducers/studioSelector";
-import ListItemDecorator from '@mui/joy/ListItemDecorator';
+import { selectFeatures } from "@/selectors/studioSelector";
 import { Icon } from "@iconify/react";
-import ListItemButton from '@mui/joy/ListItemButton';
+import { AppDispatch } from "@/store";
+import { fetchAllFeatures } from "@/reducers/featuresReducer";
 
-export const Specialty = ({ onChangeInfo, isEdit = false }: any) => {
-  const studio = useSelector(selectStudio) || {};
-  const [list, setList] = useState<number[]>([]);
-  const dispatch = useDispatch();
-  const features = useSelector(selectFeatures) || [];
+interface FeaturesProps {
+  onChangeInfo: (features: number[]) => void;
+  isEdit?: boolean;
+  initialData?: number[];
+}
 
-  const handleChange = (e: any, id: number) => {
-    setList((prevList) => {
-      const updatedList = e.target.checked
-        ? prevList.includes(id) ? prevList : [...prevList, id]
-        : prevList.filter((item) => item !== id);
-
-      onChangeInfo(updatedList);
-      return updatedList;
-    });
-  };
-
-  const setPropertys = () => {
-    const listFeatures = studio.studioFeatures.map((feature: any) => feature.feature.id);
-    setList([...listFeatures])
-  }
+export const Features = ({
+  onChangeInfo,
+  isEdit = false,
+  initialData = [],
+}: FeaturesProps) => {
+  const [list, setList] = useState<number[]>(initialData);
+  const dispatch = useDispatch<AppDispatch>();
+  const features = useSelector(selectFeatures);
 
   useEffect(() => {
     if (features.length === 0) {
@@ -37,10 +29,25 @@ export const Specialty = ({ onChangeInfo, isEdit = false }: any) => {
     }
   }, [dispatch, features.length]);
 
-  useEffect(() => {
-    if (!isEdit) return;
-    setPropertys();
-  }, [isEdit, studio.id]);
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>, id: number) => {
+    setList((prevList) => {
+      let updatedList;
+      if (e.target.checked) {
+        if (prevList.includes(id)) {
+          updatedList = prevList.filter((item) => item !== id);
+          e.target.checked = false;
+        } else {
+          updatedList = [...prevList, id];
+        }
+      } else {
+        updatedList = prevList.filter((item) => item !== id);
+      }
+
+      onChangeInfo(updatedList);
+
+      return updatedList;
+    });
+  };
 
   return (
     <div className="space-y-3">
@@ -60,8 +67,8 @@ export const Specialty = ({ onChangeInfo, isEdit = false }: any) => {
               <Checkbox
                 overlay
                 disableIcon
-                variant={list.includes(feature.id) ? "solid" : "soft"}
                 color="danger"
+                variant={list.includes(feature.id) ? "solid" : "soft"}
                 label={feature.featureName}
                 value={feature.id}
                 onChange={(e) => handleChange(e, feature.id)}
@@ -74,4 +81,4 @@ export const Specialty = ({ onChangeInfo, isEdit = false }: any) => {
   );
 };
 
-export default Specialty;
+export default Features;

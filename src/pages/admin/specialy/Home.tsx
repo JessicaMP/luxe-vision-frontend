@@ -6,7 +6,7 @@ import Checkbox from "@mui/joy/Checkbox";
 import Link from "@mui/joy/Link";
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { selectSpecialties } from "@/reducers/studioSelector";
+import { selectSpecialties } from "@/selectors/studioSelector";
 import { fetchSpecialties } from "@/reducers/specialtiesReducer";
 import { RiArrowLeftSLine, RiArrowRightSLine } from "react-icons/ri";
 import { visuallyHidden } from "@mui/utils";
