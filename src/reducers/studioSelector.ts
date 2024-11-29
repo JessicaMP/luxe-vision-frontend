@@ -12,6 +12,18 @@ export const selectSpecialties = (state: any) => state.specialties.specialties;
 export const selectStudio = (state: any) => state.studios.studio;
 
 export const selectFavoritesIds = (state: any) => state.favorites?.favorites || [];
+
+export const selectStudioWithFavorite = createSelector(
+  [selectStudio, selectFavoritesIds],
+  (studio, favoriteIds) => {
+    if (!studio) return null;
+    return {
+      ...studio,
+      isFavorite: favoriteIds.includes(studio.id),
+    };
+  }
+);
+
 export const selectFavorites = createSelector(
   [selectStudios, selectFavoritesIds],
   (studios, favoriteIds) => {

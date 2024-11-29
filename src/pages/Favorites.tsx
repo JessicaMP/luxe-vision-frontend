@@ -27,12 +27,6 @@ const Favorites = () => {
   const dispatch = useDispatch();
   const favorites = useSelector(selectFavorites) || [];
 
-  // useEffect(() => {
-  //   if (favorites.length === 0) {
-  //     dispatch(fetchFavorites());
-  //   }
-  // }, [dispatch, favorites.length]);
-
   useEffect(() => {
     dispatch(fetchFavorites());
   }, [dispatch]);

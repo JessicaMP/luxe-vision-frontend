@@ -1,5 +1,5 @@
-import { Button } from '@mui/joy';
-import { Link } from 'react-router-dom';
+import Button from "@mui/joy/Button";
+// import { Link } from 'react-router-dom';
 
 const OutlineBtn = ({ nombre }) => {
   return (
@@ -15,8 +15,10 @@ const OutlineBtn = ({ nombre }) => {
           backgroundColor: 'rgba(255, 169, 135, 0.1)',
         },
       }}
+      href="/register"
+      component="a"
     >
-      <Link to="/register">{nombre}</Link>
+      {nombre}
     </Button>
   );
 };
