@@ -130,7 +130,7 @@ const SearchSection = ({ onSearch }: { onSearch: (values: any) => void }) => {
                         className={
                           open
                             ? cn(
-                                "mt-12 fixed bg-white rounded-lg min-w-[300px] z-50"
+                                "mt-12 absolute bg-white rounded-lg min-w-[300px] z-50"
                               )
                             : cn("hidden")
                         }
