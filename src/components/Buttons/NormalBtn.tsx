@@ -1,11 +1,13 @@
 import Button from "@mui/joy/Button";
 import { MenuItem } from "../../types";
+import { useNavigate } from "react-router-dom";
 
 type NormalBtnProps = {
   element: MenuItem;
 };
 
 const NormalBtn = ({ element }: NormalBtnProps) => {
+  const navigate = useNavigate();
   return (
     <Button
       variant="plain"
@@ -16,7 +18,7 @@ const NormalBtn = ({ element }: NormalBtnProps) => {
           backgroundColor: "rgba(255, 255, 255, 0.1)",
         },
       }}
-      href={element.route}
+      onClick={() => navigate(element.route)}
       component="a"
     >
       {element.name}
