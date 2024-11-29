@@ -11,7 +11,9 @@ import HomeFeatures from "./pages/admin/feature/Home";
 import AddFeature from "./pages/admin/feature/AddFeature";
 import UsersHome from "./pages/admin/user/UsersTable";
 import HomeSpecialies from "./pages/admin/specialy/Home";
-import PrivateRoute from "./components/PrivateRoute";
+import PrivateRoute, { PrivateRouteAuth } from "./components/PrivateRoute";
+import Favorites from "./pages/Favorites";
+
 
 function App() {
   return (
@@ -23,6 +25,16 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
           <Route path="/studio/:id" element={<Detail />} />
+
+          {/* Ruta visibles despues del login */}
+          <Route
+            path="/favorites"
+            element={
+              <PrivateRouteAuth>
+                <Favorites />
+              </PrivateRouteAuth>
+            }
+          />
 
           {/* Rutas protegidas para administradores */}
           <Route

@@ -69,8 +69,8 @@ export const Header = ({ isLogin = false }: any) => {
                 </span>
               )}
               <div
-                className={`flex items-center justify-center rounded-full 
-              ${isMobile ? "w-8 h-8 text-base" : "w-12 h-12 text-2xl"} 
+                className={`flex items-center justify-center rounded-full
+              ${isMobile ? "w-8 h-8 text-base" : "w-12 h-12 text-2xl"}
               bg-[#FFA987] text-white font-bold`}
               >
                 {user?.firstName?.charAt(0).toUpperCase() || "U"}
@@ -92,11 +92,17 @@ export const Header = ({ isLogin = false }: any) => {
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
               >
-                <MenuItem onClick={handleClose}>Profile</MenuItem>
+                <MenuItem onClick={handleClose}>My profile</MenuItem>
                 {user?.role === "ROLE_CUSTOMER" && (
-                  <MenuItem onClick={handleClose}>My reservations</MenuItem>
+                  <MenuItem onClick={handleClose}>Reservations</MenuItem>
                 )}
-                <MenuItem onClick={handleClose}>Settings</MenuItem>
+                <MenuItem
+                  onClick={() => {
+                    navigate("/favorites"); // Redirige al panel de administrador
+                  }}
+                >
+                  Favorites list
+                </MenuItem>
                 {user?.role === "ROLE_ADMINISTRATOR" && (
                   <MenuItem
                     onClick={() => {

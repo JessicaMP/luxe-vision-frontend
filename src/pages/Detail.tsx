@@ -12,8 +12,10 @@ import { Studio, StudioFeature } from "@/types";
 import NotFoundStudio from "@/components/pages/detail/NotFoundStudio";
 import { Icon } from "@iconify/react";
 import { RootState } from "@/store";
-import { selectStudio } from "@/selectors/studioSelector";
+import { selectStudioWithFavorite } from "@/reducers/studioSelector";
 import Availability from "./Availability";
+import ButtonFavorite from "@/components/pages/favorites/ButtonFavorite";
+import { IoMdShare } from "react-icons/io";
 
 const Detail = () => {
   useEffect(() => {
@@ -27,7 +29,7 @@ const Detail = () => {
   const { id } = useParams();
   const studioId = Number(id);
 
-  const currentStudio = useSelector((state: RootState) => selectStudio(state));
+  const currentStudio = useSelector(selectStudioWithFavorite);
 
   useEffect(() => {
     setStudio(currentStudio);
@@ -69,6 +71,9 @@ const Detail = () => {
     ],
   };
 
+  const { isAuthenticated } = useSelector((state: RootState) => state.users);
+
+
   if (isLoading) {
     return <div>Loading...</div>;
   }
@@ -82,7 +87,7 @@ const Detail = () => {
 
   return (
     <main className="bg-white">
-      <div className="container mx-auto py-20 space-y-6 px-4 sm:px-10 mt-4 ">
+      <div className="container mx-auto py-20 space-y-8 px-4 sm:px-10 mt-4 ">
         <header className="flex flex-row justify-between items-start md:items-end gap-4 md:gap-0 order-2 sm:order-first md:order-1">
           <div className="flex flex-col sm:flex-row gap-3 ">
             <Avatar
@@ -117,6 +122,25 @@ const Detail = () => {
             <span className="text-black">Back</span>
           </Button>
         </header>
+
+        {isAuthenticated && (
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 sm:gap-0">
+            <div className="invisible">reviews</div>
+            <div className="flex items-center gap-2">
+              <Button variant="plain">
+                <IoMdShare className="text-[#FFA987] text-lg" />
+                <p className="pl-2 text-[#444243]">Share</p>
+              </Button>
+              <ButtonFavorite
+                id={studio.id}
+                status={studio.isFavorite ?? false}
+                classBtn="text-[#FFA987] text-lg"
+              >
+                Save
+              </ButtonFavorite>
+            </div>
+          </div>
+        )}
 
         <section className="flex gap-4 relative w-full h-[500px]">
           {studio.portfolioPhotos.length > 0 && (

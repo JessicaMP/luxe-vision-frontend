@@ -49,7 +49,7 @@ const Login = () => {
     [validateField]
   );
 
-  const handleSubmit = (event) => {
+  const handleSubmit = (event: any) => {
     event.preventDefault();
 
     // Final validation before submission

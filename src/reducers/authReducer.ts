@@ -2,7 +2,6 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import AuthService from "@/services/auth";
 import { AxiosError } from "axios";
 import { ErrorResponse } from "@/types";
-
 interface AuthState {
   token: string | null;
   user: {
@@ -31,7 +30,7 @@ export const login = createAsyncThunk(
       const response = await AuthService.login(email, password);
       const token = response.data.jwt;
     if (token) {
-      localStorage.setItem("token", token); 
+      localStorage.setItem("token", token);
     }
     return { token, user: response.data.user };
     } catch (error: any) {
@@ -55,9 +54,9 @@ export const register = createAsyncThunk(
   ) => {
     try {
       const response = await AuthService.register(userData);
-      const token = response.data.jwt; 
+      const token = response.data.jwt;
     if (token) {
-      localStorage.setItem("token", token); 
+      localStorage.setItem("token", token);
     }
     return { token, user: response.data.user };
     } catch (error: any) {
@@ -75,7 +74,7 @@ export const fetchProfile = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const response = await AuthService.getProfile();
-      return response.data; 
+      return response.data;
     } catch (error) {
       const axiosError = error as AxiosError<ErrorResponse>;
       if (axiosError.response && axiosError.response.data?.message) {
@@ -141,7 +140,7 @@ const authSlice = createSlice({
       })
       .addCase(fetchProfile.fulfilled, (state, action) => {
         state.loading = false;
-        state.user = action.payload; 
+        state.user = action.payload;
       })
       .addCase(fetchProfile.rejected, (state, action) => {
         state.loading = false;
@@ -152,5 +151,3 @@ const authSlice = createSlice({
 
 export const { logout } = authSlice.actions;
 export default authSlice.reducer;
-
-
