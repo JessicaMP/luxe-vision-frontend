@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { Studio } from "@/types";
 import ApiService from "@/services/studios";
+import { RootState } from "@/store";
 
 interface StudioState {
   studios: Studio[];
@@ -60,6 +61,9 @@ const studiosSlice = createSlice({
     selectStudioById: (state, action) => {
       state.studio = state.studios.find(studio => studio.id === action.payload) || null;
     },
+    setStudio: (state, action) => {
+      state.studio = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -108,6 +112,6 @@ const studiosSlice = createSlice({
       })
   }
 });
-export const { addStudio, updateStudio, deleteStudio ,selectStudioById} = studiosSlice.actions;
+export const { addStudio, updateStudio, deleteStudio ,selectStudioById, setStudio} = studiosSlice.actions;
 
 export default studiosSlice.reducer;
