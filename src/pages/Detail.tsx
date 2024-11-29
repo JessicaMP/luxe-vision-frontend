@@ -6,7 +6,7 @@ import { MdEmail } from "react-icons/md";
 import { FaLocationDot } from "react-icons/fa6";
 import { BsFillGrid1X2Fill } from "react-icons/bs";
 import ModalDetail from "../components/pages/detail/ModalDetail";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { Studio, StudioFeature } from "@/types";
 import NotFoundStudio from "@/components/pages/detail/NotFoundStudio";
@@ -18,6 +18,7 @@ import ButtonFavorite from "@/components/pages/favorites/ButtonFavorite";
 import { IoMdShare } from "react-icons/io";
 
 const Detail = () => {
+  const navigate = useNavigate();
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
@@ -49,30 +50,29 @@ const Detail = () => {
     appointments: [
       {
         id: 1,
-        date: "2024-11-27",
+        date: "2024-11-30",
         startTime: "10:00",
-        endTime: "11:00",
+        endTime: "13:00",
         status: "booked",
       },
       {
         id: 2,
-        date: "2024-11-27",
-        startTime: "13:00",
-        endTime: "14:00",
+        date: "2024-12-03",
+        startTime: "9:00",
+        endTime: "18:00",
         status: "booked",
       },
       {
         id: 3,
-        date: "2024-11-30",
+        date: "2024-11-29",
         startTime: "9:00",
-        endTime: "15:00",
+        endTime: "18:00",
         status: "booked",
       },
     ],
   };
 
   const { isAuthenticated } = useSelector((state: RootState) => state.users);
-
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -111,36 +111,40 @@ const Detail = () => {
                 ))}
             </div>
           </div>
-          <Button
-            color="danger"
-            size="lg"
-            variant="outlined"
-            startDecorator={<FaChevronLeft />}
-            className="order-1 sm:order-last md:order-2"
-            onClick={() => window.history.back()}
-          >
-            <span className="text-black">Back</span>
-          </Button>
-        </header>
 
-        {isAuthenticated && (
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 sm:gap-0">
-            <div className="invisible">reviews</div>
-            <div className="flex items-center gap-2">
-              <Button variant="plain">
-                <IoMdShare className="text-[#FFA987] text-lg" />
-                <p className="pl-2 text-[#444243]">Share</p>
-              </Button>
-              <ButtonFavorite
-                id={studio.id}
-                status={studio.isFavorite ?? false}
-                classBtn="text-[#FFA987] text-lg"
-              >
-                Save
-              </ButtonFavorite>
-            </div>
+          <div className="flex flex-col gap-10 items-end">
+            <Button
+              color="danger"
+              size="lg"
+              variant="outlined"
+              startDecorator={<FaChevronLeft />}
+              className="order-1 sm:order-last md:order-2 max-w-28"
+              onClick={() => window.history.back()}
+            >
+              <span className="text-black">Back</span>
+            </Button>
+            {isAuthenticated && (
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 sm:gap-0">
+                <div className="invisible">reviews</div>
+                <div className="flex items-center gap-2">
+                  <Button variant="plain">
+                    <IoMdShare className="text-[#FFA987] text-2xl" />
+                    <p className="pl-2 text-[#444243] text-xl">Share</p>
+                  </Button>
+                  <ButtonFavorite
+                    id={studio.id}
+                    status={studio.isFavorite ?? false}
+                    classBtn="text-[#FFA987] text-2xl"
+                  >
+                    <p className="text-xl">
+                      {studio.isFavorite ? "Unsave" : "Save"}
+                    </p>
+                  </ButtonFavorite>
+                </div>
+              </div>
+            )}
           </div>
-        )}
+        </header>
 
         <section className="flex gap-4 relative w-full h-[500px]">
           {studio.portfolioPhotos.length > 0 && (
@@ -263,6 +267,7 @@ const Detail = () => {
                 schedule={schedule}
                 onReserve={(startTime, endTime, date) => {
                   console.log("Reserved:", { startTime, endTime, date });
+                  navigate("/login");
                 }}
               />
             </div>
