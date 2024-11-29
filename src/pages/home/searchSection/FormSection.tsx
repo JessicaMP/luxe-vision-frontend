@@ -8,12 +8,10 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-  CommandSeparator,
 } from "@/components/ui/command";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormMessage,
@@ -49,7 +47,7 @@ const generateFixedTimeSlots = (start: string, end: string) => {
   return slots;
 };
 
-const SearchSection = () => {
+const SearchSection = ({ onSearch }: { onSearch: (values: any) => void }) => {
   const specialtiesFromStore = useSelector(
     selectSpecialties
   ) as StudioSpecialty[];
@@ -84,7 +82,7 @@ const SearchSection = () => {
   );
 
   const handleSubmit = (values: z.infer<typeof formSchema>) => {
-    console.log(form.getValues());
+    onSearch(values);
   };
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -93,19 +91,13 @@ const SearchSection = () => {
       specialty: "",
       startTime: "",
       endTime: "",
-      date: new Date("1111-11-11"), //old date
+      date: new Date("1111-11-11"),
     },
   });
 
   return (
-    <div className="relative z-10 container px-4 flex flex-col gap-10 items-center text-center">
-      <h1 className="text-4xl md:text-5xl lg:text-[55px] font-bold md:leading-relaxed leading-normal mb-8 max-w-3xl text-[#D05858] ">
-        <span className="text-[#D05858] ">Your ideal photographer,</span>
-        <br />
-        <span className="text-[#D05858]">just a click away</span>
-      </h1>
-
-      <div className=" py-16 px-4 flex flex-col items-center justify-center bg-[#444243] rounded-[20px] max-sm:w-full md:w-[65vw] 2xl:w-[50vw]">
+    <>
+      <div className=" py-10 flex flex-col items-center justify-center bg-[#444243] rounded-[20px] max-sm:w-full md:w-[65vw] 2xl:w-[50vw] ">
         <h3 className="text-white text-xl md:text-2xl mb-6 font-bold ">
           Find the photographer you need
         </h3>
@@ -113,7 +105,7 @@ const SearchSection = () => {
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(handleSubmit)}
-            className="flex flex-col lg:grid max-lg:grid-cols-2 lg:gap-4 gap-4 min-[1028px]:w-[600px]"
+            className="flex flex-col lg:grid max-lg:grid-cols-2 lg:gap-4 gap-4 min-[1028px]:w-[600px] grid-cols-2"
           >
             <FormField
               control={form.control}
@@ -268,7 +260,7 @@ const SearchSection = () => {
           </form>
         </Form>
       </div>
-    </div>
+    </>
   );
 };
 
