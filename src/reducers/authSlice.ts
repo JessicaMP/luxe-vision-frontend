@@ -2,7 +2,6 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import AuthService from "@/services/auth";
 import { AxiosError } from "axios";
 import { ErrorResponse } from "@/types";
-
 interface AuthState {
   token: string | null;
   user: {
@@ -78,7 +77,7 @@ export const fetchProfile = createAsyncThunk(
     try {
       const response = await AuthService.getProfile();
       console.log("Perfil de usuario obtenido:", response.data);
-      return response.data; 
+      return response.data;
     } catch (error) {
       const axiosError = error as AxiosError<ErrorResponse>;
       if (axiosError.response && axiosError.response.data?.message) {
@@ -145,7 +144,7 @@ const authSlice = createSlice({
       })
       .addCase(fetchProfile.fulfilled, (state, action) => {
         state.loading = false;
-        state.user = action.payload; 
+        state.user = action.payload;
         console.log("Usuario cargado:", action.payload);
       })
       .addCase(fetchProfile.rejected, (state, action) => {
@@ -157,6 +156,3 @@ const authSlice = createSlice({
 
 export const { logout } = authSlice.actions;
 export default authSlice.reducer;
-
-
-

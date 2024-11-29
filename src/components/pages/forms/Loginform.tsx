@@ -1,7 +1,7 @@
 import { Button, FormControl, FormLabel, Input, Typography } from "@mui/joy";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { login } from "@/reducers/authSlice"; 
+import { login } from "@/reducers/authSlice";
 import { RootState } from "src/store.ts";
 import { useNavigate } from "react-router-dom";
 
@@ -12,10 +12,10 @@ const Login = () => {
 
   const [formData, setFormData] = useState({
     email: "",
-    password: ""
+    password: "",
   });
 
-  const handleChange = (event) => {
+  const handleChange = (event: any) => {
     const { name, value } = event.target;
     setFormData((prevData) => ({
       ...prevData,
@@ -23,19 +23,19 @@ const Login = () => {
     }));
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = (event: any) => {
     event.preventDefault();
-  
+
     const emailLowercase = formData.email.toLowerCase();
 
     // Despacha el login con el correo en minúsculas
     dispatch(login({ ...formData, email: emailLowercase }))
       .unwrap()
       .then(() => {
-        navigate("/"); 
+        navigate("/");
       })
       .catch((error) => {
-        alert(error); 
+        alert(error);
       });
   };
 
@@ -45,7 +45,7 @@ const Login = () => {
       style={{
         backgroundImage: `url('/images/background.jpg')`,
         backgroundColor: "rgba(0, 0, 0, 0.3)",
-        backgroundBlendMode: "overlay"
+        backgroundBlendMode: "overlay",
       }}
     >
       <div className="w-[90%] max-w-[550px] bg-[#DADADA] shadow-[0_1px_5px_2px_#FFA987] rounded-[30px] p-10">

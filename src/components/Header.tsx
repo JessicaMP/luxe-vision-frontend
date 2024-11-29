@@ -9,7 +9,9 @@ import { fetchProfile, logout } from "@/reducers/authSlice";
 
 export const Header = ({ isLogin = false }: any) => {
   const isMobile = useMediaQuery("(max-width:768px)");
-  const { isAuthenticated, user, loading } = useSelector((state: RootState) => state.users);
+  const { isAuthenticated, user, loading } = useSelector(
+    (state: RootState) => state.users
+  );
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -28,13 +30,10 @@ export const Header = ({ isLogin = false }: any) => {
     }
   }, [isAuthenticated, user, dispatch, loading]);
 
-
   return (
     <header className="bg-[#323232] fixed top-0 w-full z-20">
       <div className="container mx-auto">
-        <div
-          className="flex items-center justify-between flex-wrap px-6 py-2 w-full sticky top-0 z-20"
-        >
+        <div className="flex items-center justify-between flex-wrap px-6 py-2 w-full sticky top-0 z-20">
           <div className="flex items-center">
             <Link to="/">
               <img
@@ -59,12 +58,16 @@ export const Header = ({ isLogin = false }: any) => {
             <div className="flex items-center space-x-4 text-white">
               {!isMobile && (
                 <span className="mr-2 text-lg">
-                Welcome, {user?.firstName ? user?.firstName.charAt(0).toUpperCase() + user?.firstName.slice(1) : ""}
-              </span>
+                  Welcome,{" "}
+                  {user?.firstName
+                    ? user?.firstName.charAt(0).toUpperCase() +
+                      user?.firstName.slice(1)
+                    : ""}
+                </span>
               )}
               <div
-                className={`flex items-center justify-center rounded-full 
-              ${isMobile ? "w-8 h-8 text-base" : "w-12 h-12 text-2xl"} 
+                className={`flex items-center justify-center rounded-full
+              ${isMobile ? "w-8 h-8 text-base" : "w-12 h-12 text-2xl"}
               bg-[#FFA987] text-white font-bold`}
               >
                 {user?.firstName?.charAt(0).toUpperCase() || "U"}
@@ -86,11 +89,17 @@ export const Header = ({ isLogin = false }: any) => {
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
               >
-                <MenuItem onClick={handleClose}>Profile</MenuItem>
+                <MenuItem onClick={handleClose}>My profile</MenuItem>
                 {user?.role === "ROLE_CUSTOMER" && (
-                  <MenuItem onClick={handleClose}>My reservations</MenuItem>
+                  <MenuItem onClick={handleClose}>Reservations</MenuItem>
                 )}
-                <MenuItem onClick={handleClose}>Settings</MenuItem>
+                <MenuItem
+                  onClick={() => {
+                    navigate("/favorites"); // Redirige al panel de administrador
+                  }}
+                >
+                  Favorites list
+                </MenuItem>
                 {user?.role === "ROLE_ADMINISTRATOR" && (
                   <MenuItem
                     onClick={() => {
