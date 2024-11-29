@@ -6,7 +6,7 @@ import Checkbox from "@mui/joy/Checkbox";
 import Link from "@mui/joy/Link";
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { selectFeatures } from "@/reducers/studioSelector";
+import { selectFeatures } from "@/selectors/studioSelector";
 import { fetchAllFeatures } from "@/reducers/featuresReducer";
 import { RiArrowLeftSLine, RiArrowRightSLine } from "react-icons/ri";
 import { visuallyHidden } from "@mui/utils";
@@ -217,12 +217,12 @@ const FeatureHome = () => {
   };
 
   const handleAdd = () => {
-    setOpen(true)
-    setEdit(false)
+    setOpen(true);
+    setEdit(false);
   };
 
   const handleSave = async (form: any) => {
-    if(isEdit) {
+    if (isEdit) {
       try {
         const resultAction = await dispatch(updateFeature(form));
         if (updateFeature.fulfilled.match(resultAction)) {
@@ -234,7 +234,7 @@ const FeatureHome = () => {
       } catch (err) {
         console.log("Error: ", err);
       }
-      return
+      return;
     }
     try {
       const resultAction = await dispatch(addFeature(form));
@@ -357,7 +357,7 @@ const FeatureHome = () => {
                       </th>
                       <td className="font-bold">{row.featureName}</td>
                       <td className="">
-                        <Icon icon={row.icon} className="text-3xl" />
+                        <Icon icon={row.icon} className="text-3xl mx-auto" />
                       </td>
                       <td className="flex justify-center items-center gap-4">
                         <IconButton variant="plain" color="danger">
@@ -425,7 +425,13 @@ const FeatureHome = () => {
             </tfoot>
           </Table>
         </Sheet>
-        <ModalAddFeature open={open} setOpen={setOpen} onSave={handleSave} isEdit={isEdit} feature={feature} />
+        <ModalAddFeature
+          open={open}
+          setOpen={setOpen}
+          onSave={handleSave}
+          isEdit={isEdit}
+          feature={feature}
+        />
         <Snackbar
           autoHideDuration={4000}
           open={openToast}

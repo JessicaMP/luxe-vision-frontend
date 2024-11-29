@@ -4,8 +4,21 @@ import FormLabel from "@mui/joy/FormLabel";
 import Button from "@mui/joy/Button";
 import SvgIcon from "@mui/joy/SvgIcon";
 import { styled } from "@mui/joy";
-import { selectStudio } from "@/reducers/studioSelector";
+import { selectStudio } from "@/selectors/studioSelector";
 import { useSelector } from "react-redux";
+import { PortfolioPhoto, Studio } from "@/types";
+import React from "react";
+
+interface SectionImagesProps {
+  onChangeInfo: (data: any) => void;
+  isEdit?: boolean;
+  initialData?: {
+    profileImage?: string;
+    portfolioPhotos?: PortfolioPhoto[];
+    profileImageFile?: File | null;
+    portfolioFiles?: File[];
+  };
+}
 
 const VisuallyHiddenInput = styled("input")`
   clip: rect(0 0 0 0);
@@ -19,64 +32,94 @@ const VisuallyHiddenInput = styled("input")`
   width: 1px;
 `;
 
-export const SectionImages = ({ onChangeInfo, isEdit = false }: any) => {
-  const studio = useSelector(selectStudio) || {};
-  const [profileImageFile, setProfileImageFile] = useState(null);
-  const [portfolioFiles, setPortfolioFiles] = useState([]);
+export const SectionImages = ({
+  onChangeInfo,
+  isEdit = false,
+  initialData = {},
+}: SectionImagesProps) => {
+  const [profileImage, setProfileImage] = useState<string | undefined>(
+    initialData?.profileImage
+  );
+  const [portfolioPhotos, setPortfolioPhotos] = useState<PortfolioPhoto[]>(
+    initialData?.portfolioPhotos || []
+  );
+  const [profileImageFile, setProfileImageFile] = useState<File | null>(
+    initialData?.profileImageFile || null
+  );
+  const [portfolioFiles, setPortfolioFiles] = useState<File[]>(
+    initialData?.portfolioFiles || []
+  );
+
+  const [isInitialDataLoaded, setIsInitialDataLoaded] = useState(false);
 
   useEffect(() => {
-    if (!isEdit) return;
-    setPropertys();
-  }, [isEdit, studio.id]);
-
-  const setPropertys = () => {
-    const {profileImage, portfolioPhotos} = studio;
-    if (profileImage) {
-      const simulatedProfileImageFile = {
-        preview: profileImage,
-        name: "profile-image",
-        size: 0,
-        type: "image/jpeg",
-      };
-
-      setProfileImageFile(simulatedProfileImageFile);
+    if (!isInitialDataLoaded) {
+      setProfileImage(initialData?.profileImage);
+      setPortfolioPhotos(initialData?.portfolioPhotos || []);
+      setProfileImageFile(initialData?.profileImageFile || null);
+      setPortfolioFiles(initialData?.portfolioFiles || []);
+      setIsInitialDataLoaded(true);
     }
+  }, [initialData, isInitialDataLoaded]);
 
-    if (portfolioPhotos && portfolioPhotos.length > 0) {
-      const simulatedPortfolioFiles = portfolioPhotos.map((photo: any) => ({
-        preview: photo.image,
-        name: `portfolio-image-${photo.id}`,
-        size: 0,
-        type: "image/jpeg",
-      }));
-      setPortfolioFiles(simulatedPortfolioFiles);
-    }
-  }
+  const updateParent = () => {
+    onChangeInfo({
+      profileImage,
+      profileImageFile,
+      portfolioPhotos,
+      portfolioFiles,
+    });
+  };
 
-  const handleFileChange = (e: any) => {
-    const file = e.target.files[0];
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
     if (file) {
+      setProfileImage(undefined);
       setProfileImageFile(file);
-      onChangeInfo({ profileImageFile: file, portfolioFiles });
+      onChangeInfo({
+        profileImageFile: file,
+        profileImage: undefined,
+        portfolioFiles,
+        portfolioPhotos,
+      });
     }
   };
 
   const handleRemoveProfileImage = () => {
+    setProfileImage(undefined);
     setProfileImageFile(null);
-    onChangeInfo({ profileImageFile: null, portfolioFiles });
-  };
-
-  const handleRemoveFile = (index: number) => {
-    setPortfolioFiles((prevFiles) => {
-      const updatedFiles = prevFiles.filter((_, i) => i !== index);
-      onChangeInfo({ profileImageFile, portfolioFiles: updatedFiles }); // Llamada con el valor actualizado
-      return updatedFiles;
+    onChangeInfo({
+      profileImage: undefined,
+      profileImageFile: null,
+      portfolioFiles,
+      portfolioPhotos,
     });
   };
 
-  const handlePortfolioFilesChange = (e: any) => {
-    const selectedFiles = Array.from(e.target.files);
-    const totalFiles = portfolioFiles.length + selectedFiles.length;
+  const handleRemoveFile = (index: number) => {
+    const updatedFiles = portfolioFiles.filter((_, i) => i !== index);
+    setPortfolioFiles(updatedFiles);
+    updateParent();
+  };
+
+  const handleRemovePortfolioImage = (index: number) => {
+    const totalFiles = portfolioPhotos.length + portfolioFiles.length;
+    if (totalFiles > 10) {
+      alert("You can only upload up to 10 images.");
+      return;
+    }
+
+    const updatedPhotos = portfolioPhotos.filter((_, i) => i !== index);
+    setPortfolioPhotos(updatedPhotos);
+    updateParent();
+  };
+
+  const handlePortfolioFilesChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const selectedFiles = Array.from(e.target.files || []);
+    const totalFiles =
+      portfolioPhotos.length + portfolioFiles.length + selectedFiles.length;
 
     if (totalFiles > 10) {
       alert("You can only upload up to 10 images.");
@@ -85,11 +128,15 @@ export const SectionImages = ({ onChangeInfo, isEdit = false }: any) => {
 
     setPortfolioFiles((prevFiles) => {
       const updatedFiles = [...prevFiles, ...selectedFiles];
-      onChangeInfo({ profileImageFile, portfolioFiles: updatedFiles }); // Llamada con el valor actualizado
+      onChangeInfo({
+        profileImage,
+        profileImageFile,
+        portfolioFiles: updatedFiles,
+        portfolioPhotos,
+      });
       return updatedFiles;
     });
   };
-  // console.log({profileImageFile, portfolioFiles});
 
   return (
     <div className="space-y-3">
@@ -100,7 +147,6 @@ export const SectionImages = ({ onChangeInfo, isEdit = false }: any) => {
             <FormLabel>Profile Image:</FormLabel>
             <Button
               id="profileImageInput"
-              onChange={handleFileChange}
               component="label"
               role={undefined}
               tabIndex={-1}
@@ -124,7 +170,7 @@ export const SectionImages = ({ onChangeInfo, isEdit = false }: any) => {
               }
             >
               Upload a file
-              <VisuallyHiddenInput type="file" />
+              <VisuallyHiddenInput type="file" onChange={handleFileChange} />
             </Button>
           </FormControl>
           <label
@@ -133,7 +179,7 @@ export const SectionImages = ({ onChangeInfo, isEdit = false }: any) => {
           >
             Choose Image
           </label>
-          {profileImageFile && (
+          {(profileImageFile || profileImage) && (
             <div
               style={{
                 position: "relative",
@@ -142,7 +188,11 @@ export const SectionImages = ({ onChangeInfo, isEdit = false }: any) => {
               }}
             >
               <img
-                src={profileImageFile && profileImageFile.preview || URL.createObjectURL(profileImageFile)}
+                src={
+                  profileImageFile
+                    ? URL.createObjectURL(profileImageFile)
+                    : profileImage
+                }
                 alt="Profile Preview"
                 style={{ width: "100%", height: "auto", borderRadius: "4px" }}
               />
@@ -173,7 +223,6 @@ export const SectionImages = ({ onChangeInfo, isEdit = false }: any) => {
             <FormLabel>Portfolio Images (up to 10):</FormLabel>
             <Button
               id="portfolioImagesInput"
-              onChange={handlePortfolioFilesChange}
               component="label"
               role={undefined}
               tabIndex={-1}
@@ -197,7 +246,11 @@ export const SectionImages = ({ onChangeInfo, isEdit = false }: any) => {
               }
             >
               Upload a file
-              <VisuallyHiddenInput type="file" multiple />
+              <VisuallyHiddenInput
+                type="file"
+                multiple
+                onChange={handlePortfolioFilesChange}
+              />
             </Button>
           </FormControl>
           <label
@@ -214,10 +267,41 @@ export const SectionImages = ({ onChangeInfo, isEdit = false }: any) => {
               marginTop: "10px",
             }}
           >
-            {portfolioFiles.map((file: any, index) => (
+            {portfolioPhotos.map((file: any, index: number) => (
               <div key={index} style={{ position: "relative", width: "100px" }}>
                 <img
-                  src={file.preview || URL.createObjectURL(file)}
+                  src={file.image}
+                  alt={`Preview ${index}`}
+                  style={{
+                    width: "100%",
+                    height: "auto",
+                    borderRadius: "4px",
+                  }}
+                />
+                <button
+                  type="button"
+                  onClick={() => handleRemovePortfolioImage(index)}
+                  style={{
+                    position: "absolute",
+                    top: "5px",
+                    right: "5px",
+                    backgroundColor: "red",
+                    color: "white",
+                    border: "none",
+                    borderRadius: "50%",
+                    width: "20px",
+                    height: "20px",
+                    cursor: "pointer",
+                  }}
+                >
+                  ×
+                </button>
+              </div>
+            ))}
+            {portfolioFiles.map((file: any, index: number) => (
+              <div key={index} style={{ position: "relative", width: "100px" }}>
+                <img
+                  src={URL.createObjectURL(file)}
                   alt={`Preview ${index}`}
                   style={{
                     width: "100%",

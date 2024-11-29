@@ -4,9 +4,9 @@ import ListItemButton from "@mui/joy/ListItemButton";
 import Button from "@mui/joy/Button";
 import { TbLogout } from "react-icons/tb";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import {  logout } from "@/reducers/authSlice";
-import {  useDispatch } from "react-redux";
-import {  AppDispatch } from "src/store.ts";
+import { logout } from "@/reducers/authReducer";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "src/store.ts";
 
 const menu = [
   {
@@ -19,7 +19,7 @@ const menu = [
   },
   {
     name: "Manage categories",
-    route: "/",
+    route: "/administration/specialties",
   },
   {
     name: "Manage features",
@@ -41,7 +41,6 @@ const menu = [
 
 const SelectedList = () => {
   const location = useLocation();
-
 
   return (
     <List sx={{ minWidth: 200 }}>
@@ -68,9 +67,8 @@ const SelectedList = () => {
 export const SideBar = () => {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
-
   return (
-    <div className="bg-[#323232] h-screen py-10 space-y-5">
+    <aside className="bg-[#323232] h-full py-10 space-y-5 fixed left-0 z-20 ">
       <h2 className="text-white text-2xl font-bold text-center">Admin</h2>
       <SelectedList />
       <Button
@@ -89,7 +87,7 @@ export const SideBar = () => {
       >
         Log out
       </Button>
-    </div>
+    </aside>
   );
 };
 

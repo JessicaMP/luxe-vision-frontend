@@ -1,6 +1,6 @@
 const NotFoundStudio = () => {
   return (
-    <div className="min-h-[74svh] bg-[#1C1C1C] flex flex-col justify-center items-center px-4">
+    <div className="min-h-[74svh] w-full bg-[#1C1C1C] flex flex-col justify-center items-center px-4">
       <div className="max-w-lg w-full bg-[#242424] rounded-lg shadow-xl p-8 text-center">
         <h1 className="text-8xl font-bold bg-gradient-to-r from-[#FF3B30] to-[#FF6B6B] text-transparent bg-clip-text mb-4">
           404
