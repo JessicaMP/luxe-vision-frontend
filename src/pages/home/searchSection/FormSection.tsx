@@ -98,7 +98,7 @@ const SearchSection = ({ onSearch }: { onSearch: (values: any) => void }) => {
   return (
     <>
       <div className=" py-10 flex flex-col items-center justify-center bg-[#444243] rounded-[20px] max-sm:w-full md:w-[65vw] 2xl:w-[50vw] ">
-        <h3 className="text-white text-xl md:text-2xl mb-6 font-bold ">
+        <h3 className="text-white text-lg sm:text-xl md:text-2xl mb-6 font-bold ">
           Find the photographer you need
         </h3>
 

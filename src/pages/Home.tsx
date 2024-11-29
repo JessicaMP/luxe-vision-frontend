@@ -32,12 +32,12 @@ const Home = () => {
         className="relative sm:min-h-[80svh] bg-black py-20 sm:py-0 mt-14 md:mt-20 w-full flex items-center justify-center"
       >
         <div
-          className="absolute inset-0 bg-[url('./images/bg.png')] bg-cover lg:bg-center opacity-70 max-h-[800px]"
+          className="absolute inset-0 bg-[url('./images/bg.png')] bg-cover lg:bg-center opacity-70"
           aria-hidden="true"
         />
 
-        <div className="relative z-10 text-center w-full flex flex-col items-center gap-16 mt-0 md:mt-14">
-          <h1 className="text-4xl md:text-5xl lg:text-[55px] font-bold md:leading-relaxed leading-normal mb-8 max-w-3xl text-[#D05858] ">
+        <div className="relative z-10 text-center w-full flex flex-col items-center gap-8 sm:gap-12 mt-0 md:mt-14 pb-8 md:pb-20 px-4 md:px-0">
+          <h1 className="text-4xl md:text-5xl lg:text-[55px] font-bold md:leading-relaxed leading-normal mb-4 sm:mb-6 max-w-3xl text-[#D05858] ">
             <span className="text-[#D05858] ">Your ideal photographer,</span>
             <br />
             <span className="text-[#D05858]">just a click away</span>

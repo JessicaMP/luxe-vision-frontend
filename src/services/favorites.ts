@@ -1,39 +1,28 @@
 import axios from "axios";
 
 const API_URL = import.meta.env.VITE_API_BASE_URL as string;
-const TOKEN = localStorage.getItem("token") || "";
 
-const getFavorites = () => {
-  const headers = {
+const getHeaders = () => {
+  const token = localStorage.getItem("token");
+  return {
     headers: {
-      "Authorization": `Bearer ${TOKEN}`,
+      Authorization: `Bearer ${token}`,
     },
   };
-  return axios.get(`${API_URL}/users/favorites`, headers);
 };
 
-const postFavorite = (body: any) => {
-  const headers = {
-    headers: {
-      "Authorization": `Bearer ${TOKEN}`,
-    },
-  };
-  return axios.post(`${API_URL}/users`, body, headers);
-};
+const getFavorites = () => axios.get(`${API_URL}/users/favorites`, getHeaders());
 
-const deleteFavorite = (id: any) => {
-  const headers = {
-    headers: {
-      "Authorization": `Bearer ${TOKEN}`,
-    },
-  };
-  return axios.delete(`${API_URL}/users/favorites/${id}`, headers);
-};
+const postFavorite = (body: any) =>
+  axios.post(`${API_URL}/users`, body, getHeaders());
+
+const deleteFavorite = (id: any) =>
+  axios.delete(`${API_URL}/users/favorites/${id}`, getHeaders());
 
 const ApiFavorites = {
   getFavorites,
   postFavorite,
-  deleteFavorite
+  deleteFavorite,
 };
 
 export default ApiFavorites;

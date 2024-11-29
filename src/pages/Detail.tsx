@@ -89,7 +89,7 @@ const Detail = () => {
     <main className="bg-white">
       <div className="container mx-auto py-20 space-y-8 px-4 sm:px-10 mt-4 ">
         <header className="flex flex-row justify-between items-start md:items-end gap-4 md:gap-0 order-2 sm:order-first md:order-1">
-          <div className="flex flex-col sm:flex-row gap-3 ">
+          <div className="flex flex-col sm:flex-row gap-3 mt-12">
             <Avatar
               alt="Remy Sharp"
               src={`${studio.profileImage}?t=${studio.lastUpdate}`}
@@ -116,7 +116,7 @@ const Detail = () => {
             size="lg"
             variant="outlined"
             startDecorator={<FaChevronLeft />}
-            className="order-1 sm:order-last md:order-2 "
+            className="order-1 sm:order-last md:order-2"
             onClick={() => window.history.back()}
           >
             <span className="text-black">Back</span>
