@@ -4,7 +4,7 @@ import CardRecommend from "@/components/pages/home/recommendations/CardRecommend
 import { useDispatch, useSelector } from "react-redux";
 import { selectFavorites } from "@/reducers/studioSelector";
 import { fetchFavorites } from "@/reducers/favoritesReducer";
-import CustomButton from "@/components/Buttons/CustomButton";
+import CustomButton from "@/components/buttons/CustomButton";
 
 const Favorites = () => {
   const dispatch = useDispatch();
