@@ -18,8 +18,6 @@ import {
 } from "@/components/ui/form";
 
 import { cn } from "@/lib/utils";
-import { selectSpecialties } from "@/selectors/studioSelector";
-import { StudioSpecialty } from "@/types";
 import { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { IoMdSearch } from "react-icons/io";
@@ -34,6 +32,8 @@ import {
 import { CalendarIcon } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
+import { RootState } from "@/store";
+import { Specialty } from "@/types/specialty";
 
 const generateFixedTimeSlots = (start: string, end: string) => {
   const startHour = parseInt(start.split(":")[0]);
@@ -49,26 +49,18 @@ const generateFixedTimeSlots = (start: string, end: string) => {
 
 const SearchSection = ({ onSearch }: { onSearch: (values: any) => void }) => {
   const specialtiesFromStore = useSelector(
-    selectSpecialties
-  ) as StudioSpecialty[];
+    (state: RootState) => state.specialties.specialties
+  ) as Specialty[];
 
-  const [specialties, setSpecialties] = useState<string[]>([]);
+  const [specialties, setSpecialties] = useState<Specialty[]>([]);
 
   useEffect(() => {
-    const specialtyNames = specialtiesFromStore.map(
-      (specialty: any) => specialty.specialtyName
-    );
-    setSpecialties(specialtyNames);
+    setSpecialties(specialtiesFromStore);
   }, [specialtiesFromStore]);
 
   const formSchema = z.object({
-    specialty: z
-      .string()
-      .min(5, "Specialty must be at least 5 characters.")
-      .max(40, "Specialty must be at most 40 characters.")
-      .refine((val) => specialties.includes(val), {
-        message: "Please select a valid specialty.",
-      }),
+    specialtyId: z.number().min(1, "Please select a specialty."),
+    specialtyName: z.string(),
     startTime: z.string().min(3, "Please select a start time."),
     endTime: z.string().min(3, "Please select an end time."),
     date: z.date().min(new Date("1900-01-01"), "Please select a date"),
@@ -82,13 +74,23 @@ const SearchSection = ({ onSearch }: { onSearch: (values: any) => void }) => {
   );
 
   const handleSubmit = (values: z.infer<typeof formSchema>) => {
-    onSearch(values);
+    // Format the date as YYYY-MM-DD
+    const formattedDate = format(values.date, "yyyy-MM-dd");
+
+    onSearch({
+      ...values,
+      specialty: specialties.find(
+        (specialty) => specialty.id === values.specialtyId
+      ),
+      date: formattedDate,
+    });
   };
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      specialty: "",
+      specialtyId: 0,
+      specialtyName: "",
       startTime: "",
       endTime: "",
       date: new Date("1111-11-11"),
@@ -97,7 +99,7 @@ const SearchSection = ({ onSearch }: { onSearch: (values: any) => void }) => {
 
   return (
     <>
-      <div className=" py-10 flex flex-col items-center justify-center bg-[#444243] rounded-[20px] max-sm:w-full md:w-[65vw] 2xl:w-[50vw] ">
+      <div className=" py-10 flex flex-col items-center justify-center bg-[#444243] rounded-[20px] max-sm:w-full md:w-[80vw] xl:w-[65vw] max-w-[800px] px-10 ">
         <h3 className="text-white text-lg sm:text-xl md:text-2xl mb-6 font-bold ">
           Find the photographer you need
         </h3>
@@ -105,11 +107,12 @@ const SearchSection = ({ onSearch }: { onSearch: (values: any) => void }) => {
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(handleSubmit)}
-            className="flex flex-col lg:grid max-lg:grid-cols-2 lg:gap-4 gap-4 min-[1028px]:w-[600px] grid-cols-2"
+            className="flex flex-col lg:grid max-lg:grid-cols-2 lg:gap-4 gap-4 min-[1028px]:w-[600px] grid-cols-2 w-full"
           >
+            {/* // Seleccion de especialidad */}
             <FormField
               control={form.control}
-              name="specialty"
+              name="specialtyName"
               render={({ field }) => (
                 <FormItem className="min-w-[250px] max-h-[45px] mb-4">
                   <FormControl>
@@ -140,22 +143,31 @@ const SearchSection = ({ onSearch }: { onSearch: (values: any) => void }) => {
                           {specialties.length > 0
                             ? specialties
                                 .filter((specialty) =>
-                                  specialty
+                                  specialty.specialtyName
                                     .toLowerCase()
                                     .includes(
-                                      form.getValues().specialty.toLowerCase()
+                                      form
+                                        .getValues()
+                                        .specialtyName.toLowerCase()
                                     )
                                 )
                                 .map((specialty) => (
                                   <CommandItem
-                                    key={specialty}
-                                    value={specialty}
+                                    key={specialty.id}
+                                    value={specialty.specialtyName}
                                     onSelect={() => {
-                                      field.onChange(specialty); // Actualizar el valor seleccionado
-                                      setOpen(false); // Cerrar la lista
+                                      form.setValue(
+                                        "specialtyId",
+                                        specialty.id
+                                      );
+                                      form.setValue(
+                                        "specialtyName",
+                                        specialty.specialtyName
+                                      );
+                                      setOpen(false);
                                     }}
                                   >
-                                    {specialty}
+                                    {specialty.specialtyName}
                                   </CommandItem>
                                 ))
                             : null}
@@ -167,7 +179,7 @@ const SearchSection = ({ onSearch }: { onSearch: (values: any) => void }) => {
                 </FormItem>
               )}
             />
-
+            {/* // Seleccion de fecha */}
             <FormField
               control={form.control}
               name="date"
@@ -206,7 +218,7 @@ const SearchSection = ({ onSearch }: { onSearch: (values: any) => void }) => {
                 </FormItem>
               )}
             />
-
+            {/* // Seleccion de horarios inicio */}
             <FormField
               control={form.control}
               name="startTime"
@@ -228,6 +240,7 @@ const SearchSection = ({ onSearch }: { onSearch: (values: any) => void }) => {
                 </FormItem>
               )}
             />
+            {/* // Seleccion de horarios fin */}
             <FormField
               control={form.control}
               name="endTime"
@@ -248,11 +261,13 @@ const SearchSection = ({ onSearch }: { onSearch: (values: any) => void }) => {
                 </FormItem>
               )}
             />
-
             <Button
               type="submit"
               className="h-full px-8 bg-[#F69D7B] hover:bg-[#f38a61] text-white font-bold text-md rounded-md py-3 max-h-[45px] lg:col-span-2"
               id="specialty-search-button"
+              onClick={() => {
+                form.handleSubmit(handleSubmit)();
+              }}
             >
               <IoMdSearch size={70} />
               Search
