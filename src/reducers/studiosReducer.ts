@@ -1,7 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { Studio } from "@/types";
+import { Studio } from "@/types/studio";
 import ApiService from "@/services/studios";
-import { RootState } from "@/store";
 
 interface StudioState {
   studios: Studio[];
@@ -40,6 +39,11 @@ export const updateStudioAPI = createAsyncThunk('studios/updateStudio', async (b
 export const deleteStudioAPI = createAsyncThunk('studios/deleteStudio', async (id: string) => {
   await ApiService.deleteStudio(id);
   return id;
+});
+
+export const fetchStudioPricesAPI = createAsyncThunk('studios/fetchStudioPrices', async (id: string) => {
+  const response = await ApiService.getStudioPrices(id);
+  return response.data;
 });
 
 const studiosSlice = createSlice({
@@ -107,6 +111,18 @@ const studiosSlice = createSlice({
         state.studios = state.studios.filter(studio => studio.id.toString() !== action.payload);
       })
       .addCase(deleteStudioAPI.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.error.message || 'Error desconocido';
+      })
+      //Fetch prices of studio
+      .addCase(fetchStudioPricesAPI.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(fetchStudioPricesAPI.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        state.studio.studioPrices = action.payload;
+      })
+      .addCase(fetchStudioPricesAPI.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.error.message || 'Error desconocido';
       })
