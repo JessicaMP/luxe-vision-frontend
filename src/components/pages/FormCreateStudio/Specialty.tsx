@@ -5,9 +5,8 @@ import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { selectSpecialties } from "@/selectors/studioSelector";
 import { fetchSpecialties } from "@/reducers/specialtiesReducer";
-import { selectStudio } from "@/selectors/studioSelector";
 import React from "react";
-import { Studio, StudioSpecialty } from "@/types/types";
+import { StudioSpecialty } from "@/types/studio";
 import { AppDispatch } from "@/store";
 
 interface SpecialtyProps {
