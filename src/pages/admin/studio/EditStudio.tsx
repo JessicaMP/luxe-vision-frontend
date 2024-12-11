@@ -8,7 +8,7 @@ import store, { AppDispatch, RootState } from "@/store";
 import NotFoundStudio from "@/components/pages/detail/NotFoundStudio";
 import StudioForm from "./StudioForm";
 import { selectStudioById } from "@/selectors/studioSelector";
-import { StudioFeature, StudioSpecialty } from "@/types";
+import { StudioFeature, StudioSpecialty } from "@/types/types";
 import { useParams } from "react-router-dom";
 
 const EditStudio = () => {
