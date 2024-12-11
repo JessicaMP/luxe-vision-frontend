@@ -10,7 +10,7 @@ import PhotographerTeam from "@/components/pages/FormCreateStudio/PhotographerTe
 import SectionImage from "@/components/pages/FormCreateStudio/SectionImages";
 import { Toaster } from "@/components/ui/toaster";
 import { toast } from "@/hooks/use-toast";
-import { StudioFeature, StudioSpecialty } from "@/types";
+import { StudioFeature, StudioSpecialty } from "@/types/types";
 
 interface StudioFormProps {
   initialData?: any;
