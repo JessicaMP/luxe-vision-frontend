@@ -8,12 +8,6 @@ import {
 import Autoplay from "embla-carousel-autoplay";
 import CardSpeciality from "@/components/pages/home/speciality/CardSpeciality";
 import RecommendSection from "./home/RecommendSection";
-import { useSelector, useDispatch } from "react-redux";
-import { useEffect } from "react";
-import { selectStudios } from "@/selectors/studioSelector";
-import { fetchStudiosAPI } from "@/reducers/studiosReducer";
-import { AppDispatch } from "@/store";
-import FormSection from "./home/searchSection/FormSection";
 import SearchSection from "./SearchSection";
 
 const Home = () => {
