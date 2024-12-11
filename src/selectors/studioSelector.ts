@@ -1,5 +1,5 @@
 import { RootState } from '@/store';
-import { Studio } from '@/types';
+import { Studio } from '@/types/studio';
 
 export const selectStudios = (state: RootState) => state.studios.studios;
 
