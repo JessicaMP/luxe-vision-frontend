@@ -3,10 +3,6 @@ import FormControl from "@mui/joy/FormControl";
 import FormLabel from "@mui/joy/FormLabel";
 import Input from "@mui/joy/Input";
 import { IMaskInput } from "react-imask";
-import { useSelector } from "react-redux";
-import { selectStudio } from "@/selectors/studioSelector";
-import React from "react";
-import { Studio } from "@/types";
 
 interface TextMaskProps {
   onChange: (event: { target: { name: string; value: string } }) => void;
