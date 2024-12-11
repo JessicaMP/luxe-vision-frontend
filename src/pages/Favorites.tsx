@@ -1,10 +1,10 @@
-import {FaChevronLeft} from "react-icons/fa";
-import {useEffect} from "react";
+import { FaChevronLeft } from "react-icons/fa";
+import { useEffect } from "react";
 import CardRecommend from "@/components/pages/home/recommendations/CardRecommend";
-import {useDispatch, useSelector} from "react-redux";
-import {selectFavorites} from "@/reducers/studioSelector";
-import {fetchFavorites} from "@/reducers/favoritesReducer";
-import CustomButton from "@/components/buttons/CustomButton.tsx";
+import { useDispatch, useSelector } from "react-redux";
+import { selectFavorites } from "@/reducers/studioSelector";
+import { fetchFavorites } from "@/reducers/favoritesReducer";
+import CustomButton from "@/components/Buttons/CustomButton";
 
 const Favorites = () => {
   const dispatch = useDispatch();
@@ -21,7 +21,7 @@ const Favorites = () => {
             <h1 className="text-[#FFA987] font-bold text-4xl">Favorites</h1>
 
             <CustomButton onClick={() => window.history.back()}>
-              <FaChevronLeft className="text-white"/>
+              <FaChevronLeft className="text-white" />
               Back
             </CustomButton>
           </header>
@@ -29,7 +29,7 @@ const Favorites = () => {
             {favorites.map(
               (favorite: any) =>
                 favorite != undefined && (
-                  <CardRecommend key={favorite.id} studio={favorite}/>
+                  <CardRecommend key={favorite.id} studio={favorite} />
                 )
             )}
           </div>
