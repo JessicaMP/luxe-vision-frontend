@@ -1,81 +1,74 @@
 import { useEffect, useState } from "react";
 import Avatar from "@mui/joy/Avatar";
 import Button from "@mui/joy/Button";
-import { FaChevronLeft, FaPhoneAlt, FaAward } from "react-icons/fa";
+import { FaAward, FaChevronLeft, FaPhoneAlt } from "react-icons/fa";
 import { MdEmail } from "react-icons/md";
 import { FaLocationDot } from "react-icons/fa6";
 import { BsFillGrid1X2Fill } from "react-icons/bs";
 import ModalDetail from "../components/pages/detail/ModalDetail";
 import { useNavigate, useParams } from "react-router-dom";
-import { useSelector } from "react-redux";
-import { Studio, StudioFeature } from "@/types";
+import { useDispatch, useSelector } from "react-redux";
+import { Studio, StudioAvailability, StudioFeature } from "@/types/studio";
 import NotFoundStudio from "@/components/pages/detail/NotFoundStudio";
 import { Icon } from "@iconify/react";
 import { RootState } from "@/store";
 import { selectStudioWithFavorite } from "@/reducers/studioSelector";
+import { bookingSlice } from "@/reducers/bookingReducer";
 import Availability from "./Availability";
 import ButtonFavorite from "@/components/pages/favorites/ButtonFavorite";
 import { IoMdShare } from "react-icons/io";
+import { OccupiedSlot } from "@/types/availability";
+import { QuoteDTO } from "@/types/quote";
+import { DetailSkeleton } from "@/components/pages/detail/DetailSkeleton";
 
 const Detail = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
   const [open, setOpen] = useState(false);
   const [studio, setStudio] = useState<Studio | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [occupiedHours, setOccupiedHours] = useState<OccupiedSlot[]>([]);
+  const [availableHours, setAvailableHours] = useState<StudioAvailability>();
 
   const { id } = useParams();
   const studioId = Number(id);
 
-  const currentStudio = useSelector(selectStudioWithFavorite);
+  const currentStudio = useSelector(selectStudioWithFavorite) as Studio;
+
+  const currentBookings = useSelector(
+    (state: RootState) => state.bookings.bookingsStudio
+  ) as OccupiedSlot[];
+
+  const currentWorkingHours = useSelector(
+    (state: RootState) => state.availability.workingHours
+  ) as StudioAvailability;
+
+  const statusBookings = useSelector(
+    (state: RootState) => state.bookings.status
+  );
+
+  const statusAvailability = useSelector(
+    (state: RootState) => state.availability.status
+  );
+
+  const onReserve = (quote: QuoteDTO) => {
+    dispatch(bookingSlice.actions.setQuote(quote));
+    navigate("/confirm-quote");
+  };
 
   useEffect(() => {
     setStudio(currentStudio);
-    setIsLoading(false);
-  }, [currentStudio, studioId]);
-
-  const schedule = {
-    openHours: {
-      Monday: "09:00-19:00",
-      Tuesday: "09:00-18:00",
-      Wednesday: "09:00-18:00",
-      Thursday: "09:00-18:00",
-      Friday: "09:00-18:00",
-      Saturday: "10:00-15:00",
-      Sunday: "Closed",
-    },
-    appointments: [
-      {
-        id: 1,
-        date: "2024-11-30",
-        startTime: "10:00",
-        endTime: "13:00",
-        status: "booked",
-      },
-      {
-        id: 2,
-        date: "2024-12-03",
-        startTime: "9:00",
-        endTime: "18:00",
-        status: "booked",
-      },
-      {
-        id: 3,
-        date: "2024-11-29",
-        startTime: "9:00",
-        endTime: "18:00",
-        status: "booked",
-      },
-    ],
-  };
+    setOccupiedHours(currentBookings);
+    setAvailableHours(currentWorkingHours);
+  }, [currentStudio, studioId, currentBookings, currentWorkingHours]);
 
   const { isAuthenticated } = useSelector((state: RootState) => state.users);
 
-  if (isLoading) {
-    return <div>Loading...</div>;
+  if (statusBookings === "loading" || statusAvailability === "loading") {
+    return <DetailSkeleton />;
   }
 
   if (!studio) {
@@ -119,7 +112,10 @@ const Detail = () => {
               variant="outlined"
               startDecorator={<FaChevronLeft />}
               className="order-1 sm:order-last md:order-2 max-w-28"
-              onClick={() => window.history.back()}
+              onClick={() => {
+                window.history.back();
+                dispatch(bookingSlice.actions.clearQuote());
+              }}
             >
               <span className="text-black">Back</span>
             </Button>
@@ -263,13 +259,13 @@ const Detail = () => {
               <h3 className="text-[#D05858] font-semibold text-3xl justify-start">
                 Availability
               </h3>
-              <Availability
-                schedule={schedule}
-                onReserve={(startTime, endTime, date) => {
-                  console.log("Reserved:", { startTime, endTime, date });
-                  navigate("/login");
-                }}
-              />
+              {availableHours && (
+                <Availability
+                  occupiedSlots={occupiedHours}
+                  studioAvailability={availableHours}
+                  onReserve={onReserve}
+                />
+              )}
             </div>
           </section>
         </div>
