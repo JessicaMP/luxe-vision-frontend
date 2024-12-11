@@ -6,7 +6,7 @@ import SvgIcon from "@mui/joy/SvgIcon";
 import { styled } from "@mui/joy";
 import { selectStudio } from "@/selectors/studioSelector";
 import { useSelector } from "react-redux";
-import { PortfolioPhoto, Studio } from "@/types";
+import { PortfolioPhoto, Studio } from "@/types/types";
 import React from "react";
 
 interface SectionImagesProps {

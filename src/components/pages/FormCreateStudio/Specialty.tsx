@@ -7,7 +7,7 @@ import { selectSpecialties } from "@/selectors/studioSelector";
 import { fetchSpecialties } from "@/reducers/specialtiesReducer";
 import { selectStudio } from "@/selectors/studioSelector";
 import React from "react";
-import { Studio, StudioSpecialty } from "@/types";
+import { Studio, StudioSpecialty } from "@/types/types";
 import { AppDispatch } from "@/store";
 
 interface SpecialtyProps {

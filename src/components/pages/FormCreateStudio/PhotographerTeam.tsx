@@ -8,7 +8,7 @@ import CardOverflow from "@mui/joy/CardOverflow";
 import CardContent from "@mui/joy/CardContent";
 import Input from "@mui/joy/Input";
 import React from "react";
-import { Photographer } from "@/types";
+import { Photographer } from "@/types/types";
 
 interface PhotographerTeamProps {
   onChangeInfo: (photographers: Photographer[]) => void;
