@@ -6,6 +6,7 @@ import { RootState, AppDispatch } from "src/store.ts";
 import { useState, useEffect } from "react";
 import { MdMenu } from "react-icons/md";
 import { fetchProfile, performLogout } from "@/reducers/authReducer";
+import { bookingSlice } from "@/reducers/bookingReducer";
 
 export const Header = ({ isLogin = false }: any) => {
   const isMobile = useMediaQuery("(max-width:768px)");
@@ -94,7 +95,13 @@ export const Header = ({ isLogin = false }: any) => {
               >
                 <MenuItem onClick={handleClose}>My profile</MenuItem>
                 {user?.role === "ROLE_CUSTOMER" && (
-                  <MenuItem onClick={handleClose}>Reservations</MenuItem>
+                  <MenuItem
+                    onClick={() => {
+                      navigate("/bookings"); // Redirige al panel de bookings
+                    }}
+                  >
+                    Reservations
+                  </MenuItem>
                 )}
                 <MenuItem
                   onClick={() => {
@@ -114,16 +121,17 @@ export const Header = ({ isLogin = false }: any) => {
                   </MenuItem>
                 )}
                 <MenuItem
-                   onClick={() => {
+                  onClick={() => {
                     dispatch(performLogout())
                       .unwrap()
                       .then(() => {
                         navigate("/");
+                        dispatch(bookingSlice.actions.clearAll());
                       })
                       .catch((error) => {
                         console.error("Error durante el logout:", error);
                       });
-                    handleClose(); 
+                    handleClose();
                   }}
                 >
                   Logout
