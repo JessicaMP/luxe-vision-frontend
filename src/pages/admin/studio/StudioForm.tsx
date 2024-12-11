@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Button from "@mui/joy/Button";
 import GeneralInformation from "@/components/pages/FormCreateStudio/Generalinformation";
@@ -9,8 +9,6 @@ import Features from "@/components/pages/FormCreateStudio/Features";
 import PhotographerTeam from "@/components/pages/FormCreateStudio/PhotographerTeam";
 import SectionImage from "@/components/pages/FormCreateStudio/SectionImages";
 import { Toaster } from "@/components/ui/toaster";
-import { toast } from "@/hooks/use-toast";
-import { StudioFeature, StudioSpecialty } from "@/types";
 
 interface StudioFormProps {
   initialData?: any;

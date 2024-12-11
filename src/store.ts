@@ -5,10 +5,11 @@ import themeReducer from './reducers/themeSlice';
 import studiosReducer from './reducers/studiosReducer';
 import featuresReducer from './reducers/featuresReducer';
 import specialtiesReducer from './reducers/specialtiesReducer';
+import availableStudiosReducer from './reducers/availableStudios';
 import authSlice from '@/reducers/authReducer';
 import favoritesReducer from './reducers/favoritesReducer';
 import favoritesMiddleware from "@/middleware/favorites";
-
+import bookingsReducer from './reducers/bookingReducer';
 
 const authPersistConfig = {
   key: 'users',
@@ -37,11 +38,23 @@ const favoritePersistConfig = {
   whitelist: ["favorites"],
 };
 
+const availabilityPersistConfig = {
+  key: "availability",
+  storage,
+};
+
+const bookingsPersistConfig = {
+  key: "bookings",
+  storage,
+};
+
 const persistedStudiosReducer = persistReducer(studioPersistConfig, studiosReducer);
 const persistedFeaturesReducer = persistReducer(featurePersistConfig, featuresReducer);
 const persistedSpecialtiesReducer = persistReducer(featureSpecialtiesConfig, specialtiesReducer);
 const persistedAuthReducer = persistReducer(authPersistConfig, authSlice);
 const persistedFavoriteReducer = persistReducer(favoritePersistConfig, favoritesReducer);
+const persistedAvailabilityReducer = persistReducer(availabilityPersistConfig, availableStudiosReducer);
+const persistedBookingsReducer = persistReducer(bookingsPersistConfig, bookingsReducer);
 
 const store = configureStore({
   reducer: {
@@ -50,7 +63,9 @@ const store = configureStore({
     features: persistedFeaturesReducer,
     specialties: persistedSpecialtiesReducer,
     users: persistedAuthReducer,
-    favorites: persistedFavoriteReducer
+    favorites: persistedFavoriteReducer,
+    availability: persistedAvailabilityReducer,
+    bookings: persistedBookingsReducer
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

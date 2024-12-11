@@ -1,5 +1,5 @@
 import Button from "@mui/joy/Button";
-import { MenuItem } from "../../types";
+import { MenuItem } from "../../types/types";
 import { useNavigate } from "react-router-dom";
 
 type NormalBtnProps = {

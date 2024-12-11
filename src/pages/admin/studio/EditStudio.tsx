@@ -1,14 +1,10 @@
 import { useDispatch, useSelector } from "react-redux";
-import {
-  fetchStudiosAPI,
-  updateStudio,
-  updateStudioAPI,
-} from "@/reducers/studiosReducer";
-import store, { AppDispatch, RootState } from "@/store";
+import { updateStudioAPI } from "@/reducers/studiosReducer";
+import { AppDispatch, RootState } from "@/store";
 import NotFoundStudio from "@/components/pages/detail/NotFoundStudio";
 import StudioForm from "./StudioForm";
 import { selectStudioById } from "@/selectors/studioSelector";
-import { StudioFeature, StudioSpecialty } from "@/types";
+import { StudioFeature, StudioSpecialty } from "@/types/studio";
 import { useParams } from "react-router-dom";
 
 const EditStudio = () => {

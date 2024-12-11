@@ -1,8 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import AuthService from "@/services/auth";
 import { AxiosError } from "axios";
-import { ErrorResponse } from "@/types";
-import { resetFavorites } from "@/reducers/favoritesReducer";
+import { ErrorResponse } from "@/types/types";
 
 interface AuthState {
   token: string | null;
