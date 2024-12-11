@@ -5,8 +5,9 @@ import Button from "@mui/joy/Button";
 import { TbLogout } from "react-icons/tb";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { performLogout } from "@/reducers/authReducer";
-import {  useDispatch } from "react-redux";
-import {  AppDispatch } from "src/store.ts";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "src/store.ts";
+import { bookingSlice } from "@/reducers/bookingReducer";
 
 const menu = [
   {
@@ -82,14 +83,15 @@ export const SideBar = () => {
         endDecorator={<TbLogout />}
         onClick={() => {
           dispatch(performLogout())
-                      .unwrap()
-                      .then(() => {
-                        navigate("/");
-                      })
-                      .catch((error) => {
-                        console.error("Error durante el logout:", error);
-                      });
-                  }}
+            .unwrap()
+            .then(() => {
+              navigate("/");
+              dispatch(bookingSlice.actions.clearAll());
+            })
+            .catch((error) => {
+              console.error("Error durante el logout:", error);
+            });
+        }}
       >
         Log out
       </Button>
