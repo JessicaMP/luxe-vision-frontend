@@ -44,6 +44,10 @@ const deleteStudio = (id: string) => {
   return axios.delete(`${API_URL}/studios/${id}`, headers);
 };
 
+const getStudioPrices = (id: string) => {
+  return axios.get(`${API_URL}/studios/${id}/prices`);
+};
+
 const ApiService = {
   getStudios,
   getStudiosRandom,
@@ -51,6 +55,7 @@ const ApiService = {
   postStudio,
   putStudio,
   deleteStudio,
+  getStudioPrices
 };
 
 export default ApiService;
