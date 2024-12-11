@@ -1,22 +1,41 @@
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
-import { setStudio } from "@/reducers/studiosReducer";
+import { fetchStudioPricesAPI, setStudio } from "@/reducers/studiosReducer";
 import { useDispatch } from "react-redux";
-import { Studio } from "@/types";
+import { Studio } from "@/types/studio";
 import { Avatar } from "@mui/material";
 import { Link } from "react-router-dom";
 import ButtonFavorite from "@/components/pages/favorites/ButtonFavorite";
 import { useSelector } from "react-redux";
 import { RootState } from "src/store.ts";
+import { fetchBookingByStudioId } from "@/reducers/bookingReducer";
+import { fetchWorkingHoursByStudioId } from "@/reducers/availableStudios";
 
 export default function CardRecommend({ studio }: { studio: Studio }) {
-  const { isAuthenticated } = useSelector(
-    (state: RootState) => state.users
-  );
+  const { isAuthenticated } = useSelector((state: RootState) => state.users);
   const dispatch = useDispatch();
+
+  const handleCardClick = () => {
+    dispatch(setStudio(studio));
+    dispatch(fetchBookingByStudioId(studio.id));
+    dispatch(fetchWorkingHoursByStudioId(studio.id));
+    dispatch(fetchStudioPricesAPI(studio.id));
+
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  };
+
   return (
     studio && (
       <Card className="relative studio-card min-w-[250px] min-h-[250px] h-[300px] text-white border-0 grid grid-cols-2 overflow-hidden">
-        {isAuthenticated && <ButtonFavorite className="absolute top-4 right-4" id={studio.id} status={studio.isFavorite ?? false} />}
+        {isAuthenticated && (
+          <ButtonFavorite
+            className="absolute top-4 right-4"
+            id={studio.id}
+            status={studio.isFavorite ?? false}
+          />
+        )}
         <CardContent className="p-0">
           <img
             alt="title"
@@ -45,7 +64,7 @@ export default function CardRecommend({ studio }: { studio: Studio }) {
             {studio.location.city + ", " + studio.location.state}
           </p>
           <Link
-            onClick={() => dispatch(setStudio(studio))}
+            onClick={handleCardClick}
             to={`/studio/${studio.id}`}
             className="text-sm text-red-500"
           >
