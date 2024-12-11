@@ -2,7 +2,7 @@ import { Button, FormControl, FormLabel, Input, Typography } from "@mui/joy";
 import { useCallback, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "@/reducers/authReducer";
-import { AppDispatch, RootState } from "src/store.ts";
+import store, { AppDispatch, RootState } from "@/store.ts";
 import { useNavigate } from "react-router-dom";
 import InputField from "./InputField";
 
@@ -68,12 +68,23 @@ const Login = () => {
     }
 
     const emailLowercase = formData.email.toLowerCase();
+    const quote = store.getState().bookings.quote;
 
     // Despacha el login con el correo en minúsculas
     dispatch(login({ ...formData, email: emailLowercase }))
       .unwrap()
       .then(() => {
-        navigate("/");
+        console.log(quote);
+        if (quote) {
+          console.log("entro");
+          console.log(quote);
+          setTimeout(() => {
+            navigate("/confirm-quote");
+          }, 500);
+        } else {
+          console.log("entro tmb");
+          navigate("/");
+        }
       })
       .catch((error) => {
         alert(error);
