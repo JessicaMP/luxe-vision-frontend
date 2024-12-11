@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Calendar } from "@/components/ui/calendar";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -10,73 +10,141 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
-import type { AvailabilityProps, Studio } from "@/types";
+import type { Studio, StudioSpecialty } from "@/types/studio";
 import {
   generateTimeSlots,
-  isTimeSlotAvailable,
-  parseTimeRange,
-  isTimeSlotBooked,
+  getAvailableEndTimes,
   isDayFullyBooked,
+  isTimeSlotAvailable,
+  isTimeSlotBooked,
+  parseTimeRange,
 } from "../utils/date-utils";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store";
 import { TimeSelect } from "@/components/TimeSelect";
+import { AvailabilityProps } from "@/types/availability";
+import { Specialty } from "@/types/specialty";
+import { QuoteDTO } from "@/types/quote";
+import { UnauthModal } from "@/components/pages/bookings/modals/UnauthModal";
+import { useNavigate } from "react-router-dom";
+import { bookingSlice } from "@/reducers/bookingReducer";
 
 export default function Availability({
-  schedule,
+  studioAvailability,
+  occupiedSlots,
   onReserve,
 }: AvailabilityProps) {
-  const [date, setDate] = useState<Date>();
-  const [startTime, setStartTime] = useState<string>();
-  const [endTime, setEndTime] = useState<string>();
-  const [specialty, setSpecialty] = useState<string>();
-  const [costPerHour, setCostPerHour] = useState<number>(75);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const quote = useSelector(
+    (state: RootState) => state.bookings.quote
+  ) as QuoteDTO;
+
+  const [date, setDate] = useState<Date | undefined>(
+    quote ? new Date(quote.date + "T00:00:00") : undefined
+  );
+  const [startTime, setStartTime] = useState<string | undefined>(
+    quote ? quote.startTime : undefined
+  );
+  const [endTime, setEndTime] = useState<string | undefined>(
+    quote ? quote.endTime : undefined
+  );
+
+  const [showUnauthModal, setShowUnauthModal] = useState(false);
+
+  const onLogin = () => {
+    navigate("/login");
+  };
+
+  const [hoursFormatted, setHoursFormatted] = useState<string>();
+  const [totalFormatted, setTotalFormatted] = useState<string>();
 
   const studio: Studio = useSelector(
     (state: RootState) => state.studios.studio
   ) as Studio;
 
-  const total = useMemo(() => {
+  const [studioSpecialties, setStudioSpecialties] = useState<StudioSpecialty[]>(
+    studio.studioSpecialties
+  );
+
+  const [selectedSpecialty, setSelectedSpecialty] = useState<Specialty>(
+    quote ? quote.specialty : undefined
+  );
+
+  const studioPriceSpecialty = studio.studioPrices?.find(
+    (sp) => sp.specialtyID === selectedSpecialty?.id
+  );
+
+  const costPerHour = studioPriceSpecialty?.price;
+
+  const isAuthenticated = useSelector(
+    (state: RootState) => state.users.isAuthenticated
+  );
+
+  const total = () => {
     if (!startTime || !endTime) return 0;
+
     return (
       parseFloat(endTime.split(":")[0]) +
       parseFloat(endTime.split(":")[1]) / 60 -
       (parseFloat(startTime.split(":")[0]) +
         parseFloat(startTime.split(":")[1]) / 60)
     );
-  }, [startTime, endTime, costPerHour]);
+  };
 
-  const formattedDuration = useMemo(() => {
-    if (!total) return "Select hours";
+  useEffect(() => {
+    setHoursFormatted(formattedDuration());
+  }, [endTime, startTime]);
 
-    const hours = Math.floor(total);
-    const minutes = Math.round((total - hours) * 60);
+  useEffect(() => {
+    setTotalFormatted(formatTotal());
+  }, [studioPriceSpecialty, hoursFormatted]);
+
+  const formattedDuration = () => {
+    if (!(date || startTime || endTime)) return "Select hours";
+
+    const totalTime = total();
+    if (totalTime === 0) return "Select hours";
+
+    const hours = Math.floor(totalTime);
+    const minutes = Math.round((totalTime - hours) * 60);
 
     if (minutes === 0) return `${hours} hour${hours !== 1 ? "s" : ""}`;
     return `${hours} hour${hours !== 1 ? "s" : ""} and ${minutes} minutes`;
-  }, [startTime, endTime, total]);
+  };
 
   const timeSlots = useMemo(() => {
-    if (!date) return [];
+    if (!date || !startTime || !endTime) return [];
 
-    const dayOfWeek = date.toLocaleDateString("en-US", { weekday: "long" });
-    const daySchedule = schedule.openHours[dayOfWeek];
+    const dayOfWeek = date
+      .toLocaleDateString("en-US", { weekday: "long" })
+      .toLowerCase();
+
+    const daySchedule = studioAvailability[dayOfWeek];
 
     if (daySchedule === "Closed") return [];
-
     const { start, end } = parseTimeRange(daySchedule);
     return generateTimeSlots(start, end);
-  }, [date, schedule]);
+  }, [date, studioAvailability]);
+
+  const availableEndTimes = useMemo(() => {
+    if (!date || !startTime) return [];
+    return getAvailableEndTimes(
+      date,
+      startTime,
+      occupiedSlots,
+      studioAvailability
+    );
+  }, [date, startTime, occupiedSlots, studioAvailability]);
 
   const isSlotAvailable = (slot: string) => {
     return (
-      date &&
-      isTimeSlotAvailable(date, slot, schedule.appointments, schedule.openHours)
+      date && isTimeSlotAvailable(date, slot, occupiedSlots, studioAvailability)
     );
   };
 
   const isSlotBooked = (slot: string) => {
-    return date && isTimeSlotBooked(date, slot, schedule.appointments);
+    return date && isTimeSlotBooked(date, slot, occupiedSlots);
   };
 
   const handleDateChange = (newDate: Date | undefined) => {
@@ -85,12 +153,52 @@ export default function Availability({
     setEndTime(undefined);
   };
 
-  const handleReserve = () => {
-    if (date && startTime && endTime) {
-      onReserve(startTime, endTime, date);
-    }
+  const handleStartTimeChange = (value: string) => {
+    setStartTime(value);
+    setEndTime(undefined);
   };
 
+  const formatTotal = () => {
+    if (!studioPriceSpecialty) return "Complete the form";
+    return Number(studioPriceSpecialty?.price * total()).toLocaleString(
+      "en-US",
+      {
+        style: "currency",
+        currency: "USD",
+      }
+    );
+  };
+
+  const handleReserve = () => {
+    const pricePerHour = studioPriceSpecialty?.price ?? 0;
+
+    if (!isAuthenticated) {
+      const quote = {
+        date,
+        startTime,
+        endTime,
+        pricePerHour,
+        totalHours: total(),
+        specialty: selectedSpecialty,
+        studio: studio,
+      };
+      dispatch(bookingSlice.actions.setQuote(quote));
+      setShowUnauthModal(true);
+      return;
+    }
+
+    if (date && startTime && endTime && selectedSpecialty) {
+      onReserve({
+        date,
+        startTime,
+        endTime,
+        pricePerHour,
+        totalHours: total(),
+        specialty: selectedSpecialty,
+        studio: studio,
+      });
+    }
+  };
   return (
     <div className="w-full flex justify-center items-center">
       <div className="flex flex-col sm:flex-row gap-12 max-w-2xl">
@@ -100,31 +208,29 @@ export default function Availability({
             <Calendar
               mode="single"
               selected={date}
-              onSelect={handleDateChange}
+              onSelect={(date) => {
+                handleDateChange(date);
+              }}
               className="border rounded-lg"
               disabled={(date) => {
                 const today = new Date();
                 today.setHours(0, 0, 0, 0);
-                const day = date.toLocaleDateString("en-US", {
-                  weekday: "long",
-                });
+                const day = date
+                  .toLocaleDateString("en-US", {
+                    weekday: "long",
+                  })
+                  .toLowerCase();
                 return (
                   date < today ||
-                  schedule.openHours[day] === "Closed" ||
-                  isDayFullyBooked(
-                    date,
-                    schedule.appointments,
-                    schedule.openHours
-                  )
+                  !studioAvailability ||
+                  !studioAvailability[day] ||
+                  studioAvailability[day] === "Closed" ||
+                  isDayFullyBooked(date, occupiedSlots, studioAvailability)
                 );
               }}
               modifiers={{
                 booked: (date) =>
-                  isDayFullyBooked(
-                    date,
-                    schedule.appointments,
-                    schedule.openHours
-                  ),
+                  isDayFullyBooked(date, occupiedSlots, studioAvailability),
               }}
               modifiersClassNames={{
                 booked: "line-through text-red-500",
@@ -134,38 +240,29 @@ export default function Availability({
 
           <div className="space-y-4">
             <div className="flex flex-col gap-4">
-              <div className="space-y-2">
-                <TimeSelect
-                  label="From what hours?"
-                  value={startTime}
-                  onValueChange={(value) => {
-                    setStartTime(value);
-                    setEndTime(undefined);
-                  }}
-                  timeSlots={timeSlots}
-                  disabled={!date || timeSlots.length === 0}
-                  placeholder="Start time"
-                  isSlotAvailable={isSlotAvailable}
-                  isSlotBooked={isSlotBooked}
-                  classname="mt-2"
-                />
-              </div>
+              <TimeSelect
+                label="From what hours?"
+                value={startTime}
+                onValueChange={handleStartTimeChange}
+                timeSlots={timeSlots}
+                disabled={!date || timeSlots.length === 0}
+                placeholder="Start time"
+                isSlotAvailable={isSlotAvailable}
+                isSlotBooked={isSlotBooked}
+                classname="mt-2"
+              />
 
-              <div className="space-y-2">
-                <TimeSelect
-                  label="Until what hours?"
-                  value={endTime}
-                  onValueChange={setEndTime}
-                  timeSlots={timeSlots.filter(
-                    (time) => time > (startTime || "")
-                  )}
-                  disabled={!startTime}
-                  placeholder="End time"
-                  isSlotAvailable={isSlotAvailable}
-                  isSlotBooked={isSlotBooked}
-                  classname="mt-2"
-                />
-              </div>
+              <TimeSelect
+                label="Until what hours?"
+                value={endTime}
+                onValueChange={setEndTime}
+                timeSlots={availableEndTimes}
+                disabled={!startTime}
+                placeholder="End time"
+                isSlotAvailable={isSlotAvailable}
+                isSlotBooked={isSlotBooked}
+                classname="mt-2"
+              />
             </div>
           </div>
         </div>
@@ -173,18 +270,23 @@ export default function Availability({
           <div className="space-y-4">
             <Label>Appointment Specialty</Label>
             <Select
-              value={specialty}
-              onValueChange={(value) => setSpecialty(value)}
+              value={selectedSpecialty?.id?.toString()}
+              onValueChange={(value) => {
+                const specialty = studioSpecialties.find(
+                  (s) => s.specialty.id.toString() === value
+                )?.specialty;
+                setSelectedSpecialty(specialty);
+              }}
             >
               <SelectTrigger className="w-[280px]">
                 <SelectValue placeholder="Choose a specialty" />
               </SelectTrigger>
               <SelectContent>
-                {studio &&
-                  studio.studioSpecialties.map((specialty) => (
+                {studioSpecialties &&
+                  studioSpecialties.map((specialty) => (
                     <SelectItem
-                      key={specialty.id}
-                      value={specialty.specialty.specialtyName}
+                      key={specialty.specialty.id}
+                      value={specialty.specialty.id.toString()}
                     >
                       {specialty.specialty.specialtyName}
                     </SelectItem>
@@ -197,15 +299,17 @@ export default function Availability({
             <hr className="w-full" />
 
             <div className="flex justify-between">
-              <Label>Specialty</Label>
-              <Label>{specialty || "Select a specialty"}</Label>
+              <Label className="font-bold">Specialty</Label>
+              <Label>
+                {selectedSpecialty?.specialtyName || "Select a specialty"}
+              </Label>
             </div>
             <div className="flex justify-between">
-              <Label>Date</Label>
+              <Label className="font-bold">Date</Label>
               <Label>{date?.toDateString() || "Select a date"}</Label>
             </div>
             <div className="flex justify-between">
-              <Label>Hours</Label>
+              <Label className="font-bold">Hours</Label>
               <Label>
                 {startTime && endTime
                   ? `From ${startTime} to ${endTime} `
@@ -213,25 +317,32 @@ export default function Availability({
               </Label>
             </div>
             <div className="flex justify-between">
-              <Label>Total hours</Label>
+              <Label className="font-bold">Total hours</Label>
               <Label className="text-right break-words max-w-[150px]">
-                {startTime && endTime ? `${formattedDuration}` : "Select hours"}
+                {startTime && endTime && hoursFormatted
+                  ? `${hoursFormatted}`
+                  : "Select hours"}
               </Label>
             </div>
 
             <div className="flex justify-between">
-              <Label>Cost per hour</Label>
-              <Label>{costPerHour}$</Label>
+              <Label className="font-bold">Cost per hour</Label>
+              <Label>
+                {selectedSpecialty?.specialtyName
+                  ? costPerHour == 0
+                    ? "Contact us"
+                    : `${costPerHour?.toLocaleString("en-US", {
+                        style: "currency",
+                        currency: "USD",
+                      })}`
+                  : "Select a specialty"}
+              </Label>
             </div>
             <hr className="w-full" />
 
             <div className="flex justify-between items-center">
               <Label className="text-lg font-semibold">Total</Label>
-              <Label>
-                {total
-                  ? `${(total * costPerHour).toFixed(2)}$`
-                  : "Select hours"}
-              </Label>
+              <Label>{totalFormatted}</Label>
             </div>
           </div>
           <Button
@@ -241,12 +352,17 @@ export default function Availability({
                 "opacity-50 cursor-not-allowed"
             )}
             onClick={handleReserve}
-            disabled={!date || !startTime || !endTime || !specialty}
+            disabled={!date || !startTime || !endTime || !selectedSpecialty}
           >
             Reserve now
           </Button>
         </div>
       </div>
+      <UnauthModal
+        isOpen={showUnauthModal}
+        onClose={() => setShowUnauthModal(false)}
+        onLogin={onLogin}
+      />
     </div>
   );
 }
