@@ -1,60 +1,49 @@
-"use client";
-
-import { useEffect, useState } from "react";
+import {useState} from "react";
 import FormSection from "./home/searchSection/FormSection";
 import ResultSection from "./home/searchSection/ResultSection";
-import { Studio } from "@/types";
-import { RootState } from "@/store";
-import { useSelector } from "react-redux";
+import {useDispatch} from "react-redux";
+import {AvailabilityDTO} from "@/types/availability";
+import {fetchAvailableStudios} from "@/reducers/availableStudios";
+import {bookingSlice} from "@/reducers/bookingReducer.ts";
+
+export const {setQuote, clearQuote} = bookingSlice.actions;
 
 export default function SearchSection() {
-  const [searchParams, setSearchParams] = useState<{
-    specialty: string;
-    date: Date;
-    startTime: string;
-    endTime: string;
-  } | null>(null);
+  const dispatch = useDispatch();
+  const [searchParams, setSearchParams] = useState<AvailabilityDTO>();
 
-  const [studios, setStudios] = useState<Studio[]>([]);
-  const [studiosCoincidences, setStudiosCoincidences] = useState<Studio[]>([]);
+  const handleSearch = async (values: any) => {
+    const {specialtyName, ...availabilityDTO} = values;
+    setSearchParams(availabilityDTO);
 
-  const searchStudios = useSelector(
-    (state: RootState) => state.studios.studios
-  );
-
-  useEffect(() => {
-    setStudios(searchStudios);
-  }, [searchStudios]);
-
-  useEffect(() => {
-    if (searchParams) {
-      const coincidences = studios.filter((studio) =>
-        studio.studioSpecialties.find(
-          (specialty) =>
-            specialty.specialty.specialtyName === searchParams.specialty
-        )
+    try {
+      const resultAction = await dispatch(
+        fetchAvailableStudios(availabilityDTO)
       );
-      setStudiosCoincidences(coincidences);
-      const resultSection = document.getElementById("result-section");
-      if (resultSection) {
-        resultSection.scrollIntoView({ behavior: "smooth", block: "center" });
-      }
-    }
-  }, [searchParams]);
 
-  const handleSearch = (values: any) => {
-    setSearchParams(values);
+      const {specialtyId, ...quoteParams} = availabilityDTO;
+
+      if (fetchAvailableStudios.fulfilled.match(resultAction)) {
+        const resultSection = document.getElementById("result-section");
+        if (resultSection) {
+          resultSection.scrollIntoView({behavior: "smooth", block: "center"});
+          dispatch(setQuote({
+            ...quoteParams,
+          }));
+        }
+
+      }
+    } catch (error) {
+      console.error("Failed to fetch available studios", error);
+    }
   };
 
   return (
     <>
-      <FormSection onSearch={handleSearch} />
+      <FormSection onSearch={handleSearch}/>
       {searchParams && (
         <div id="result-section">
-          <ResultSection
-            searchParams={searchParams}
-            studios={studiosCoincidences}
-          />
+          <ResultSection searchParams={searchParams}/>
         </div>
       )}
     </>
