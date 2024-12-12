@@ -95,7 +95,7 @@ const Login = () => {
     <div
       className="min-h-screen flex items-center justify-center bg-cover bg-center"
       style={{
-        backgroundImage: `url('/images/background.jpg')`,
+        backgroundImage: `url('/images/bg-login.webp')`,
         backgroundColor: "rgba(0, 0, 0, 0.3)",
         backgroundBlendMode: "overlay",
       }}
