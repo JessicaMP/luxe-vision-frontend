@@ -6,7 +6,7 @@ import { Card, CardContent } from "@/components/ui/card.tsx";
 import { Avatar } from "@mui/joy";
 import { Check, X } from "lucide-react";
 import { FaChevronLeft } from "react-icons/fa";
-import CustomButton from "@/components/buttons/CustomButton";
+import CustomButton from "@/components/Buttons/CustomButton";
 import { fetchBookingOfUser } from "@/reducers/bookingReducer.ts";
 
 export default function Bookings() {
