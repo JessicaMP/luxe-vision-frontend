@@ -26,7 +26,7 @@ const Home = () => {
         className="relative sm:min-h-[80svh] bg-black py-20 sm:py-0 mt-14 md:mt-20 w-full flex items-center justify-center"
       >
         <div
-          className="absolute inset-0 bg-[url('./images/bg.webp')] bg-cover lg:bg-center opacity-70"
+          className="absolute inset-0 bg-[url('/images/bg.webp')] bg-cover lg:bg-center opacity-70"
           aria-hidden="true"
         />
 
