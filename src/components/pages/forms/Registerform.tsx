@@ -125,8 +125,8 @@ const Register = () => {
     <div
       className="min-h-screen flex items-center justify-center bg-cover bg-center py-28"
       style={{
-        backgroundImage: `url('/images/background.jpg')`,
-        backgroundColor: "rgba(0, 0, 0, 0.6)",
+        backgroundImage: `url('/images/bg-login.webp')`,
+        backgroundColor: "rgba(0, 0, 0, 0.3)",
         backgroundBlendMode: "overlay",
       }}
     >
