@@ -84,8 +84,7 @@ export default function ConfirmationPage() {
       endTime: quote.endTime,
       studioID: quote.studio.id,
       specialtyID: quote.specialty.id,
-      // TODO Preguntar a jere si agregaremos los comentarios
-      // specialRequests: formData.specialRequests,
+      specialRequests: formData.specialRequests,
     };
 
     try {
