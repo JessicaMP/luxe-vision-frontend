@@ -3,7 +3,6 @@ import {Booking, BookingDTO} from "@/types/bookings";
 import ApiBookings from "@/services/bookings";
 import {QuoteDTO} from "@/types/quote";
 import {OccupiedSlot} from "@/types/availability";
-import { clear } from "console";
 
 const initialState = {
   loading: false,
