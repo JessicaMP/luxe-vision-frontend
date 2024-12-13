@@ -42,6 +42,7 @@ export function UnauthModal({
             Cancel
           </Button>
           <Button
+            data-cy="booking-login-modal"
             className="bg-red-500 hover:bg-red-600 text-white"
             onClick={onLogin}
           >
