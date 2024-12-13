@@ -88,6 +88,20 @@ export default function Availability({
     (state: RootState) => state.users.isAuthenticated
   );
 
+  const roundUpToNextHour = () => {
+    const now = new Date();
+    if (now.getMinutes() > 0) {
+      now.setHours(now.getHours() + 1);
+    }
+    now.setMinutes(0);
+
+    return now.toLocaleTimeString("en-US", {
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false,
+    });
+  };
+
   const total = () => {
     if (!startTime || !endTime) return 0;
 
@@ -131,6 +145,10 @@ export default function Availability({
 
     if (daySchedule === "Closed") return [];
     const { start, end } = parseTimeRange(daySchedule);
+
+    if (date.getDate() === new Date().getDate() && roundUpToNextHour() > start)
+      return generateTimeSlots(roundUpToNextHour(), end);
+
     return generateTimeSlots(start, end);
   }, [date, studioAvailability]);
 

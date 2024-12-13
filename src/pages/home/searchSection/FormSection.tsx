@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/form";
 
 import { cn } from "@/lib/utils";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { IoMdSearch } from "react-icons/io";
 import { useSelector } from "react-redux";
@@ -69,10 +69,19 @@ const SearchSection = ({ onSearch }: { onSearch: (values: any) => void }) => {
   const [open, setOpen] = useState(false);
   const [openCalendar, setOpenCalendar] = useState(false);
 
-  const fixedTimeSlots = useMemo(
-    () => generateFixedTimeSlots("06:00", "23:00"),
-    []
-  );
+  const roundUpToNextHour = () => {
+    const now = new Date();
+    if (now.getMinutes() > 0) {
+      now.setHours(now.getHours() + 1);
+    }
+    now.setMinutes(0);
+
+    return now.toLocaleTimeString("en-US", {
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false,
+    });
+  };
 
   const handleSubmit = (values: z.infer<typeof formSchema>) => {
     // Format the date as YYYY-MM-DD
@@ -97,6 +106,29 @@ const SearchSection = ({ onSearch }: { onSearch: (values: any) => void }) => {
       date: new Date("1111-11-11"),
     },
   });
+  const fixedTimeSlots = () => {
+    try {
+      const date = form.getValues("date");
+      if (!date) return generateFixedTimeSlots("06:00", "23:00");
+
+      const today = new Date(new Date().setHours(0, 0, 0, 0));
+      const isToday =
+        date.getDate() === today.getDate() &&
+        date.getMonth() === today.getMonth() &&
+        date.getFullYear() === today.getFullYear();
+
+      if (isToday) {
+        return generateFixedTimeSlots(roundUpToNextHour(), "23:00");
+      }
+      return generateFixedTimeSlots("06:00", "23:00");
+    } catch (error) {
+      console.error("Error in fixedTimeSlots:", error);
+      return generateFixedTimeSlots("06:00", "23:00"); // valor por defecto
+    }
+  };
+
+  // Añade watch al inicio del componente
+  form.watch("startTime");
 
   return (
     <>
@@ -212,8 +244,12 @@ const SearchSection = ({ onSearch }: { onSearch: (values: any) => void }) => {
                         onSelect={(e) => {
                           field.onChange(e);
                           setOpenCalendar(false);
+                          form.setValue("startTime", "");
+                          form.setValue("endTime", "");
                         }}
-                        disabled={(date) => date < new Date()}
+                        disabled={(date) =>
+                          date < new Date(new Date().setHours(0, 0, 0, 0))
+                        }
                         initialFocus
                       />
                     </PopoverContent>
@@ -235,7 +271,7 @@ const SearchSection = ({ onSearch }: { onSearch: (values: any) => void }) => {
                         field.onChange(value);
                         form.setValue("endTime", "");
                       }}
-                      timeSlots={fixedTimeSlots}
+                      timeSlots={fixedTimeSlots() || []}
                       disabled={false}
                       placeholder="From what hours?"
                     />
@@ -254,10 +290,10 @@ const SearchSection = ({ onSearch }: { onSearch: (values: any) => void }) => {
                     <TimeSelect
                       value={field.value}
                       onValueChange={field.onChange}
-                      timeSlots={fixedTimeSlots.filter(
+                      timeSlots={(fixedTimeSlots() || []).filter(
                         (time) => time > (form.getValues().startTime || "")
                       )}
-                      disabled={!form.getValues().startTime}
+                      disabled={!form.getValues("startTime")}
                       placeholder="Until what hours?"
                     />
                   </FormControl>
