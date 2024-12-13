@@ -1,4 +1,4 @@
-import {BrowserRouter as Router, Route, Routes} from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Layout from "./components/Layout";
 import Home from "./pages/Home";
 import Detail from "./pages/Detail";
@@ -11,10 +11,11 @@ import HomeFeatures from "./pages/admin/feature/Home";
 import AddFeature from "./pages/admin/feature/AddFeature";
 import UsersHome from "./pages/admin/user/UsersTable";
 import HomeSpecialies from "./pages/admin/specialy/Home";
-import PrivateRoute, {PrivateRouteAuth} from "./components/PrivateRoute";
+import PrivateRoute, { PrivateRouteAuth } from "./components/PrivateRoute";
 import Favorites from "./pages/Favorites";
 import ConfirmQuote from "./pages/ConfirmQuote";
 import Bookings from "@/pages/Bookings";
+import NotFound from "@/components/pages/NotFound";
 
 function App() {
   return (
@@ -22,17 +23,17 @@ function App() {
       <Layout>
         <Routes>
           {/* Rutas públicas */}
-          <Route path="/" element={<Home/>}/>
-          <Route path="/register" element={<Register/>}/>
-          <Route path="/login" element={<Login/>}/>
-          <Route path="/studio/:id" element={<Detail/>}/>
+          <Route path="/" element={<Home />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/studio/:id" element={<Detail />} />
 
           {/* Ruta visibles despues del login */}
           <Route
             path="/favorites"
             element={
               <PrivateRouteAuth>
-                <Favorites/>
+                <Favorites />
               </PrivateRouteAuth>
             }
           />
@@ -40,7 +41,7 @@ function App() {
             path="/bookings"
             element={
               <PrivateRouteAuth>
-                <Bookings/>
+                <Bookings />
               </PrivateRouteAuth>
             }
           />
@@ -48,7 +49,7 @@ function App() {
             path="/confirm-quote"
             element={
               <PrivateRouteAuth>
-                <ConfirmQuote/>
+                <ConfirmQuote />
               </PrivateRouteAuth>
             }
           />
@@ -58,7 +59,7 @@ function App() {
             path="/administration"
             element={
               <PrivateRoute role="ROLE_ADMINISTRATOR">
-                <AdminHome/>
+                <AdminHome />
               </PrivateRoute>
             }
           />
@@ -66,7 +67,7 @@ function App() {
             path="/administration/create_studio"
             element={
               <PrivateRoute role="ROLE_ADMINISTRATOR">
-                <AddStudio/>
+                <AddStudio />
               </PrivateRoute>
             }
           />
@@ -74,7 +75,7 @@ function App() {
             path="/administration/edit_studio/:id"
             element={
               <PrivateRoute role="ROLE_ADMINISTRATOR">
-                <EditStudio/>
+                <EditStudio />
               </PrivateRoute>
             }
           />
@@ -82,7 +83,7 @@ function App() {
             path="/administration/users"
             element={
               <PrivateRoute role="ROLE_ADMINISTRATOR">
-                <UsersHome/>
+                <UsersHome />
               </PrivateRoute>
             }
           />
@@ -91,7 +92,7 @@ function App() {
             path="/administration/features"
             element={
               <PrivateRoute role="ROLE_ADMINISTRATOR">
-                <HomeFeatures/>
+                <HomeFeatures />
               </PrivateRoute>
             }
           />
@@ -100,7 +101,7 @@ function App() {
             path="/administration/create_feature"
             element={
               <PrivateRoute role="ROLE_ADMINISTRATOR">
-                <AddFeature/>
+                <AddFeature />
               </PrivateRoute>
             }
           />
@@ -109,10 +110,12 @@ function App() {
             path="/administration/specialties"
             element={
               <PrivateRoute role="ROLE_ADMINISTRATOR">
-                <HomeSpecialies/>
+                <HomeSpecialies />
               </PrivateRoute>
             }
           />
+
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </Layout>
     </Router>
