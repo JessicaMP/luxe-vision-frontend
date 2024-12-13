@@ -31,6 +31,10 @@ export default function ConfirmationPage() {
     (state: RootState) => state.bookings.quote
   ) as QuoteDTO;
 
+  const isAuthenticated = useSelector(
+    (state: RootState) => state.users.isAuthenticated
+  );
+
   useEffect(() => {
     const checkQuote = () => {
       if (!quote || Object.keys(quote).length === 0 || !quote.studio) {
@@ -143,6 +147,9 @@ export default function ConfirmationPage() {
           <Button
             variant="outline"
             onClick={() => {
+              if (isAuthenticated) {
+                navigate("/");
+              }
               window.history.back();
             }}
             className="text-gray-600"
