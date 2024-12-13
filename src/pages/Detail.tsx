@@ -82,7 +82,7 @@ const Detail = () => {
     <main className="bg-white">
       <div className="container mx-auto py-20 space-y-8 px-4 sm:px-10 mt-4 ">
         <header className="flex flex-row justify-between items-start md:items-end gap-4 md:gap-0 order-2 sm:order-first md:order-1">
-          <div className="flex flex-col sm:flex-row gap-3 mt-12">
+          <div className="flex flex-col sm:flex-row gap-3 md:mt-12">
             <Avatar
               alt="Remy Sharp"
               src={`${studio.profileImage}?t=${studio.lastUpdate}`}
@@ -122,7 +122,7 @@ const Detail = () => {
             {isAuthenticated && (
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 sm:gap-0">
                 <div className="invisible">reviews</div>
-                <div className="flex items-center gap-2">
+                <div className="flex flex-col md:flex-row items-center gap-2">
                   <Button variant="plain">
                     <IoMdShare className="text-[#FFA987] text-2xl" />
                     <p className="pl-2 text-[#444243] text-xl">Share</p>

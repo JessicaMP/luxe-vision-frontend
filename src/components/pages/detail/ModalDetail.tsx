@@ -1,13 +1,14 @@
-import { useEffect, useState } from 'react';
-import Modal from '@mui/joy/Modal';
-import ModalClose from '@mui/joy/ModalClose';
-import Sheet from '@mui/joy/Sheet';
+import { useEffect, useState } from "react";
+import Modal from "@mui/joy/Modal";
+import ModalClose from "@mui/joy/ModalClose";
+import Sheet from "@mui/joy/Sheet";
 import {
   Carousel,
   CarouselContent,
   CarouselItem,
-} from '@/components/ui/carousel';
-import { MdNavigateBefore, MdNavigateNext } from 'react-icons/md';
+} from "@/components/ui/carousel";
+import { MdNavigateBefore, MdNavigateNext } from "react-icons/md";
+import { motion, AnimatePresence } from "framer-motion";
 
 const ModalDetail = ({ open, setOpen, studio }: any) => {
   const [currentPage, setCurrentPage] = useState(0);
@@ -18,7 +19,7 @@ const ModalDetail = ({ open, setOpen, studio }: any) => {
   useEffect(() => {
     if (!api) return;
 
-    api.on('select', () => {
+    api.on("select", () => {
       setCurrentPage(api.selectedScrollSnap());
     });
 
@@ -52,16 +53,16 @@ const ModalDetail = ({ open, setOpen, studio }: any) => {
       aria-describedby="modal-desc"
       open={open}
       onClose={() => setOpen(false)}
-      sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
+      sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}
     >
       <Sheet
         variant="outlined"
         sx={{
-          width: '80vw', // Ancho del fondo
-          height: '80vh', // Altura del fondo
-          borderRadius: 'md',
+          width: "80vw", // Ancho del fondo
+          height: "80vh", // Altura del fondo
+          borderRadius: "md",
           p: 2, // Reducir el padding del fondo
-          boxShadow: 'lg',
+          boxShadow: "lg",
         }}
         className="flex justify-center items-center h-max"
       >
@@ -69,12 +70,19 @@ const ModalDetail = ({ open, setOpen, studio }: any) => {
 
         <div className="flex flex-col gap-6 justify-center items-center w-full h-full">
           {/* Imagen principal */}
-          <div className="w-full h-full max-h-[60vh] flex justify-center items-center">
-            <img
-              src={studio.portfolioPhotos[currentPage]?.image}
-              alt="logo"
-              className="max-w-full max-h-full object-contain rounded-lg"
-            />
+          <div className="w-full h-full max-h-[60vh] flex justify-center items-center relative">
+            <AnimatePresence mode="wait">
+              <motion.img
+                key={currentPage}
+                src={studio.portfolioPhotos[currentPage]?.image}
+                alt="logo"
+                className="max-w-full max-h-full object-contain rounded-lg absolute"
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -20 }}
+                transition={{ duration: 0.15 }}
+              />
+            </AnimatePresence>
           </div>
 
           {/* Carrusel de miniaturas */}
@@ -86,10 +94,10 @@ const ModalDetail = ({ open, setOpen, studio }: any) => {
               <MdNavigateBefore className="text-white size-8 hover:text-[#D05858]" />
             </button>
             <Carousel
-              className="w-[50%] h-full"
+              className="w-[50%]"
               setApi={setApi}
               opts={{
-                align: 'start',
+                align: "start",
                 loop: true,
                 skipSnaps: false,
                 dragFree: false,
@@ -99,19 +107,21 @@ const ModalDetail = ({ open, setOpen, studio }: any) => {
                 {studio.portfolioPhotos.map((photo: any, index: number) => (
                   <CarouselItem
                     key={photo.id}
-                    className="basis-1/5 cursor-pointer h-min max-sm:basis-1/2"
+                    className="basis-1/5 cursor-pointer max-sm:basis-1/2"
                     onClick={() => handleImageClick(index)}
                   >
-                    <img
-                      src={photo.image}
-                      alt={`Imagen ${index + 1}`}
-                      className="object-cover rounded-lg transition-opacity duration-300 h-max"
-                      style={{
-                        aspectRatio: '1/1',
-                        opacity: index === currentPage ? 1 : 0.7,
-                      }}
-                      draggable={false}
-                    />
+                    <div className="relative w-full pb-[100%]">
+                      {" "}
+                      <img
+                        src={photo.image}
+                        alt={`Imagen ${index + 1}`}
+                        className="absolute top-0 left-0 w-full h-full object-cover rounded-lg transition-opacity duration-300"
+                        style={{
+                          opacity: index === currentPage ? 1 : 0.7,
+                        }}
+                        draggable={false}
+                      />
+                    </div>
                   </CarouselItem>
                 ))}
               </CarouselContent>
