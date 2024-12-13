@@ -9,17 +9,24 @@ import Autoplay from "embla-carousel-autoplay";
 import CardSpeciality from "@/components/pages/home/speciality/CardSpeciality";
 import RecommendSection from "./home/RecommendSection";
 import SearchSection from "./SearchSection";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { bookingSlice } from "@/reducers/bookingReducer";
-import store from "@/store";
+import { RootState } from "@/store";
 import { Specialty } from "@/types/specialty";
+import { useEffect } from "react";
 
 const Home = () => {
   const dispatch = useDispatch();
 
-  const cardsSpeciality: Specialty[] = store.getState().specialties.specialties;
+  const cardsSpeciality: Specialty[] = useSelector(
+    (state: RootState) => state.specialties.specialties
+  );
 
-  dispatch(bookingSlice.actions.clearQuote());
+  useEffect(() => {}, [dispatch]);
+
+  useEffect(() => {
+    dispatch(bookingSlice.actions.clearQuote());
+  }, [dispatch]);
 
   return (
     <main>
@@ -52,35 +59,37 @@ const Home = () => {
             <h3 className="font-bold text-3xl">Search by Specialty </h3>
 
             <div className="bg-[#707070] rounded-[20px] py-12 px-4 flex justify-center">
-              <Carousel
-                plugins={[
-                  Autoplay({
-                    delay: 4000,
-                  }),
-                ]}
-                opts={{
-                  align: "start",
-                }}
-                className="w-11/12"
-              >
-                <CarouselContent className="">
-                  {cardsSpeciality.map((card, index) => {
-                    return (
-                      <CarouselItem
-                        key={index}
-                        className="basis-full sm:basis-1/2 md:basis-1/3 lg:basis-1/3 xl:basis-1/4"
-                      >
-                        <CardSpeciality
-                          title={card.specialtyName}
-                          image={card.image}
-                        />
-                      </CarouselItem>
-                    );
-                  })}
-                </CarouselContent>
-                <CarouselPrevious />
-                <CarouselNext />
-              </Carousel>
+              {cardsSpeciality && cardsSpeciality.length > 0 && (
+                <Carousel
+                  plugins={[
+                    Autoplay({
+                      delay: 4000,
+                    }),
+                  ]}
+                  opts={{
+                    align: "start",
+                  }}
+                  className="w-11/12"
+                >
+                  <CarouselContent className="">
+                    {cardsSpeciality.map((card, index) => {
+                      return (
+                        <CarouselItem
+                          key={index}
+                          className="basis-full sm:basis-1/2 md:basis-1/3 lg:basis-1/3 xl:basis-1/4"
+                        >
+                          <CardSpeciality
+                            title={card.specialtyName}
+                            image={card.image}
+                          />
+                        </CarouselItem>
+                      );
+                    })}
+                  </CarouselContent>
+                  <CarouselPrevious />
+                  <CarouselNext />
+                </Carousel>
+              )}
             </div>
           </div>
         </div>
