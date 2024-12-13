@@ -41,8 +41,11 @@ export default function Availability({
   ) as QuoteDTO;
 
   const [date, setDate] = useState<Date | undefined>(
-    quote ? new Date(quote.date + "T00:00:00") : undefined
+    Object.keys(quote).length > 0
+      ? new Date(quote.date + "T00:00:00")
+      : new Date()
   );
+
   const [startTime, setStartTime] = useState<string | undefined>(
     quote ? quote.startTime : undefined
   );
@@ -75,7 +78,7 @@ export default function Availability({
     (sp) => sp.specialtyID === selectedSpecialty?.id
   );
 
-  const costPerHour = studioPriceSpecialty?.price;
+  const costPerHalfHour = studioPriceSpecialty?.price;
 
   const isAuthenticated = useSelector(
     (state: RootState) => state.users.isAuthenticated
@@ -114,13 +117,20 @@ export default function Availability({
   };
 
   const timeSlots = useMemo(() => {
-    if (!date || !startTime || !endTime) return [];
+    console.log("entro");
+    if (!date || !studioAvailability || date == "Invalid Date") return [];
+
+    console.log("entro2");
+    console.log(date);
 
     const dayOfWeek = date
       .toLocaleDateString("en-US", { weekday: "long" })
       .toLowerCase();
 
+    console.log(dayOfWeek);
+
     const daySchedule = studioAvailability[dayOfWeek];
+    console.log(daySchedule);
 
     if (daySchedule === "Closed") return [];
     const { start, end } = parseTimeRange(daySchedule);
@@ -160,7 +170,7 @@ export default function Availability({
 
   const formatTotal = () => {
     if (!studioPriceSpecialty) return "Complete the form";
-    return Number(studioPriceSpecialty?.price * total()).toLocaleString(
+    return Number(studioPriceSpecialty?.price * total() * 2).toLocaleString(
       "en-US",
       {
         style: "currency",
@@ -329,9 +339,9 @@ export default function Availability({
               <Label className="font-bold">Cost per hour</Label>
               <Label>
                 {selectedSpecialty?.specialtyName
-                  ? costPerHour == 0
+                  ? costPerHalfHour == 0
                     ? "Contact us"
-                    : `${costPerHour?.toLocaleString("en-US", {
+                    : `${(costPerHalfHour * 2)?.toLocaleString("en-US", {
                         style: "currency",
                         currency: "USD",
                       })}`
