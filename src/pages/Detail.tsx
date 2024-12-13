@@ -13,7 +13,10 @@ import NotFoundStudio from "@/components/pages/detail/NotFoundStudio";
 import { Icon } from "@iconify/react";
 import { RootState } from "@/store";
 import { selectStudioWithFavorite } from "@/reducers/studioSelector";
-import { bookingSlice } from "@/reducers/bookingReducer";
+import {
+  bookingSlice,
+  fetchBookingByStudioId,
+} from "@/reducers/bookingReducer";
 import Availability from "./Availability";
 import ButtonFavorite from "@/components/pages/favorites/ButtonFavorite";
 import { IoMdShare } from "react-icons/io";
@@ -63,6 +66,7 @@ const Detail = () => {
     setStudio(currentStudio);
     setOccupiedHours(currentBookings);
     setAvailableHours(currentWorkingHours);
+    dispatch(fetchBookingByStudioId(studioId));
   }, [currentStudio, studioId, currentBookings, currentWorkingHours]);
 
   const { isAuthenticated } = useSelector((state: RootState) => state.users);
