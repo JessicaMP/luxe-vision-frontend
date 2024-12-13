@@ -37,6 +37,9 @@ const Detail = () => {
   const studioId = Number(id);
 
   const currentStudio = useSelector(selectStudioWithFavorite) as Studio;
+  const statusCurrentStudio = useSelector(
+    (state: RootState) => state.studios.status
+  );
 
   const currentBookings = useSelector(
     (state: RootState) => state.bookings.bookingsStudio
@@ -67,11 +70,16 @@ const Detail = () => {
 
   const { isAuthenticated } = useSelector((state: RootState) => state.users);
 
-  if (statusBookings === "loading" || statusAvailability === "loading") {
+  if (
+    statusBookings === "loading" ||
+    statusAvailability === "loading" ||
+    statusCurrentStudio === "loading" ||
+    !studio
+  ) {
     return <DetailSkeleton />;
   }
 
-  if (!studio) {
+  if (statusCurrentStudio === "failed") {
     return <NotFoundStudio />;
   }
 
