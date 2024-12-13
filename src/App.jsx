@@ -16,6 +16,7 @@ import Favorites from "./pages/Favorites";
 import ConfirmQuote from "./pages/ConfirmQuote";
 import Bookings from "@/pages/Bookings";
 import NotFound from "@/components/pages/NotFound";
+import ListSpecialtyStudios from "./pages/ListSpecialtyStudios";
 
 function App() {
   return (
@@ -27,6 +28,10 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
           <Route path="/studio/:id" element={<Detail />} />
+          <Route
+            path="/listSpecialtyStudios/:id"
+            element={<ListSpecialtyStudios />}
+          />
 
           {/* Ruta visibles despues del login */}
           <Route
