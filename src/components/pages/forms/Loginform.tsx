@@ -74,15 +74,11 @@ const Login = () => {
     dispatch(login({ ...formData, email: emailLowercase }))
       .unwrap()
       .then(() => {
-        console.log(quote);
         if (quote) {
-          console.log("entro");
-          console.log(quote);
           setTimeout(() => {
             navigate("/confirm-quote");
           }, 500);
         } else {
-          console.log("entro tmb");
           navigate("/");
         }
       })

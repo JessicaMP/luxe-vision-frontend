@@ -117,20 +117,13 @@ export default function Availability({
   };
 
   const timeSlots = useMemo(() => {
-    console.log("entro");
     if (!date || !studioAvailability || date == "Invalid Date") return [];
-
-    console.log("entro2");
-    console.log(date);
 
     const dayOfWeek = date
       .toLocaleDateString("en-US", { weekday: "long" })
       .toLowerCase();
 
-    console.log(dayOfWeek);
-
     const daySchedule = studioAvailability[dayOfWeek];
-    console.log(daySchedule);
 
     if (daySchedule === "Closed") return [];
     const { start, end } = parseTimeRange(daySchedule);
