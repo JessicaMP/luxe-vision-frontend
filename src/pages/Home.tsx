@@ -11,16 +11,13 @@ import RecommendSection from "./home/RecommendSection";
 import SearchSection from "./SearchSection";
 import { useDispatch } from "react-redux";
 import { bookingSlice } from "@/reducers/bookingReducer";
+import store from "@/store";
+import { Specialty } from "@/types/specialty";
 
 const Home = () => {
   const dispatch = useDispatch();
-  const cardsSpeciality = [
-    { title: "Portrait", image: "/images/cardsSpeciality/foto1.png" },
-    { title: "Wedding", image: "/images/cardsSpeciality/foto2.png" },
-    { title: "Product", image: "/images/cardsSpeciality/foto3.png" },
-    { title: "Architecture", image: "/images/cardsSpeciality/foto4.png" },
-    { title: "Business", image: "/images/cardsSpeciality/foto5.png" },
-  ];
+
+  const cardsSpeciality: Specialty[] = store.getState().specialties.specialties;
 
   dispatch(bookingSlice.actions.clearQuote());
 
@@ -73,7 +70,10 @@ const Home = () => {
                         key={index}
                         className="basis-full sm:basis-1/2 md:basis-1/3 lg:basis-1/3 xl:basis-1/4"
                       >
-                        <CardSpeciality title={card.title} image={card.image} />
+                        <CardSpeciality
+                          title={card.specialtyName}
+                          image={card.image}
+                        />
                       </CarouselItem>
                     );
                   })}
