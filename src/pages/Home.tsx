@@ -79,6 +79,7 @@ const Home = () => {
                           className="basis-full sm:basis-1/2 md:basis-1/3 lg:basis-1/3 xl:basis-1/4"
                         >
                           <CardSpeciality
+                            id={card.id}
                             title={card.specialtyName}
                             image={card.image}
                           />
