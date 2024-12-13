@@ -29,11 +29,6 @@ export function ErrorModal({ isOpen, onClose, errorMessage }: ErrorModalProps) {
           </Button>
         </div>
         <div className="flex flex-col items-center text-center px-4 pb-8 pt-4">
-          <div className="mb-6">
-            <div className="h-16 w-16 rounded-full bg-red-100 flex items-center justify-center">
-              <X className="h-8 w-8 text-red-500" />
-            </div>
-          </div>
           <h2 className="text-2xl font-semibold mb-6">
             Reservation was unsuccessful
           </h2>
