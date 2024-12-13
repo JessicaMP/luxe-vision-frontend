@@ -23,6 +23,11 @@ import { IoMdShare } from "react-icons/io";
 import { OccupiedSlot } from "@/types/availability";
 import { QuoteDTO } from "@/types/quote";
 import { DetailSkeleton } from "@/components/pages/detail/DetailSkeleton";
+import {
+  fetchStudioPricesAPI,
+  selectStudioById,
+} from "@/reducers/studiosReducer";
+import { fetchWorkingHoursByStudioId } from "@/reducers/availableStudios";
 
 const Detail = () => {
   const navigate = useNavigate();
@@ -38,6 +43,7 @@ const Detail = () => {
 
   const { id } = useParams();
   const studioId = Number(id);
+  dispatch(selectStudioById(studioId));
 
   const currentStudio = useSelector(selectStudioWithFavorite) as Studio;
   const statusCurrentStudio = useSelector(
@@ -69,7 +75,12 @@ const Detail = () => {
     setStudio(currentStudio);
     setOccupiedHours(currentBookings);
     setAvailableHours(currentWorkingHours);
-    dispatch(fetchBookingByStudioId(studioId));
+
+    if (currentStudio && (!availableHours || !occupiedHours)) {
+      dispatch(fetchWorkingHoursByStudioId(studioId));
+      dispatch(fetchStudioPricesAPI(studioId));
+      dispatch(fetchBookingByStudioId(studioId));
+    }
   }, [currentStudio, studioId, currentBookings, currentWorkingHours]);
 
   const { isAuthenticated } = useSelector((state: RootState) => state.users);

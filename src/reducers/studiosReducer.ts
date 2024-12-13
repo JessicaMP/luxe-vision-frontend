@@ -1,16 +1,18 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { Studio } from "@/types/studio";
+import { Studio, StudioPrices } from "@/types/studio";
 import ApiService from "@/services/studios";
 
 interface StudioState {
   studios: Studio[];
   studio: Studio | null;
+  studioPrices: StudioPrices[];
   status: 'idle' | 'loading' | 'succeeded' | 'failed';
   error: string | null;
 }
 
 const initialState: StudioState = {
   studios: [],
+  studioPrices: [],
   studio: null,
   status: 'idle',
   error: null
@@ -120,7 +122,10 @@ const studiosSlice = createSlice({
       })
       .addCase(fetchStudioPricesAPI.fulfilled, (state, action) => {
         state.status = 'succeeded';
-        state.studio.studioPrices = action.payload;
+        state.studioPrices = action.payload;
+        if(state.studio){
+          state.studio.studioPrices = action.payload
+        }
       })
       .addCase(fetchStudioPricesAPI.rejected, (state, action) => {
         state.status = 'failed';

@@ -74,7 +74,11 @@ export default function Availability({
     quote ? quote.specialty : undefined
   );
 
-  const studioPriceSpecialty = studio.studioPrices?.find(
+  const studioPrices = useSelector(
+    (state: RootState) => state.studios.studioPrices
+  );
+
+  const studioPriceSpecialty = studioPrices?.find(
     (sp) => sp.specialtyID === selectedSpecialty?.id
   );
 
@@ -204,6 +208,7 @@ export default function Availability({
           <div className="space-y-4">
             <Label>Which day?</Label>
             <Calendar
+              data-cy="booking-calendar"
               mode="single"
               selected={date}
               onSelect={(date) => {
@@ -251,6 +256,7 @@ export default function Availability({
               />
 
               <TimeSelect
+                data-cy="booking-timeEnd"
                 label="Until what hours?"
                 value={endTime}
                 onValueChange={setEndTime}
@@ -264,8 +270,8 @@ export default function Availability({
             </div>
           </div>
         </div>
-        <div className="flex flex-col gap-4 gap-y-6">
-          <div className="space-y-4">
+        <div data-cy="booking-summary" className="flex flex-col gap-4 gap-y-6">
+          <div data-cy="booking-specialty" className="space-y-4">
             <Label>Appointment Specialty</Label>
             <Select
               value={selectedSpecialty?.id?.toString()}
@@ -344,6 +350,7 @@ export default function Availability({
             </div>
           </div>
           <Button
+            data-cy="booking-reserve-button"
             className={cn(
               "w-full bg-red-500 hover:bg-red-600 text-white",
               (!date || !startTime || !endTime) &&
