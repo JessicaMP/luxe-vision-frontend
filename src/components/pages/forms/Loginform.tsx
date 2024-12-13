@@ -1,5 +1,5 @@
 import { Button, FormControl, FormLabel, Input, Typography } from "@mui/joy";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "@/reducers/authReducer";
 import store, { AppDispatch, RootState } from "@/store.ts";
@@ -10,6 +10,10 @@ const Login = () => {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
   const { loading, error } = useSelector((state: RootState) => state.users);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   const [formData, setFormData] = useState({
     email: "",
