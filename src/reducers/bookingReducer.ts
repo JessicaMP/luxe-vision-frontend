@@ -53,6 +53,14 @@ export const fetchBookingOfUser = createAsyncThunk(
   }
 );
 
+export const cancelBookingById = createAsyncThunk(
+  "booking/cancelBookingById",
+  async (id: number) => {
+    const response = await ApiBookings.cancelBookingById(id);
+    return response.data;
+  }
+);
+
 export const bookingSlice = createSlice({
   name: "booking",
   initialState,
@@ -129,15 +137,33 @@ export const bookingSlice = createSlice({
     builder
       .addCase(fetchBookingOfUser.pending, (state) => {
         state.loading = true;
+        state.status = "loading";
       })
       .addCase(fetchBookingOfUser.fulfilled, (state, action) => {
         state.loading = false;
+        state.status = "succeeded";
         state.bookingsUser = action.payload;
       })
       .addCase(fetchBookingOfUser.rejected, (state) => {
         state.loading = false;
+        state.status = "failed";
       });
 
+    // Cancel Booking By Id
+    builder
+      .addCase(cancelBookingById.pending, (state) => {
+        state.loading = true;
+        state.status = "loading";
+      })
+      .addCase(cancelBookingById.fulfilled, (state, action) => {
+        state.loading = false;
+        state.status = "succeeded";
+        state.bookingsUser = state.bookingsUser.filter((booking) => booking.id !== action.payload.id);
+      })
+      .addCase(cancelBookingById.rejected, (state) => {
+        state.status = "failed";
+        state.loading = false;
+      });
   },
 });
 

@@ -1,29 +1,48 @@
 import { Booking } from "@/types/bookings.tsx";
 import { RootState } from "@/store.ts";
 import { useDispatch, useSelector } from "react-redux";
-import { Studio, StudioFeature } from "@/types/studio.tsx";
+import { Studio, StudioFeature, StudioSpecialty } from "@/types/studio.tsx";
 import { Card, CardContent } from "@/components/ui/card.tsx";
 import { Avatar } from "@mui/joy";
-import { Check, X } from "lucide-react";
+import { CalendarCheck, Check, X } from "lucide-react";
 import { FaChevronLeft } from "react-icons/fa";
 import CustomButton from "@/components/Buttons/CustomButton";
-import { bookingSlice, fetchBookingOfUser } from "@/reducers/bookingReducer.ts";
+import {
+  bookingSlice,
+  cancelBookingById,
+  fetchBookingOfUser,
+} from "@/reducers/bookingReducer.ts";
+import { Button } from "@/components/ui/button";
+import { useEffect, useState } from "react";
 
 export default function Bookings() {
   const dispatch = useDispatch();
   dispatch(bookingSlice.actions.clearQuote());
-  dispatch(fetchBookingOfUser());
 
-  const userBookings: Booking[] = useSelector(
+  const handleCancelReservation = (id: number) => {
+    dispatch(cancelBookingById(id));
+    dispatch(fetchBookingOfUser());
+  };
+
+  const userBookingsFromStore = useSelector(
     (state: RootState) => state.bookings.bookingsUser
-  ) as Booking[];
+  );
 
-  // Create a sorted copy of the bookings array
+  const [userBookings, setUserBookings] = useState<Booking[]>([]);
+
   const sortedBookings = [...userBookings].sort((a: Booking, b: Booking) => {
     const dateA = new Date(a.date);
     const dateB = new Date(b.date);
     return dateA.getTime() - dateB.getTime();
   });
+
+  useEffect(() => {
+    dispatch(fetchBookingOfUser());
+  }, []);
+
+  useEffect(() => {
+    setUserBookings(userBookingsFromStore);
+  }, [userBookingsFromStore, dispatch]);
 
   const studios: Studio[] = useSelector(
     (state: RootState) => state.studios.studios
@@ -68,7 +87,12 @@ export default function Bookings() {
               return (
                 <Card
                   key={booking.id}
-                  className="overflow-hidden"
+                  className={`overflow-hidden ${
+                    booking.status === "COMPLETED" ||
+                    booking.status === "CANCELED"
+                      ? "opacity-60" // Hace el card más opaco
+                      : "opacity-100" // Mantiene la opacidad normal
+                  }`}
                   data-cy="booking-item"
                 >
                   <CardContent className="p-6">
@@ -96,10 +120,10 @@ export default function Bookings() {
                           <h3 className="font-semibold">{studio.studioName}</h3>
                           <p className="text-sm text-red-500 font-semibold">
                             {
-                              studio.studioFeatures.find(
-                                (feature: StudioFeature) =>
-                                  feature.feature.id === booking.specialtyID
-                              )?.feature.featureName
+                              studio.studioSpecialties.find(
+                                (specialty: StudioSpecialty) =>
+                                  specialty.specialty.id === booking.specialtyID
+                              )?.specialty.specialtyName
                             }
                           </p>
                         </div>
@@ -111,19 +135,32 @@ export default function Bookings() {
                             currency: "USD",
                           })}
                         </div>
-                        <div className="flex items-center gap-1 text-sm">
+                        <div className="flex justify-end items-center gap-1 text-sm">
                           {booking.status === "CONFIRMED" ? (
                             <>
                               <span className="text-green-600">Confirmed</span>
+                              <CalendarCheck className="w-4 h-4 text-green-600" />
+                            </>
+                          ) : booking.status === "COMPLETED" ? (
+                            <>
+                              <span className="text-green-600">Completed</span>
                               <Check className="w-4 h-4 text-green-600" />
                             </>
-                          ) : (
+                          ) : booking.status === "CANCELLED" ? (
                             <>
-                              <span className="text-red-500">Canceled</span>
-                              <X className="w-4 h-4 text-red-500" />
+                              <span className="text-red-600">Canceled</span>
+                              <X className="w-4 h-4 text-red-600" />
                             </>
-                          )}
+                          ) : null}
                         </div>
+                        {booking.status === "CONFIRMED" && (
+                          <Button
+                            onClick={() => handleCancelReservation(booking.id)}
+                            className="mt-4"
+                          >
+                            Cancel Reservation
+                          </Button>
+                        )}
                       </div>
                     </div>
                   </CardContent>
