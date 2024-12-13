@@ -67,6 +67,7 @@ const SearchSection = ({ onSearch }: { onSearch: (values: any) => void }) => {
   });
 
   const [open, setOpen] = useState(false);
+  const [openCalendar, setOpenCalendar] = useState(false);
 
   const fixedTimeSlots = useMemo(
     () => generateFixedTimeSlots("06:00", "23:00"),
@@ -185,7 +186,7 @@ const SearchSection = ({ onSearch }: { onSearch: (values: any) => void }) => {
               name="date"
               render={({ field }) => (
                 <FormItem className="max-h-[45px] mb-4">
-                  <Popover>
+                  <Popover open={openCalendar} onOpenChange={setOpenCalendar}>
                     <PopoverTrigger asChild className="h-full w-full">
                       <FormControl>
                         <Button
@@ -208,7 +209,10 @@ const SearchSection = ({ onSearch }: { onSearch: (values: any) => void }) => {
                       <Calendar
                         mode="single"
                         selected={field.value}
-                        onSelect={field.onChange}
+                        onSelect={(e) => {
+                          field.onChange(e);
+                          setOpenCalendar(false);
+                        }}
                         disabled={(date) => date < new Date()}
                         initialFocus
                       />
