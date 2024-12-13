@@ -35,8 +35,10 @@ export const TimeSelect: React.FC<TimeSelectProps> = ({
   return (
     <div className=" h-full">
       <Label>{label && label}</Label>
-
-      <div className={cn("h-full w-full", classname)}>
+      <div
+        data-cy="booking-timeStart"
+        className={cn("h-full w-full", classname)}
+      >
         <Select
           value={value}
           onValueChange={onValueChange ?? undefined}
@@ -44,10 +46,7 @@ export const TimeSelect: React.FC<TimeSelectProps> = ({
         >
           <SelectTrigger className="!mt-0 h-full">
             <SelectValue placeholder={placeholder}>
-              <div className="flex items-center">
-                <CalendarIcon className="mr-2 h-4 w-4" />
-                {value || placeholder}
-              </div>
+              <div className="flex items-center">{value || placeholder}</div>
             </SelectValue>
           </SelectTrigger>
           <SelectContent>

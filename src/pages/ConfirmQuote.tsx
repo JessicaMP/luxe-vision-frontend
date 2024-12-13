@@ -244,7 +244,10 @@ export default function ConfirmationPage() {
             </CardContent>
           </Card>
 
-          <div className="flex flex-col justify-between gap-4">
+          <div
+            className="flex flex-col justify-between gap-4"
+            data-cy="quote-reservation"
+          >
             <Card className="py-8">
               <CardHeader>
                 <CardTitle>Your reservation details</CardTitle>

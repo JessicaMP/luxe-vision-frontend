@@ -17,6 +17,14 @@ export default function Bookings() {
   const userBookings: Booking[] = useSelector(
     (state: RootState) => state.bookings.bookingsUser
   ) as Booking[];
+
+  // Create a sorted copy of the bookings array
+  const sortedBookings = [...userBookings].sort((a: Booking, b: Booking) => {
+    const dateA = new Date(a.date);
+    const dateB = new Date(b.date);
+    return dateA.getTime() - dateB.getTime();
+  });
+
   const studios: Studio[] = useSelector(
     (state: RootState) => state.studios.studios
   ) as Studio[];
@@ -51,22 +59,28 @@ export default function Bookings() {
         </div>
 
         <div className="space-y-4 flex flex-col gap-4">
-          {userBookings &&
-            userBookings.map((booking: Booking) => {
+          {sortedBookings &&
+            sortedBookings.map((booking: Booking) => {
               const studio: Studio = studios.find(
                 (studio: Studio) => studio.id === booking.studioID
               ) as Studio;
 
               return (
-                <Card key={booking.id} className="overflow-hidden">
+                <Card
+                  key={booking.id}
+                  className="overflow-hidden"
+                  data-cy="booking-item"
+                >
                   <CardContent className="p-6">
                     <div className="text-md text-gray-600 font-semibold">
-                      {formatDate(booking.date)} • From{" "}
-                      {booking.startTime.slice(0, 5)} to{" "}
+                      <span data-cy="booking-date">
+                        {formatDate(booking.date)} •{" "}
+                      </span>
+                      From {booking.startTime.slice(0, 5)} to{" "}
                       {booking.endTime.slice(0, 5)}
                     </div>
                     <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-4">
+                      <div className="flex items-center gap-4 mt-2">
                         <div className="relative w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 rounded-full overflow-hidden bg-gray-100">
                           <Avatar
                             alt="Studio Logo"
