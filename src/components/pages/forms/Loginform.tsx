@@ -74,7 +74,7 @@ const Login = () => {
     dispatch(login({ ...formData, email: emailLowercase }))
       .unwrap()
       .then(() => {
-        if (quote) {
+        if (Object.keys(quote).length > 0) {
           setTimeout(() => {
             navigate("/confirm-quote");
           }, 500);
