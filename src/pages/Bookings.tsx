@@ -7,10 +7,11 @@ import { Avatar } from "@mui/joy";
 import { Check, X } from "lucide-react";
 import { FaChevronLeft } from "react-icons/fa";
 import CustomButton from "@/components/Buttons/CustomButton";
-import { fetchBookingOfUser } from "@/reducers/bookingReducer.ts";
+import { bookingSlice, fetchBookingOfUser } from "@/reducers/bookingReducer.ts";
 
 export default function Bookings() {
   const dispatch = useDispatch();
+  dispatch(bookingSlice.actions.clearQuote());
   dispatch(fetchBookingOfUser());
 
   const userBookings: Booking[] = useSelector(
