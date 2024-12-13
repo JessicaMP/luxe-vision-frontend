@@ -3,8 +3,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { ChevronLeft } from "lucide-react";
-import { useState } from "react";
+import { ChevronLeft, Loader2 } from "lucide-react";
+import { useEffect, useState } from "react";
 import type { QuoteDTO } from "@/types/quote";
 import { Avatar } from "@mui/joy";
 import { useDispatch, useSelector } from "react-redux";
@@ -15,6 +15,7 @@ import { BookingDTO } from "@/types/bookings";
 import { makeBooking } from "@/reducers/bookingReducer";
 import { SuccessModal } from "@/components/pages/bookings/modals/SuccessModal";
 import { ErrorModal } from "@/components/pages/bookings/modals/ErrorModal";
+import { useNavigate } from "react-router-dom";
 
 interface FormData {
   firstName: string;
@@ -24,12 +25,33 @@ interface FormData {
 }
 
 export default function ConfirmationPage() {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const quote = useSelector(
     (state: RootState) => state.bookings.quote
   ) as QuoteDTO;
+
+  useEffect(() => {
+    const checkQuote = () => {
+      if (!quote || Object.keys(quote).length === 0 || !quote.studio) {
+        console.log("No quote data, redirecting...");
+        navigate("/");
+      } else {
+        setIsLoading(false);
+      }
+    };
+
+    checkQuote();
+  }, [quote, navigate]);
+
+  // Si no hay quote válido, no renderizamos nada
+  if (!quote || Object.keys(quote).length === 0 || !quote.studio) {
+    return null;
+  }
+
   const user = useSelector((state: RootState) => state.users.user);
   const studio = quote.studio;
+  const [isLoading, setIsLoading] = useState(false);
 
   const [formData, setFormData] = useState<FormData>({
     firstName: user?.firstName || "",
@@ -54,6 +76,7 @@ export default function ConfirmationPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsLoading(true);
 
     const data: BookingDTO = {
       date: quote.date,
@@ -76,6 +99,8 @@ export default function ConfirmationPage() {
     } catch (error) {
       setErrorMessage("An unexpected error occurred");
       setShowErrorModal(true);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -274,8 +299,16 @@ export default function ConfirmationPage() {
               className="w-full bg-red-500 hover:bg-red-600"
               size="lg"
               onClick={handleSubmit}
+              disabled={isLoading}
             >
-              Confirm reservation
+              {isLoading ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Processing...
+                </>
+              ) : (
+                "Confirm reservation"
+              )}
             </Button>
           </div>
         </div>
