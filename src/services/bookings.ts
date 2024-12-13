@@ -41,12 +41,24 @@ const getBookingOfUser = () => {
   });
 };
 
+const cancelBookingById = (id : number) => {
+  const headers = {
+    headers: {
+      Authorization: `Bearer ${store.getState().users.token}`,
+    },
+  };
+  return axios.put(`${API_URL}/users/reservations/${id}/cancel`,{}, headers);
+};
+
+
+
 const ApiBookings = {
   getAllBookings,
   getBookingsByStudioId,
   makeQuote,
   makeBooking,
-  getBookingOfUser
+  getBookingOfUser,
+  cancelBookingById
 };
 
 export default ApiBookings;

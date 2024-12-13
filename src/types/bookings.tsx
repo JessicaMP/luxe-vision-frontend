@@ -16,4 +16,5 @@ export interface BookingDTO {
   endTime: string;
   studioID: number;
   specialtyID: number;
+  specialRequests: string;
 }
