@@ -9,8 +9,11 @@ import Autoplay from "embla-carousel-autoplay";
 import CardSpeciality from "@/components/pages/home/speciality/CardSpeciality";
 import RecommendSection from "./home/RecommendSection";
 import SearchSection from "./SearchSection";
+import { useDispatch } from "react-redux";
+import { bookingSlice } from "@/reducers/bookingReducer";
 
 const Home = () => {
+  const dispatch = useDispatch();
   const cardsSpeciality = [
     { title: "Portrait", image: "/images/cardsSpeciality/foto1.png" },
     { title: "Wedding", image: "/images/cardsSpeciality/foto2.png" },
@@ -18,6 +21,8 @@ const Home = () => {
     { title: "Architecture", image: "/images/cardsSpeciality/foto4.png" },
     { title: "Business", image: "/images/cardsSpeciality/foto5.png" },
   ];
+
+  dispatch(bookingSlice.actions.clearQuote());
 
   return (
     <main>
@@ -43,7 +48,7 @@ const Home = () => {
 
       <section
         id="category-section"
-        className="relative min-h-[50svh] w-full bg-[#DADADA] flex flex-col"
+        className="relative w-full bg-[#DADADA] flex flex-col py-6"
       >
         <div className="container mx-auto">
           <div className="px-4 sm:px-10 py-10 flex flex-col gap-12 max-w-[1500px] ">
