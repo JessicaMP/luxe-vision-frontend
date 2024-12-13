@@ -1,16 +1,16 @@
-import {useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 import CardRecommend from "@/components/pages/home/recommendations/CardRecommend";
-import {ChevronLeft, ChevronRight} from "lucide-react";
-import {Studio} from "@/types/studio";
-import {AvailabilityDTO} from "@/types/availability";
-import {RootState} from "@/store";
-import {useSelector} from "react-redux";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import { Studio } from "@/types/studio";
+import { AvailabilityDTO } from "@/types/availability";
+import { RootState } from "@/store";
+import { useSelector } from "react-redux";
 
 interface SearchResultsProps {
   searchParams: AvailabilityDTO;
 }
 
-export default function ResultSection({searchParams}: SearchResultsProps) {
+export default function ResultSection({ searchParams }: SearchResultsProps) {
   const studios = useSelector(
     (state: RootState) => state.availability.availableStudios
   ) as Studio[];
@@ -61,18 +61,22 @@ export default function ResultSection({searchParams}: SearchResultsProps) {
           <h2 className="text-3xl font-bold text-white mb-8">
             Photographic studios available for{" "}
             {searchParams.date
-              ? new Date(searchParams.date).toLocaleDateString("en-US", {
-                weekday: "long",
-                day: "numeric",
-                month: "long",
-                year: "numeric",
-              })
+              ? (() => {
+                  const date = new Date(searchParams.date);
+                  date.setDate(date.getDate() + 1);
+                  return date.toLocaleDateString("en-US", {
+                    weekday: "long",
+                    day: "numeric",
+                    month: "long",
+                    year: "numeric",
+                  });
+                })()
               : ""}
           </h2>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
             {currentItems.map((studio) => (
-              <CardRecommend key={studio.id} studio={studio}/>
+              <CardRecommend key={studio.id} studio={studio} />
             ))}
           </div>
 
@@ -83,7 +87,7 @@ export default function ResultSection({searchParams}: SearchResultsProps) {
               className="p-2 rounded-full hover:bg-gray-700 disabled:opacity-50 text-white"
               aria-label="Previous page"
             >
-              <ChevronLeft className="w-6 h-6"/>
+              <ChevronLeft className="w-6 h-6" />
             </button>
 
             {[...Array(totalPages)].map((_, index) => (
@@ -109,7 +113,7 @@ export default function ResultSection({searchParams}: SearchResultsProps) {
               className="p-2 rounded-full hover:bg-gray-700 disabled:opacity-50 text-white"
               aria-label="Next page"
             >
-              <ChevronRight className="w-6 h-6"/>
+              <ChevronRight className="w-6 h-6" />
             </button>
           </div>
         </div>
