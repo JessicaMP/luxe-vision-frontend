@@ -102,7 +102,7 @@ export default function ConfirmationPage() {
 
   const formatTotal = () => {
     return Number(
-      quote.pricePerHour * parseFloat(quote.totalHours)
+      quote.costPerHour * parseFloat(quote.totalHours)
     ).toLocaleString("en-US", {
       style: "currency",
       currency: "USD",
@@ -256,7 +256,7 @@ export default function ConfirmationPage() {
                 <div className="flex justify-between">
                   <span className="font-medium">Cost per hour:</span>
                   <span>
-                    {quote.pricePerHour.toLocaleString("en-US", {
+                    {quote.costPerHour?.toLocaleString("en-US", {
                       style: "currency",
                       currency: "USD",
                     })}
